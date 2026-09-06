@@ -1,0 +1,117 @@
+---
+/**
+ * Anotacion — canonical hand-marker annotation (design-system.md §7, item 6
+ * "Anotación manuscrita (`Anotacion`)"; scale token in §4, the "manuscrita"
+ * row of the Escala table; canvas spec at design/ds/canvas/Elementos.dc.html,
+ * block "ANOTACION"; reference implementation at
+ * design/ds/components/expediente/Anotacion.jsx).
+ *
+ * A short word or phrase in azul-marcador, always meant to sit overlaid on
+ * something else (never alone in empty space — design-system.md §7, item 6),
+ * at the fixed "manuscrita" size (`text-manuscrita`, theme.css:
+ * `clamp(1.5rem, 4vw, 3rem)` — design-system.md §4 Escala). Rendered either
+ * from the real scanned handwriting (`imagen`, `alt` mandatory) or from the
+ * Gochi Hand fallback (`texto`). The two shapes are a discriminated union
+ * (PLAN.md §5): passing `imagen` without `alt` is a TypeScript error, not a
+ * runtime placeholder.
+ *
+ * `rotacion` is clamped to the design system's [-3, 2] degree range and
+ * applied as an inline `transform: rotate(Xdeg)` plus a `data-rotacion`
+ * attribute — never a class — so theme.css's `prefers-reduced-motion: reduce`
+ * block (`[data-rotacion] { transform: none !important }`) can override it;
+ * the attribute selector matches it on both elements regardless of whether
+ * Astro serializes it as a bare boolean (the `<span>`) or as `="true"` (the
+ * `<Image>`, which passes unrecognized props through as literal strings).
+ *
+ * Placement (grid position, margins, the wrapper's own rotation) is the
+ * caller's job: per diseno-web-indice.md decision 13, this component accepts
+ * no position classes and no `class` prop at all.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface PropsTexto {
+  /** Real-case text — design-system.md §7 item 6 mixes "EXPONEN" and "aguante la fotografía"; this component never forces a case. */
+  texto: string;
+  imagen?: undefined;
+  alt?: undefined;
+  ancho?: undefined;
+  /** Degrees, clamped to [-3, 2] (design-system.md §7 item 6). Defaults to -3. */
+  rotacion?: number;
+}
+
+interface PropsImagen {
+  texto?: undefined;
+  /** The scanned handwriting, imported so it goes through astro:assets (CLAUDE.md, "Imágenes"). */
+  imagen: ImageMetadata;
+  /** Literal transcription of the phrase — mandatory with `imagen` (CLAUDE.md: "en una frase manuscrita el alt es la transcripción literal"). */
+  alt: string;
+  /** Rendered width in pixels. Defaults to the source image's natural width. */
+  ancho?: number;
+  rotacion?: number;
+}
+
+type Props = PropsTexto | PropsImagen;
+
+const props = Astro.props;
+
+const ROTACION_MIN = -3;
+const ROTACION_MAX = 2;
+
+/**
+ * Clamps to the design system's range instead of failing the build: an
+ * out-of-range value is a content mistake, not a reason to break a page.
+ * Warns during `astro dev` only (`import.meta.env.DEV` is false under
+ * `astro build`), matching the `[i18n]` warning convention in i18n/utils.ts.
+ */
+function limitarRotacion(valor: number): number {
+  if (valor >= ROTACION_MIN && valor <= ROTACION_MAX) return valor;
+  const recortada = Math.min(ROTACION_MAX, Math.max(ROTACION_MIN, valor));
+  if (import.meta.env.DEV) {
+    console.warn(
+      `[Anotacion] rotacion=${valor} fuera de [${ROTACION_MIN}, ${ROTACION_MAX}]; se recorta a ${recortada}.`
+    );
+  }
+  return recortada;
+}
+
+const rotacion = limitarRotacion(props.rotacion ?? -3);
+const estiloRotacion = `transform: rotate(${rotacion}deg);`;
+
+// widths/sizes only make sense when there is an image: scaled around the
+// rendered width (never the full decode when the caller renders it smaller)
+// and capped at the source's natural resolution so `widths` never asks the
+// image service for more pixels than the scan actually has.
+let widths: number[] = [];
+let anchoObjetivo = 0;
+if (props.imagen) {
+  const anchoNatural = props.imagen.width;
+  anchoObjetivo = props.ancho ?? anchoNatural;
+  const objetivoCapado = Math.min(anchoObjetivo, anchoNatural);
+  widths = [...new Set([Math.round(objetivoCapado / 2), objetivoCapado, anchoNatural])]
+    .filter((ancho) => ancho > 0)
+    .sort((a, b) => a - b);
+}
+---
+
+{
+  props.imagen ? (
+    <Image
+      src={props.imagen}
+      alt={props.alt}
+      widths={widths}
+      sizes={`${anchoObjetivo}px`}
+      loading="lazy"
+      data-rotacion
+      style={`${estiloRotacion} width: ${anchoObjetivo}px; max-width: 100%; height: auto;`}
+    />
+  ) : (
+    <span
+      class="inline-block font-manuscrita text-manuscrita text-azul-marcador"
+      data-rotacion
+      style={estiloRotacion}
+    >
+      {props.texto}
+    </span>
+  )
+}
