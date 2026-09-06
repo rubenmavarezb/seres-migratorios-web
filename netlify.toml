@@ -1,0 +1,41 @@
+# Configuración de Netlify — Seres Migratorios (PLAN.md §4.3).
+# El sitio es 100 % estático: no hay adapter de Astro, alcanza con este archivo.
+# Los valores reales de las variables PUBLIC_* viven en el panel de Netlify
+# (Site configuration > Environment variables), no acá. Ver .env.example.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Misma versión que .nvmrc y que "engines" de package.json.
+  NODE_VERSION = "22"
+
+# Redirects de slugs viejos. PLAN.md §10: los slugs de contenido no cambian
+# nunca; si hay que renombrar una ruta, el redirect se agrega acá.
+# force = true para que el 301 gane incluso si algún día existe /fotografos en dist.
+
+[[redirects]]
+  from = "/fotografos"
+  to = "/artistas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/fotografos/*"
+  to = "/artistas/:splat"
+  status = 301
+  force = true
+
+# PENDIENTE SM-064 — redirect de www al dominio raíz.
+# Todavía no hay dominio propio: hoy el sitio vive en seres-migratorios.netlify.app
+# y no tiene subdominio www. El bloque queda comentado porque un placeholder
+# [DOMINIO] dentro de una URL rompería el parseo del TOML.
+# Al conectar el dominio en SM-064: descomentar, reemplazar DOMINIO-REAL por el
+# dominio contratado y actualizar PUBLIC_SITE_URL en el panel de Netlify.
+#
+# [[redirects]]
+#   from = "https://www.DOMINIO-REAL/*"
+#   to = "https://DOMINIO-REAL/:splat"
+#   status = 301
+#   force = true

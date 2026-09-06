@@ -1,0 +1,14 @@
+---
+// SM-005 i18n smoke test for the `/en/` locale. No dictionaries exist yet in
+// Fase 0, so this page carries the bare minimum of markup needed to prove that
+// `/en/` renders `<html lang="en">` and that `Astro.currentLocale` resolves to
+// `en`; it is replaced by the real EN home page in a later phase (SM-012
+// onward). "Seres Migratorios" is a proper name and is never translated.
+import Base from '../../layouts/Base.astro';
+---
+
+<Base titulo="Seres Migratorios" idioma="en">
+  <main data-locale={Astro.currentLocale}>
+    <h1 class="font-display text-display-xl uppercase">Seres Migratorios</h1>
+  </main>
+</Base>
