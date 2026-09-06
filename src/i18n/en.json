@@ -80,7 +80,8 @@
       "instagramInvalido": "Your handle needs an @: @handle.",
       "portfolioInvalido": "Portfolio has to be a URL.",
       "faltaDisciplina": "Pick a discipline.",
-      "faltaConsentimiento": "You need to accept the consent."
+      "faltaConsentimiento": "You need to accept the consent.",
+      "revisaEsteCampo": "Check this field."
     },
     "resumen": "Check the highlighted fields"
   },

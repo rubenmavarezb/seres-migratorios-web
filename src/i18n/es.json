@@ -80,7 +80,8 @@
       "instagramInvalido": "El usuario va con arroba: @usuario.",
       "portfolioInvalido": "El portfolio tiene que ser una URL.",
       "faltaDisciplina": "Elegí una disciplina.",
-      "faltaConsentimiento": "Tenés que aceptar el consentimiento."
+      "faltaConsentimiento": "Tenés que aceptar el consentimiento.",
+      "revisaEsteCampo": "Revisá este campo."
     },
     "resumen": "Revisá los campos marcados"
   },
