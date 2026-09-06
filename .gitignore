@@ -22,3 +22,6 @@ npm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# salida del servidor MCP de Playwright si algún agente lo usa
+.playwright-mcp/
