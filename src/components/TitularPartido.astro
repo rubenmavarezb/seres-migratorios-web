@@ -1,0 +1,61 @@
+---
+/**
+ * Split hero headline of the design system (design-system.md §7, item 2):
+ * `arriba` ("Seres") on top, `abajo` ("Migratorios") below, both in the
+ * display face, with a free slot in between for a `CajaNombre`, `Escudo`,
+ * `Anotacion`, or nothing at all.
+ *
+ * PLAN.md §9 requires the whole thing to read as a single accessible
+ * heading: "un solo <h1> por página: el TitularPartido del hero, que se lee
+ * 'Seres Migratorios' completo en un solo elemento accesible". The two words
+ * therefore live inside ONE heading element as two <span> children (its
+ * accessible name is computed from that text content); the slot is a
+ * sibling of the heading, never a heading child, so it never joins the
+ * accessible name.
+ *
+ * The slot is still placed visually between the two words. That rules out
+ * `display: contents` on the heading (it would erase the heading's own box
+ * and its semantics along with it), so the positioning trick is CSS Grid +
+ * subgrid instead: the wrapper below is a 3-row grid, the heading spans all
+ * three rows with `grid-template-rows: subgrid` and places its two spans on
+ * row 1 and row 3, and the slot wrapper is a plain sibling placed on row 2 —
+ * visually in the middle, structurally outside the heading.
+ */
+interface Props {
+  /** Top word ("Seres"). Written in real capitalization; `uppercase` is a visual transform, not part of the text. */
+  arriba: string;
+  /** Bottom word ("Migratorios"). Same rule as `arriba`. */
+  abajo: string;
+  /** `xl` (`text-display-xl`, 14rem max — the Home hero) or `lg` (`text-display-lg`, 7.5rem max — secondary uses). Defaults to `xl`. */
+  tamano?: 'xl' | 'lg';
+  /** Heading level of the rendered element: 1 for the page's single `<h1>` (default), 2 for a secondary use so the page keeps exactly one `<h1>`. */
+  nivel?: 1 | 2;
+}
+
+const { arriba, abajo, tamano = 'xl', nivel = 1 } = Astro.props;
+
+// Dynamic tag (docs.astro.build, "Using dynamic tags and components"): the
+// variable must be capitalized so the compiler renders it as an element,
+// not the literal tag name "Etiqueta".
+const Etiqueta = nivel === 1 ? 'h1' : 'h2';
+
+// `text-display-xl` / `text-display-lg` already carry their line-height
+// (0.85) and letter-spacing from the paired `--text-display-*--line-height`
+// / `--text-display-*--letter-spacing` tokens in theme.css (Tailwind v4
+// font-size theme convention), so no separate leading/tracking utility is
+// needed here.
+const claseTamano = tamano === 'xl' ? 'text-display-xl' : 'text-display-lg';
+---
+
+<div class="grid grid-cols-1 grid-rows-3">
+  <Etiqueta
+    class={`col-start-1 row-start-1 row-span-3 grid grid-rows-subgrid font-display uppercase text-center text-tinta ${claseTamano}`}
+  >
+    <span class="row-start-1">{arriba}</span>
+    {' '}
+    <span class="row-start-3">{abajo}</span>
+  </Etiqueta>
+  <div class="col-start-1 row-start-2 flex justify-center">
+    <slot />
+  </div>
+</div>
