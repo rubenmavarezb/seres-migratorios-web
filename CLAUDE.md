@@ -52,7 +52,7 @@ Lo que acá no está permitido, no se hace.
 
 ## Reglas de contenido
 
-- **No inventar datos.** Fechas, direcciones, nombres, handles, cifras y links: solo los del contenido o del BRIEF. Lo que falte va como **placeholder visible entre corchetes**: `[FECHA PRÓXIMA EDICIÓN]`, `[LINK DONACIONES]`, `[DOMINIO]`. Un placeholder es correcto; un dato inventado es un error grave.
+- **No inventar datos.** Fechas, direcciones, nombres, handles, cifras y links: solo los del contenido o del BRIEF. Lo que falte va como **placeholder visible entre corchetes**: `[FECHA PRÓXIMA EDICIÓN]`, `[LINK DONACIONES]`, `[EMAIL DEL COLECTIVO]`. El dominio NO es placeholder: es `seresmigratorios.com` y es el `site` de `astro.config.mjs`. Un placeholder es correcto; un dato inventado es un error grave.
 - **Bilingüe siempre.** Todo texto nuevo entra en `es.json` y `en.json` a la vez, o como campo `{ es, en }` en la colección. Nunca hardcodear texto visible en un `.astro`. Si no hay traducción, `[EN PENDIENTE]` en la clave inglesa: es preferible a dejar español en una página EN. Si agregás una ruta, agregá su equivalente en el otro idioma y actualizá `rutaLocalizada()`.
 - **No se traducen**: nombres propios, CONSULADO, handles, "Seres Migratorios", FAMILIA / RESILIENCIA / EXILIO, "¡Aguante la fotografía!" ni las frases manuscritas (la letra escaneada de cada persona).
 - **Voz**: directa, cálida, colectiva ("nosotros"), con voseo suave en los llamados a la acción ("Postulate", "Sumate"). Sin emojis ni solemnidad.
