@@ -1,0 +1,80 @@
+---
+/**
+ * Escudo — Venezuela's national coat of arms in azul-sello, with its arc of
+ * eight stars and stamp texture (design-system.md §7, item 5 "Escudo
+ * (`Escudo`)"; canvas spec at design/ds/canvas/Elementos.dc.html, block
+ * "ESCUDO"; reference implementation at design/ds/components/sellos/Escudo.jsx).
+ * A public-domain national symbol: design-system.md §9 (Do/Don't) and §7 item
+ * 5 are explicit that it is always a provided image, "nunca redibujado en
+ * CSS" — this component only ever renders an `<Image>`, never inline shapes.
+ *
+ * OBSERVACIÓN (backlog SM-017 acceptance criteria vs. current assets): the
+ * criteria ask for "SVG del escudo... no redibujado en CSS", but no SVG
+ * exists yet — design-system.md §10 ("Pendiente de producir para el sitio")
+ * and §13 ("Pendientes") both still list "SVG del Sello y del Escudo" as
+ * outstanding, and design/ds/canvas/Elementos.dc.html's ESCUDO block carries
+ * its own "PENDIENTE" callout asking for exactly that vectorization. Today
+ * the only asset is `src/assets/marca/escudo.png`, a PNG with real
+ * transparency extracted from the source PSD (design-system.md §5). This
+ * component takes `imagen: ImageMetadata` rather than a hardcoded import, so
+ * the day the SVG exists, only the caller's import changes — no code here
+ * does. Per diseno-web-indice.md's usage table this is used at 259px wide in
+ * the edition's `TitularPartido` slot (146px on mobile).
+ *
+ * `ancho` is the only sizing prop, matching Escudo.jsx: `<Image>` computes
+ * the height on its own from the source's aspect ratio (529:653 — the same
+ * ratio Escudo.jsx hardcodes — astro.build docs, "Dimensions... can be
+ * inferred automatically for local images in src/"), so this component never
+ * needs to know or repeat that ratio itself.
+ *
+ * `alt` defaults to the dictionary's `escudo.alt` (`t()`, i18n/utils.ts) but
+ * can be overridden per instance, same shape as `decorativo`'s escape hatch.
+ * `decorativo` renders `alt=""` plus `aria-hidden="true"` (CLAUDE.md,
+ * "Imágenes": "las decorativas, alt="" y aria-hidden"); verified empirically
+ * that `aria-hidden={decorativo || undefined}` omits the attribute outright
+ * on `false` rather than emitting the literal string `aria-hidden="false"`.
+ *
+ * This component's `interface Props` intentionally has no `idioma` prop (the
+ * tech lead's instructions give its exact shape): the default `alt` reads
+ * `Astro.currentLocale` directly, the same narrowing Base.astro uses.
+ *
+ * No position classes and no `rotacion` prop here — diseno-web-indice.md
+ * decision 13 makes placement (and, for Escudo, any container rotation) the
+ * caller's job; nothing in the approved pages rotates the Escudo itself.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import { IDIOMA_POR_DEFECTO, IDIOMAS, type Idioma, t } from '../i18n/utils.ts';
+
+interface Props {
+  /** The real scanned coat of arms (`src/assets/marca/escudo.png` today; a future SVG, unchanged here). */
+  imagen: ImageMetadata;
+  /** Rendered width in pixels; height follows the source's aspect ratio. Defaults to 340 (Escudo.jsx). */
+  ancho?: number;
+  /** Overrides the default dictionary alt (`escudo.alt`). */
+  alt?: string;
+  /** `true` hides the coat of arms from assistive tech (`aria-hidden`) instead of naming it. */
+  decorativo?: boolean;
+}
+
+const { imagen, ancho = 340, alt, decorativo = false } = Astro.props;
+
+/** Narrows `Astro.currentLocale`, typed `string | undefined`, to `Idioma` — same helper shape as Base.astro. */
+function esIdioma(valor: string | undefined): valor is Idioma {
+  return valor !== undefined && (IDIOMAS as readonly string[]).includes(valor);
+}
+
+const localeActual = Astro.currentLocale;
+const idiomaActual: Idioma = esIdioma(localeActual) ? localeActual : IDIOMA_POR_DEFECTO;
+
+const altTexto = alt ?? t(idiomaActual, 'escudo.alt');
+---
+
+<Image
+  src={imagen}
+  alt={decorativo ? '' : altTexto}
+  width={ancho}
+  class="block"
+  aria-hidden={decorativo || undefined}
+/>

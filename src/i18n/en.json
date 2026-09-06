@@ -158,5 +158,11 @@
   },
   "manifiesto": {
     "comoEmpezo": "How it began"
+  },
+  "sello": {
+    "alt": "Seres Migratorios seal, {ciudad}, {fecha}"
+  },
+  "escudo": {
+    "alt": "Venezuela's national coat of arms in stamp blue with an arc of eight stars"
   }
 }

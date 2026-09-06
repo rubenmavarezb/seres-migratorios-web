@@ -158,5 +158,11 @@
   },
   "manifiesto": {
     "comoEmpezo": "Cómo empezó"
+  },
+  "sello": {
+    "alt": "Sello Seres Migratorios, {ciudad}, {fecha}"
+  },
+  "escudo": {
+    "alt": "Escudo nacional de Venezuela en azul de sello con arco de ocho estrellas"
   }
 }
