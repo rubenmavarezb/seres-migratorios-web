@@ -1,25 +1,88 @@
 ---
-// Minimal root layout. SM-012 (Fase 1) will complete it with SEO, hreflang,
-// the analytics beacon, Nav and Pie — see PLAN.md §5 "Layouts".
+/**
+ * Root layout of every page (PLAN.md §5, "Layouts"): `<html lang>`, the
+ * `<head>`, the paper background with its grain and specks, `Nav` and `Pie`.
+ *
+ * NOTE: the metadata below is temporary ownership. SM-033 adds
+ * `internos/Seo.astro` as the single source of every metadata tag of the site
+ * (title, description, canonical, Open Graph and Twitter Card); when it lands,
+ * this head renders `<Seo … />` instead of writing the tags itself.
+ *
+ * Two other pieces PLAN.md §5 attributes to this layout are deliberately absent
+ * here: the `hreflang` pair (SM-049 / SM-050) and the Cloudflare Web Analytics
+ * beacon of PLAN.md §4.3, which lands with its token in SM-065.
+ */
+import type { ImageMetadata } from 'astro';
+
+import Nav from '../components/Nav.astro';
+import Pie from '../components/Pie.astro';
+import { IDIOMAS, IDIOMA_POR_DEFECTO, type Idioma, t } from '../i18n/utils.ts';
 import '../styles/global.css';
+
+// [OG DE MARCA PENDIENTE — SM-062] There is no brand Open Graph image yet:
+// `src/assets/marca/` does not exist. Until SM-062 exports the 1200×630 of
+// PLAN.md §10, a page without `imagenOg` emits no `og:image` at all rather than
+// pointing at a file that is not there. When it exists, uncomment the import
+// and make it the fallback of `imagenOg`:
+// import ogDeMarca from '../assets/marca/og-seres-migratorios.png';
 
 interface Props {
   titulo: string;
-  idioma?: 'es' | 'en';
+  descripcion: string;
+  imagenOg?: ImageMetadata;
+  idioma?: Idioma;
+  rutaActual?: string;
 }
 
-const { titulo, idioma } = Astro.props;
+const { titulo, descripcion, imagenOg, idioma: idiomaProp, rutaActual } = Astro.props;
+
+/** Narrows `Astro.currentLocale`, typed `string | undefined`, to `Idioma`. */
+function esIdioma(valor: string | undefined): valor is Idioma {
+  return valor !== undefined && (IDIOMAS as readonly string[]).includes(valor);
+}
+
+const localeActual = Astro.currentLocale;
+const idioma: Idioma = idiomaProp ?? (esIdioma(localeActual) ? localeActual : IDIOMA_POR_DEFECTO);
+
+const tituloSitio = t(idioma, 'seo.tituloSitio');
+// `titulo` + separator + site title, except when the page title already is the
+// site title: the home would otherwise read "Seres Migratorios · Seres
+// Migratorios".
+const tituloCompleto =
+  titulo === tituloSitio ? tituloSitio : `${titulo} ${t(idioma, 'seo.separador')} ${tituloSitio}`;
+
+// Open Graph needs an absolute URL; `Astro.site` is the `site` of
+// astro.config.mjs.
+const urlImagenOg = imagenOg === undefined ? undefined : new URL(imagenOg.src, Astro.site).href;
+
+// NOTE: no `theme-color`. Its `content` takes a literal color, and neither a
+// CSS variable nor a Tailwind token can be written into an HTML attribute; the
+// value would have to be the hexadecimal of `--color-papel`, which CLAUDE.md
+// forbids outside the `@theme` of src/styles/theme.css. Left out on purpose
+// until SM-033 decides how `Seo.astro` sources it.
 ---
 
-<html lang={idioma ?? 'es'}>
+<html lang={idioma}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <title>{titulo}</title>
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    {urlImagenOg !== undefined && <meta property="og:image" content={urlImagenOg} />}
   </head>
-  <body class="papel">
-    <slot />
+  <body class="papel flex min-h-screen flex-col">
+    <a
+      href="#contenido"
+      class="absolute -top-16 left-6 z-50 inline-flex min-h-11 items-center border-2 border-tinta bg-papel-puro px-6 py-3 font-mono text-etiqueta font-bold uppercase text-tinta focus:top-2 focus:outline-2 focus:outline-offset-2 focus:outline-azul-sello"
+      >{t(idioma, 'comun.irAlContenido')}</a
+    >
+    <Nav idioma={idioma} rutaActual={rutaActual} />
+    <main id="contenido" class="flex-1"><slot /></main>
+    <Pie idioma={idioma} />
   </body>
 </html>

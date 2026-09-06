@@ -1,0 +1,87 @@
+---
+/**
+ * Top bar of every page (design system §7.15): the text logo on the left and
+ * the five section links in mono 700 uppercase on the right, on `papel-puro`
+ * between a 2 px `tinta` rule above and a 1 px `linea` rule below.
+ *
+ * NOTE: this is the SM-012 skeleton, already carrying the definitive props of
+ * PLAN.md §5. SM-027 completes it with the three pieces missing on purpose: the
+ * full-screen mobile menu (`aria-expanded`, focus moved to the first link), the
+ * `ES / EN` selector as a small `CajaNombre`, and the visual treatment of the
+ * active link — the 2 px `tinta` underline of the approved design, which today
+ * is only announced with `aria-current="page"`.
+ *
+ * Until that mobile menu exists the five links stay inline and wrap on a narrow
+ * viewport, so the bar is given the design height (80 px desktop, 68 px mobile)
+ * as a floor with `min-h-*` instead of a fixed height that would clip them. The
+ * vertical padding is what keeps the logo whole: `display` runs at
+ * `line-height: 0.85`, so its glyphs are taller than their own line box and a
+ * bar with no padding cuts their tops off against the top of the viewport. On
+ * desktop it is 14 px, the value that leaves the bar exactly on the 80 px of
+ * the approved design once the two rules are counted in.
+ */
+import {
+  type ClaveDeRuta,
+  type ClaveDeTexto,
+  type Idioma,
+  rutaBase,
+  rutaLocalizada,
+  t,
+} from '../i18n/utils.ts';
+
+interface Props {
+  idioma: Idioma;
+  rutaActual?: string;
+}
+
+const { idioma, rutaActual } = Astro.props;
+
+/**
+ * The five links of the approved design, in its order. The Spanish route is the
+ * key of the row in `RUTAS`; `rutaLocalizada()` turns it into the route of
+ * `idioma`, so the link never has to be spelled out twice.
+ */
+const ENLACES = [
+  { clave: 'manifiesto', texto: 'nav.manifiesto', ruta: '/manifiesto' },
+  { clave: 'artistas', texto: 'nav.artistas', ruta: '/artistas' },
+  { clave: 'ediciones', texto: 'nav.ediciones', ruta: '/ediciones' },
+  { clave: 'convocatoria', texto: 'nav.convocatoria', ruta: '/convocatoria' },
+  { clave: 'apoyar', texto: 'nav.apoyar', ruta: '/apoyar' },
+] as const satisfies readonly { clave: ClaveDeRuta; texto: ClaveDeTexto; ruta: string }[];
+
+/**
+ * Route key of the page being rendered, matched through `rutaBase()` so the
+ * comparison holds in both languages without string-matching localized paths.
+ */
+const claveActual = rutaActual === undefined ? undefined : rutaBase(rutaActual)?.clave;
+
+/** "Seres Migratorios" is the brand name: same string in both dictionaries, never translated. */
+const marca = t(idioma, 'seo.tituloSitio');
+---
+
+<header
+  class="flex min-h-17 flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t-2 border-b border-t-tinta border-b-linea bg-papel-puro px-6 py-3 md:min-h-20 md:px-12 md:py-3.5"
+>
+  <a
+    href={rutaLocalizada('/', idioma)}
+    class="font-display text-display-md text-tinta uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+    >{marca}</a
+  >
+  <nav aria-label={t(idioma, 'nav.menu')}>
+    <ul class="m-0 flex list-none flex-wrap items-center gap-x-6 p-0">
+      {
+        ENLACES.map((enlace) => (
+          <li>
+            <a
+              href={rutaLocalizada(enlace.ruta, idioma)}
+              aria-current={enlace.clave === claveActual ? 'page' : undefined}
+              class="font-mono text-etiqueta text-tinta inline-flex min-h-11 items-center py-3 font-bold uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+            >
+              {t(idioma, enlace.texto)}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>

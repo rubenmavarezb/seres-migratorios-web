@@ -1,0 +1,92 @@
+---
+/**
+ * Footer of every page (design system §7.16). It is the same on the nine pages
+ * of the approved design and has no variants.
+ *
+ * NOTE: this is the SM-012 skeleton, already carrying the definitive props of
+ * PLAN.md §5. SM-028 completes it by composing the pieces the approved design
+ * puts here, in this fixed order: `FranjaAliados` (SM-023) → `HiloTricolor`
+ * (SM-017) → `Sello` (SM-016) → the contact block below → the handwritten
+ * closing line. None of those three components exists yet, so the `aliados`
+ * prop is accepted and not rendered.
+ */
+import type { ImageMetadata } from 'astro';
+
+import { type Idioma, t } from '../i18n/utils.ts';
+
+/**
+ * One partner logo of the `FranjaAliados`. Shape taken from the `aliados` array
+ * of the approved design's `renderVals()` (`src` / `alt` / `href`), with the
+ * image as `ImageMetadata` because every image goes through `astro:assets`.
+ * Provisional: SM-023 and SM-028 own the final shape, which will come from the
+ * `aliados` content collection (SM-030).
+ */
+interface Aliado {
+  imagen: ImageMetadata;
+  alt: string;
+  href?: string;
+}
+
+interface Props {
+  idioma: Idioma;
+  aliados?: readonly Aliado[];
+}
+
+// `aliados` is intentionally not destructured: SM-028 renders it.
+const { idioma } = Astro.props;
+
+/**
+ * A `PUBLIC_*` variable of PLAN.md §14 as a string. Vite types `import.meta.env`
+ * with an `any` index signature, so the value is narrowed here instead of
+ * spreading `any` through the component. An empty value falls back too, the way
+ * astro.config.mjs treats `PUBLIC_SITE_URL`.
+ */
+function variablePublica(valor: unknown, respaldo: string): string {
+  return typeof valor === 'string' && valor !== '' ? valor : respaldo;
+}
+
+// The collective has no address yet: the fallback is the visible placeholder of
+// .env.example, and the value is plain text rather than a `mailto:` so an
+// unresolved placeholder never becomes a broken link.
+const email = variablePublica(import.meta.env.PUBLIC_EMAIL_CONTACTO, '[EMAIL DEL COLECTIVO]');
+
+// Unlike the email, PLAN.md §14 and .env.example carry the real Instagram URL,
+// so the fallback is that value and not a placeholder.
+const instagram = variablePublica(
+  import.meta.env.PUBLIC_INSTAGRAM_URL,
+  'https://www.instagram.com/seresmigratorios/'
+);
+
+/** Official handle (design system §13, v1.1). A handle is never translated. */
+const HANDLE = '@seresmigratorios';
+---
+
+<footer class="border-t-2 border-t-tinta bg-papel-puro px-6 py-12 md:px-12 md:py-16">
+  <div class="flex flex-wrap items-start justify-between gap-8">
+    <div class="grid gap-6 md:grid-cols-2 md:gap-x-12">
+      <div>
+        <p class="font-mono text-etiqueta m-0 font-bold uppercase">
+          {t(idioma, 'pie.contacto.email')}
+        </p>
+        <p class="font-mono text-etiqueta text-tinta-suave m-0 break-words">{email}</p>
+      </div>
+      <div>
+        <p class="font-mono text-etiqueta m-0 font-bold uppercase">
+          {t(idioma, 'pie.contacto.instagram')}
+        </p>
+        <a
+          href={instagram}
+          class="font-mono text-etiqueta text-azul-sello inline-flex min-h-11 items-center break-words focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+          >{HANDLE}</a
+        >
+      </div>
+    </div>
+    <p
+      class="font-manuscrita text-manuscrita text-azul-marcador m-0 inline-block"
+      data-rotacion="-2"
+      style="transform: rotate(-2deg);"
+    >
+      {t(idioma, 'pie.aguante')}
+    </p>
+  </div>
+</footer>
