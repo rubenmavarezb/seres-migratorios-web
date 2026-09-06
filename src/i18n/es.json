@@ -1,0 +1,15 @@
+{
+  "comun": {
+    "irAlContenido": "Ir al contenido"
+  },
+  "nav": {
+    "manifiesto": "Manifiesto",
+    "artistas": "Artistas",
+    "ediciones": "Ediciones",
+    "convocatoria": "Convocatoria",
+    "apoyar": "Apoyar",
+    "idioma": "Idioma",
+    "abrirMenu": "Abrir menú",
+    "cerrarMenu": "Cerrar menú"
+  }
+}

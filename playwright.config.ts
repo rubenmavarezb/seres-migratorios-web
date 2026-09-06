@@ -10,9 +10,11 @@ import { defineConfig, devices } from '@playwright/test';
 declare const process: { env: { CI?: string } };
 
 // Minimal Playwright config for SM-007. Tests themselves land in SM-059;
-// `tests/` only carries a .gitkeep for now so this config has somewhere to point.
+// `tests/e2e/` only carries a .gitkeep for now so this config has somewhere to
+// point. The directory is explicit (SM-045) so the runner never picks up the
+// Node unit tests that live in `tests/unitarias/`.
 export default defineConfig({
-  testDir: 'tests',
+  testDir: 'tests/e2e',
   use: {
     baseURL: 'http://localhost:4321',
   },
