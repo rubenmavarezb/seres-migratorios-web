@@ -1,0 +1,23 @@
+---
+// Minimal root layout. SM-012 (Fase 1) will complete it with SEO, hreflang,
+// the analytics beacon, Nav and Pie — see PLAN.md §5 "Layouts".
+import '../styles/global.css';
+
+interface Props {
+  titulo: string;
+  idioma?: 'es' | 'en';
+}
+
+const { titulo, idioma } = Astro.props;
+---
+
+<html lang={idioma ?? 'es'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+  </head>
+  <body class="papel">
+    <slot />
+  </body>
+</html>
