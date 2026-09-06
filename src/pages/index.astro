@@ -1,0 +1,24 @@
+---
+// SM-003 token smoke test, extended in SM-005 with the i18n smoke test. No
+// dictionaries exist yet in Fase 0, so this page carries the bare minimum of
+// markup needed to prove the design-system tokens resolve and that `/` is
+// served as the unprefixed default locale; it is replaced by the real home
+// page in a later phase (SM-012 onward).
+import Base from '../layouts/Base.astro';
+---
+
+<Base titulo="Seres Migratorios" idioma="es">
+  <main data-locale={Astro.currentLocale}>
+    <section class="bg-papel text-tinta border-2 border-azul-sello shadow-foto p-6">
+      bg-papel text-tinta border-azul-sello shadow-foto
+    </section>
+
+    <h1 class="font-display text-display-xl uppercase">Seres Migratorios</h1>
+
+    <p class="font-mono">font-mono</p>
+
+    <div class="rounded-lg border-2 border-tinta p-4">rounded-lg</div>
+
+    <div class="hilo-tricolor"></div>
+  </main>
+</Base>
