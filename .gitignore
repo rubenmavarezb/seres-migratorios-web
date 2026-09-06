@@ -1,0 +1,24 @@
+# build
+dist/
+.astro/
+.netlify/
+
+# dependencias
+node_modules/
+
+# entorno (los valores reales viven en el panel de Netlify)
+.env
+.env.*
+!.env.example
+
+# tests
+test-results/
+playwright-report/
+
+# sistema y editores
+.DS_Store
+*.log
+npm-debug.log*
+.vscode/*
+!.vscode/extensions.json
+.idea/
