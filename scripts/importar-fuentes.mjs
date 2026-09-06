@@ -53,30 +53,41 @@ if (!existsSync(ORIGEN)) {
   process.exit(2);
 }
 
-/** Binary assets referenced by the approved design that are not in the brand folder yet. */
+/**
+ * Binary assets referenced by the approved design (any extension is accepted: the design
+ * names them .png, the repo keeps full-resolution JPEG versions of the photographs).
+ */
 const ESPERADOS_DESIGN = [
-  'obra/ruben-mavarez-web-01.png',
-  'obra/ruben-mavarez-web-02.png',
-  'obra/ruben-mavarez-web-03.png',
-  'obra/ruben-mavarez-web-04.png',
-  'obra/ruben-mavarez-web-05.png',
-  'obra/ruben-mavarez-web-06.png',
-  'obra/ruben-mavarez-web-07.png',
-  'obra/ruben-mavarez-web-08.png',
-  'retratos/ruben-mavarez.png',
-  'piezas/post-refugio.jpg',
+  'obra/ruben-mavarez-web-01',
+  'obra/ruben-mavarez-web-02',
+  'obra/ruben-mavarez-web-03',
+  'obra/ruben-mavarez-web-04',
+  'obra/ruben-mavarez-web-05',
+  'obra/ruben-mavarez-web-06',
+  'obra/ruben-mavarez-web-07',
+  'obra/ruben-mavarez-web-08',
+  'retratos/ruben-mavarez',
 ];
+
+/** Files above this size are skipped with a warning: photographs go in as JPEG, not multi-MB PNG. */
+const MAX_BYTES = 1_500_000;
 
 /** design/assets relative path -> source file, filled by the "design" step (also used by "assets" in dry-run). */
 const origenDeAsset = new Map();
 
-const resumen = { copiados: [], actualizados: [], iguales: 0, faltantes: [] };
+const resumen = { copiados: [], actualizados: [], iguales: 0, faltantes: [], omitidos: [] };
 
 const hash = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 
 function copiar(desde, hacia) {
   if (!existsSync(desde)) {
     resumen.faltantes.push(relative(ORIGEN, desde));
+    return;
+  }
+  if (statSync(desde).size > MAX_BYTES) {
+    resumen.omitidos.push(
+      `${relative(ORIGEN, desde)} (${(statSync(desde).size / 1e6).toFixed(1)} MB: convertir a JPEG antes de importar)`
+    );
     return;
   }
   const existe = existsSync(hacia);
@@ -158,9 +169,12 @@ function pasoDesign() {
     join(DESTINO, 'design', 'diseno-web-indice.md')
   );
   for (const rel of ESPERADOS_DESIGN) {
-    if (!existsSync(join(destinoAssets, rel)))
+    const existe = ['.jpg', '.jpeg', '.png', '.webp'].some((ext) =>
+      existsSync(join(destinoAssets, rel + ext))
+    );
+    if (!existe)
       resumen.faltantes.push(
-        `design/assets/${rel} (exportar desde Claude Design a assets-fuente/_para-claude-design/assets/${rel})`
+        `design/assets/${rel}.* (exportar desde Claude Design a assets-fuente/_para-claude-design/assets/${rel}.png)`
       );
   }
 }
@@ -236,5 +250,6 @@ const lista = (titulo, items) => {
 lista(DRY ? 'Se copiarían' : 'Copiados', resumen.copiados);
 lista(DRY ? 'Se actualizarían' : 'Actualizados', resumen.actualizados);
 console.log(`Sin cambios: ${resumen.iguales}\n`);
+lista('OMITIDOS por tamaño', resumen.omitidos);
 lista('FALTANTES en el origen', resumen.faltantes);
 process.exit(0);
