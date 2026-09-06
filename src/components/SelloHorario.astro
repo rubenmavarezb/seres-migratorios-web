@@ -1,0 +1,175 @@
+---
+/**
+ * SelloHorario — canonical stamp of hours (design-system.md §7, item 9
+ * "Sello de horario (`SelloHorario`)"; scale/pattern note in §4, "Patrón
+ * ETIQUETA:/valor — firma tipográfica de BloqueFicha, FichaFotografo y
+ * SelloHorario"; radio-0 exception in §5 and §7 item 9; canvas spec at
+ * design/ds/canvas/Elementos.dc.html, block "SELLOHORARIO"; reference
+ * implementation at design/ds/components/sellos/SelloHorario.jsx).
+ *
+ * Two circled numbers with a 2px ink border (`⑩ AM` `⑦ PM`) plus a short date
+ * in azul-sello with `.sello-grano` texture — together with `Sello`, the only
+ * other exception to the system's radio-0 rule (design-system.md §5, §7.9).
+ *
+ * Renders each of its two parts — the hours row and the date — as markup by
+ * default, or as an `<Image>` when the matching prop (`imagen` / `imagenFecha`)
+ * is supplied; the two are independent, matching the reference JSX's separate
+ * `src` / `srcFecha`. Sizes and gaps scale off `tamano` (JSX default 64) the
+ * same way the reference does: circle diameter = `tamano`, number = 53% of
+ * `tamano`, "AM"/"PM" = 60%, date = 95% — all computed inline because they are
+ * geometry derived from a caller-supplied number, not a color (CLAUDE.md's
+ * token rule governs color, not size); every color and font family still
+ * comes from a Tailwind token (`text-tinta`, `text-azul-sello`, `font-display`).
+ *
+ * Accessibility (this ticket's acceptance criterion: "se lee como '10 AM a 7
+ * PM' en lector de pantalla"): exactly one node in the whole component ever
+ * carries the accessible name, so nothing is ever announced twice —
+ * - No image prop given: the outer `<div role="img">` carries
+ *   `aria-label={lectura}` (`t(idioma, 'selloHorario.lectura')`, interpolated
+ *   with `desde`/`hasta`/`fechaCorta` — the word "a"/"to" lives in that
+ *   dictionary string, not hardcoded here); both inner parts are markup and
+ *   both get `aria-hidden="true"`.
+ * - `imagen` given: that `<Image>` gets `alt={lectura}` (tech lead
+ *   instructions: "Con imágenes: <Image> con ese mismo texto en el alt");
+ *   everything else (the date, whether image or markup) is `aria-hidden`
+ *   with an empty `alt` if it is an image, since the hours image's alt
+ *   already includes the date.
+ * - Only `imagenFecha` given (no `imagen`): symmetric — that `<Image>` carries
+ *   `alt={lectura}`, the hours markup is `aria-hidden`.
+ *
+ * Placement (grid position, margins, container rotation) is the caller's
+ * job — this component accepts no position classes, per
+ * diseno-web-indice.md decision 13. No rotation prop either: unlike `Sello`,
+ * neither the JSX reference nor the canvas gives `SelloHorario` a tilt.
+ *
+ * NOTE (diseno-web-indice.md decision 10): the approved edición 01 web pages
+ * do NOT use SelloHorario — its hours go through `BloqueFicha` instead. This
+ * component exists for the kit and future pieces (design-system.md §7.9).
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import { t, type Idioma } from '../i18n/utils.ts';
+
+interface Props {
+  /** Hour shown in the left circle, e.g. "10" (edición 01: `selloHorario.desde`). */
+  desde: string;
+  /** Hour shown in the right circle, e.g. "7" (edición 01: `selloHorario.hasta`). */
+  hasta: string;
+  /** Short date under the hours, e.g. "8.8.26" (edición 01: `selloHorario.fechaCorta`). */
+  fechaCorta: string;
+  /** Circle diameter in pixels; every other size scales off it. Defaults to 64 (SelloHorario.jsx). */
+  tamano?: number;
+  /** `true` (default): hours row above the date. `false`: side by side. */
+  apilado?: boolean;
+  /** Pre-rendered hours graphic (e.g. `sello-horario.png`); replaces the circle markup. */
+  imagen?: ImageMetadata;
+  /** Pre-rendered date graphic (e.g. `fecha-corta-8-8-26.png`); replaces the date markup. */
+  imagenFecha?: ImageMetadata;
+  idioma?: Idioma;
+}
+
+const {
+  desde,
+  hasta,
+  fechaCorta,
+  tamano = 64,
+  apilado = true,
+  imagen,
+  imagenFecha,
+  idioma,
+} = Astro.props;
+
+// Falls back to Astro.currentLocale, same narrowing as BloqueFicha.astro.
+const idiomaActual: Idioma = idioma ?? (Astro.currentLocale === 'en' ? 'en' : 'es');
+
+/**
+ * Fills `{clave}` placeholders in a dictionary string. A function replacer
+ * (not a replacement-string second argument) is used deliberately: a raw
+ * string replacer reinterprets `$&`/`$1`-like sequences in the *replacement*
+ * value, and `desde`/`hasta`/`fechaCorta` are free-text content this
+ * component does not control.
+ */
+function interpolar(plantilla: string, valores: Record<string, string>): string {
+  return plantilla.replace(/\{(\w+)\}/g, (coincidencia, clave: string) =>
+    Object.prototype.hasOwnProperty.call(valores, clave) ? valores[clave] : coincidencia
+  );
+}
+
+// design-system.md §4: "10 AM a 7 PM · 8.8.26" — one interpolated dictionary
+// string so the "a"/"to" word and the AM/PM order come from es.json/en.json,
+// never hardcoded here.
+const lectura = interpolar(t(idiomaActual, 'selloHorario.lectura'), {
+  desde,
+  hasta,
+  fechaCorta,
+});
+const etiquetaAm = t(idiomaActual, 'selloHorario.am');
+const etiquetaPm = t(idiomaActual, 'selloHorario.pm');
+
+const hayImagen = imagen !== undefined || imagenFecha !== undefined;
+// The accessible name lives on exactly one node: the first <Image> rendered
+// when any image prop is present (hours before date, matching the JSX
+// reference's render order), or the role="img" wrapper otherwise.
+const horarioEsAccesible = imagen !== undefined;
+const fechaEsAccesible = imagen === undefined && imagenFecha !== undefined;
+
+const estiloContenedor = `display:flex;flex-direction:${apilado ? 'column' : 'row'};align-items:${apilado ? 'flex-start' : 'center'};gap:${tamano * 0.28}px;`;
+const estiloFilaHorario = `display:flex;align-items:center;gap:${tamano * 0.22}px;`;
+const estiloCirculo = `width:${tamano}px;height:${tamano}px;font-size:${tamano * 0.53}px;`;
+const estiloEtiquetaAmPm = `font-size:${tamano * 0.6}px;`;
+const estiloFecha = `font-size:${tamano * 0.95}px;letter-spacing:0.06em;`;
+---
+
+<div
+  style={estiloContenedor}
+  role={hayImagen ? undefined : 'img'}
+  aria-label={hayImagen ? undefined : lectura}
+>
+  {
+    imagen ? (
+      <Image
+        src={imagen}
+        alt={horarioEsAccesible ? lectura : ''}
+        aria-hidden={horarioEsAccesible ? undefined : 'true'}
+        style={`display:block;height:${tamano * 0.9}px;width:auto;`}
+      />
+    ) : (
+      <div style={estiloFilaHorario} aria-hidden="true">
+        <span
+          class="border-tinta text-tinta box-border flex shrink-0 items-center justify-center rounded-full border-2 font-display"
+          style={estiloCirculo}
+        >
+          {desde}
+        </span>
+        <span class="text-tinta font-display uppercase" style={estiloEtiquetaAmPm}>
+          {etiquetaAm}
+        </span>
+        <span
+          class="border-tinta text-tinta box-border flex shrink-0 items-center justify-center rounded-full border-2 font-display"
+          style={`${estiloCirculo}margin-left:${tamano * 0.2}px;`}
+        >
+          {hasta}
+        </span>
+        <span class="text-tinta font-display uppercase" style={estiloEtiquetaAmPm}>
+          {etiquetaPm}
+        </span>
+      </div>
+    )
+  }
+  {
+    imagenFecha ? (
+      <Image
+        src={imagenFecha}
+        alt={fechaEsAccesible ? lectura : ''}
+        aria-hidden={fechaEsAccesible ? undefined : 'true'}
+        class="sello-grano"
+        style={`display:block;height:${tamano * 0.85}px;width:auto;`}
+      />
+    ) : (
+      <div class="sello-grano text-azul-sello font-display" aria-hidden="true" style={estiloFecha}>
+        {fechaCorta}
+      </div>
+    )
+  }
+</div>

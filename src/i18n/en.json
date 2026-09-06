@@ -164,5 +164,10 @@
   },
   "escudo": {
     "alt": "Venezuela's national coat of arms in stamp blue with an arc of eight stars"
+  },
+  "selloHorario": {
+    "lectura": "{desde} AM to {hasta} PM · {fechaCorta}",
+    "am": "AM",
+    "pm": "PM"
   }
 }

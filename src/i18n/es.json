@@ -164,5 +164,10 @@
   },
   "escudo": {
     "alt": "Escudo nacional de Venezuela en azul de sello con arco de ocho estrellas"
+  },
+  "selloHorario": {
+    "lectura": "{desde} AM a {hasta} PM · {fechaCorta}",
+    "am": "AM",
+    "pm": "PM"
   }
 }
