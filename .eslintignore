@@ -1,7 +1,0 @@
-dist/
-.astro/
-node_modules/
-design/
-docs/capturas/
-playwright-report/
-test-results/
