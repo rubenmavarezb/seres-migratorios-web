@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<!-- ===== BASE COMPARTIDA DEL CANVAS — pegar ESTE bloque completo dentro de <helmet> ... </helmet> de CADA artboard, sin modificarlo. Agregá tus estilos propios DESPUÉS, en otro <style>. ===== -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gochi+Hand&display=swap">
+<style>
+  :root {
+    --papel: #FBFAF7; --papel-puro: #FFFFFF; --tinta: #0B0B0B; --tinta-suave: #3A3A3A; --grafito: #6B6B6B; --linea: #D9D6CF;
+    --azul-sello: #1B4BAF; --azul-marcador: #0B2FCD; --azul-profundo: #0A2A78; --azul-tinta-agua: #E4EAF8;
+    --tricolor-amarillo: #F2C230; --tricolor-azul: #0033A0; --tricolor-rojo: #E0393E;
+    --display: "Anton", Impact, "Arial Narrow Bold", sans-serif;
+    --mono: "Courier Prime", "Courier New", Courier, monospace;
+    --manuscrita: "Gochi Hand", "Comic Sans MS", cursive;
+  }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font-family: var(--mono); -webkit-font-smoothing: antialiased; }
+  a { color: var(--azul-sello); text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { color: var(--azul-marcador); }
+  /* Papel con grano + motas: aplicar la clase al elemento raíz del artboard (necesita position:relative). */
+  .papel { position: relative; background: var(--papel); isolation: isolate; }
+  .papel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .07; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"); }
+  .papel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><g fill='%230B0B0B'><circle cx='23' cy='41' r='1.1'/><circle cx='131' cy='17' r='.8'/><circle cx='202' cy='96' r='1.3'/><circle cx='377' cy='58' r='.9'/><circle cx='88' cy='188' r='1'/><circle cx='301' cy='161' r='.7'/><circle cx='159' cy='266' r='1.2'/><circle cx='352' cy='289' r='.8'/><circle cx='47' cy='343' r='.9'/><circle cx='238' cy='372' r='1.1'/><circle cx='399' cy='401' r='.7'/><circle cx='118' cy='402' r='.9'/><circle cx='279' cy='238' r='.6'/><circle cx='11' cy='229' r='.8'/></g></svg>"); }
+  .papel > * { position: relative; z-index: 1; }
+  /* Tinta de sello: textura "mal entintada" para sellos, escudo, palabras clave. Aplicar sobre elementos azules. */
+  .sello-grano { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>"); -webkit-mask-size: 200px 200px; mask-size: 200px 200px; }
+  /* Tipos */
+  .display { font-family: var(--display); font-weight: 400; text-transform: uppercase; line-height: .85; letter-spacing: -.01em; }
+  .mono { font-family: var(--mono); }
+  .etiqueta { font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  .manuscrita { font-family: var(--manuscrita); color: var(--azul-marcador); line-height: 1.05; }
+  /* Foto pegada */
+  .foto-pegada { background: var(--papel-puro); padding: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 6px 14px rgba(0,0,0,.10); display: inline-block; }
+  .foto-pegada img { display: block; width: 100%; height: auto; }
+  /* Caja de nombre / botón */
+  .caja-nombre { font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; border: 2px solid var(--tinta); background: var(--papel-puro); padding: 12px 24px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; box-sizing: border-box; }
+  .hilo-tricolor { height: 3px; width: 100%; background: linear-gradient(90deg, var(--tricolor-amarillo) 0 33.34%, var(--tricolor-azul) 33.34% 66.67%, var(--tricolor-rojo) 66.67% 100%); }
+</style>
+<!-- ===== FIN BASE COMPARTIDA ===== -->
+<style>
+  /* Específico de la lámina 01: texto dentro del SVG del Sello. */
+  .sello-texto { font-family: var(--mono); font-weight: 700; fill: var(--azul-sello); }
+</style>
+</helmet>
+<div class="papel" style="width: 1440px; min-height: 1700px; box-sizing: border-box; padding: 64px; background: var(--papel); display: flex; flex-direction: column; gap: 40px; justify-content: space-between;">
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; border-bottom: 1px solid var(--linea); padding-bottom: 10px;">
+    <div class="etiqueta" style="font-size: 12px; color: var(--grafito);">SERES MIGRATORIOS — SISTEMA DE DISEÑO V1</div>
+    <div class="etiqueta" style="font-size: 12px; color: var(--grafito);">LÁMINA 01 · PORTADA</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 0px;">
+    <div class="display" style="font-size: 260px; text-align: center; color: var(--tinta);">SERES</div>
+    <div style="position: relative; height: 180px;">
+      <div class="manuscrita" style="position: absolute; left: 96px; top: -26px; font-size: 64px; color: var(--azul-marcador); transform: rotate(-3deg);">sistema de diseño v1</div>
+      <svg viewBox="0 0 190 190" width="200" height="200" class="sello-grano" style="position: absolute; right: 24px; top: -14px; transform: rotate(-12deg); overflow: visible;">
+        <defs>
+          <path id="arco-sello-01" d="M 16,95 A 79,79 0 0 1 174,95" fill="none"></path>
+        </defs>
+        <circle cx="95" cy="95" r="88" fill="none" stroke="#1B4BAF" stroke-width="3"></circle>
+        <circle cx="95" cy="95" r="70" fill="none" stroke="#1B4BAF" stroke-width="1.5"></circle>
+        <text class="sello-texto" font-size="13" letter-spacing="3.2" text-anchor="middle">
+          <textPath href="#arco-sello-01" startOffset="50%">SERES MIGRATORIOS</textPath>
+        </text>
+        <text class="sello-texto" x="95" y="90" font-size="13" letter-spacing="1" text-anchor="middle">BUENOS AIRES</text>
+        <text class="sello-texto" x="95" y="112" font-size="13" letter-spacing="1" text-anchor="middle">08 AGO 2026</text>
+        <g fill="#1B4BAF">
+          <polygon points="0,-7 1.57,-2.16 6.66,-2.16 2.54,0.83 4.11,5.66 0,2.67 -4.11,5.66 -2.54,0.83 -6.66,-2.16 -1.57,-2.16" transform="translate(69,140)"></polygon>
+          <polygon points="0,-7 1.57,-2.16 6.66,-2.16 2.54,0.83 4.11,5.66 0,2.67 -4.11,5.66 -2.54,0.83 -6.66,-2.16 -1.57,-2.16" transform="translate(95,140)"></polygon>
+          <polygon points="0,-7 1.57,-2.16 6.66,-2.16 2.54,0.83 4.11,5.66 0,2.67 -4.11,5.66 -2.54,0.83 -6.66,-2.16 -1.57,-2.16" transform="translate(121,140)"></polygon>
+        </g>
+      </svg>
+    </div>
+    <div class="display" style="font-size: 260px; text-align: center; color: var(--tinta);">MIGRATORIOS</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; border-top: 2px solid var(--tinta); border-bottom: 1px solid var(--linea); padding: 18px 0px;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div class="etiqueta" style="font-size: 14px; color: var(--tinta);">FECHA:</div>
+      <div class="mono" style="font-size: 20px; color: var(--tinta);">05.09.2026</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div class="etiqueta" style="font-size: 14px; color: var(--tinta);">VERSIÓN:</div>
+      <div class="mono" style="font-size: 20px; color: var(--tinta);">V1</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div class="etiqueta" style="font-size: 14px; color: var(--tinta);">LUGAR:</div>
+      <div class="mono" style="font-size: 20px; color: var(--tinta);">BUENOS AIRES, ARG</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    <div class="etiqueta" style="font-size: 12px; color: var(--grafito);">CINCO PRINCIPIOS</div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 64px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="etiqueta" style="font-size: 16px; color: var(--tinta);">01 · EXPEDIENTE INTERVENIDO</div>
+        <div class="mono" style="font-size: 15px; line-height: 1.5; color: var(--tinta-suave);">Datos duros en mono y encima la mano que los interviene.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="etiqueta" style="font-size: 16px; color: var(--tinta);">02 · BICOLOR SOBRE PAPEL</div>
+        <div class="mono" style="font-size: 15px; line-height: 1.5; color: var(--tinta-suave);">Tinta y azul de sello. El tricolor solo como hilo de 3 px.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="etiqueta" style="font-size: 16px; color: var(--tinta);">03 · LA MANO VA ENCIMA</div>
+        <div class="mono" style="font-size: 15px; line-height: 1.5; color: var(--tinta-suave);">Lo manuscrito se superpone al titular, nunca se acomoda al lado.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="etiqueta" style="font-size: 16px; color: var(--tinta);">04 · RADIO CERO</div>
+        <div class="mono" style="font-size: 15px; line-height: 1.5; color: var(--tinta-suave);">Radio 0 en todo. Solo el sello y los números en círculo son curvos.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="etiqueta" style="font-size: 16px; color: var(--tinta);">05 · EL COLECTIVO ANTES QUE LA FIRMA</div>
+        <div class="mono" style="font-size: 15px; line-height: 1.5; color: var(--tinta-suave);">Cajas de nombre iguales en aparejo: nadie ocupa más lugar.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="etiqueta" style="font-size: 12px; color: var(--grafito);">ÍNDICE DE LÁMINAS · APAREJO DE CAJANOMBRE</div>
+    <div style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">01 PORTADA</div>
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">02 COLOR</div>
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">03 TIPOGRAFÍA</div>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">04 ELEMENTOS</div>
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">05 COMPONENTES</div>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">06 FICHA DE FOTÓGRAFO</div>
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">07 HOME DESKTOP</div>
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">08 HOME MOBILE</div>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <div class="caja-nombre" style="font-size: 14px; min-width: 236px;">09 REFERENCIAS</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px;">
+    <div class="etiqueta" style="font-size: 12px; color: var(--grafito);">FRANJAALIADOS · EDICIÓN 01</div>
+    <div style="display: flex; align-items: center; gap: 40px;">
+      <img src="logos-aliados.jpg" alt="Franja de logos de aliados: CONSULADO Custom &amp; Craft, logo tricolor de manos, infiltrado y CCC" style="height: 40px; width: auto; display: block;">
+      <div class="mono" style="font-size: 12px; line-height: 1.5; color: var(--grafito);">Altura uniforme 40 px, separación 40 px, monocromo en azul-sello salvo el tricolor de manos. [CONFIRMAR: logo tricolor de manos y CCC]</div>
+    </div>
+    <div class="hilo-tricolor" style="height: 3px; width: 100%;"></div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

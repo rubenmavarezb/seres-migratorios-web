@@ -1,0 +1,245 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<!-- ===== BASE COMPARTIDA DEL CANVAS — pegar ESTE bloque completo dentro de <helmet> ... </helmet> de CADA artboard, sin modificarlo. Agregá tus estilos propios DESPUÉS, en otro <style>. ===== -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gochi+Hand&display=swap">
+<style>
+  :root {
+    --papel: #FBFAF7; --papel-puro: #FFFFFF; --tinta: #0B0B0B; --tinta-suave: #3A3A3A; --grafito: #6B6B6B; --linea: #D9D6CF;
+    --azul-sello: #1B4BAF; --azul-marcador: #0B2FCD; --azul-profundo: #0A2A78; --azul-tinta-agua: #E4EAF8;
+    --tricolor-amarillo: #F2C230; --tricolor-azul: #0033A0; --tricolor-rojo: #E0393E;
+    --display: "Anton", Impact, "Arial Narrow Bold", sans-serif;
+    --mono: "Courier Prime", "Courier New", Courier, monospace;
+    --manuscrita: "Gochi Hand", "Comic Sans MS", cursive;
+  }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font-family: var(--mono); -webkit-font-smoothing: antialiased; }
+  a { color: var(--azul-sello); text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { color: var(--azul-marcador); }
+  /* Papel con grano + motas: aplicar la clase al elemento raíz del artboard (necesita position:relative). */
+  .papel { position: relative; background: var(--papel); isolation: isolate; }
+  .papel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .07; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"); }
+  .papel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><g fill='%230B0B0B'><circle cx='23' cy='41' r='1.1'/><circle cx='131' cy='17' r='.8'/><circle cx='202' cy='96' r='1.3'/><circle cx='377' cy='58' r='.9'/><circle cx='88' cy='188' r='1'/><circle cx='301' cy='161' r='.7'/><circle cx='159' cy='266' r='1.2'/><circle cx='352' cy='289' r='.8'/><circle cx='47' cy='343' r='.9'/><circle cx='238' cy='372' r='1.1'/><circle cx='399' cy='401' r='.7'/><circle cx='118' cy='402' r='.9'/><circle cx='279' cy='238' r='.6'/><circle cx='11' cy='229' r='.8'/></g></svg>"); }
+  .papel > * { position: relative; z-index: 1; }
+  /* Tinta de sello: textura "mal entintada" para sellos, escudo, palabras clave. Aplicar sobre elementos azules. */
+  .sello-grano { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>"); -webkit-mask-size: 200px 200px; mask-size: 200px 200px; }
+  /* Tipos */
+  .display { font-family: var(--display); font-weight: 400; text-transform: uppercase; line-height: .85; letter-spacing: -.01em; }
+  .mono { font-family: var(--mono); }
+  .etiqueta { font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  .manuscrita { font-family: var(--manuscrita); color: var(--azul-marcador); line-height: 1.05; }
+  /* Foto pegada */
+  .foto-pegada { background: var(--papel-puro); padding: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 6px 14px rgba(0,0,0,.10); display: inline-block; }
+  .foto-pegada img { display: block; width: 100%; height: auto; }
+  /* Caja de nombre / botón */
+  .caja-nombre { font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; border: 2px solid var(--tinta); background: var(--papel-puro); padding: 12px 24px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; box-sizing: border-box; }
+  .hilo-tricolor { height: 3px; width: 100%; background: linear-gradient(90deg, var(--tricolor-amarillo) 0 33.34%, var(--tricolor-azul) 33.34% 66.67%, var(--tricolor-rojo) 66.67% 100%); }
+</style>
+<!-- ===== FIN BASE COMPARTIDA ===== -->
+<style>
+  .nombre-comp { font-family: var(--mono); font-weight: 700; font-size: 18px; letter-spacing: .02em; color: var(--tinta); }
+  .desc-comp { font-family: var(--mono); font-weight: 400; font-size: 13px; line-height: 1.65; color: var(--tinta-suave); }
+  .nota { font-family: var(--mono); font-weight: 400; font-size: 12px; line-height: 1.5; color: var(--grafito); }
+  .num { width: 24px; height: 24px; border: 2px solid var(--azul-sello); border-radius: 50%; background: var(--papel); color: var(--azul-sello); font-family: var(--mono); font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; flex: none; box-sizing: border-box; }
+</style>
+</helmet>
+
+<div class="papel" style="width: 1200px; min-height: 1330px; padding: 64px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px;">
+
+  <!-- ENCABEZADO DE SISTEMA -->
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px;">
+      <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">SERES MIGRATORIOS — SISTEMA DE DISEÑO V1</span>
+      <span class="etiqueta" style="font-size: 12px; color: var(--tinta);">LÁMINA 06 · FICHA DE FOTÓGRAFO</span>
+    </div>
+    <div style="height: 1px; background: var(--linea);"></div>
+  </div>
+
+  <!-- TÍTULO DE LÁMINA -->
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 48px;">
+    <div style="display: flex; flex-direction: column; gap: 14px; max-width: 720px;">
+      <h1 class="display" style="font-size: 48px; margin: 0; color: var(--tinta);">Ficha de fotógrafo</h1>
+      <p class="desc-comp" style="margin: 0;">La pieza más personal del sistema: número, obra, cara y letra. Reconstruida con los datos reales del 001 y con la versión de lista compacta que arma el índice de <span style="font-weight: 700;">/fotografos</span>.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;"><span class="nombre-comp" style="white-space: nowrap;">FichaFotografo</span><span class="etiqueta" style="font-size: 11px; color: var(--grafito); white-space: nowrap;">BRIEF §2.4 · COMPONENTE 08</span></div>
+  </div>
+
+  <!-- COMPONENTE + ANATOMÍA -->
+  <div style="display: grid; grid-template-columns: 620px minmax(0, 1fr); gap: 56px; align-items: start;">
+
+    <!-- COMPONENTE -->
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+
+      <div style="display: flex; align-items: center; justify-content: center; gap: 12px; position: relative;">
+        <span class="num" style="position: absolute; left: 0; top: -2px;">1</span>
+        <span class="etiqueta" style="font-size: 17px; color: var(--tinta); letter-spacing: .08em;">001 HERICK FRONTADO</span>
+      </div>
+
+      <div style="position: relative; width: 620px; padding-bottom: 26px;">
+        <div class="foto-pegada" style="display: block; width: 620px; box-sizing: border-box;">
+          <div style="width: 604px; height: 296px; overflow: hidden; position: relative;">
+            <img src="ficha-fotografo.jpg" alt="Foto de Herick Frontado: un hombre de gorra en la proa de una lancha, con un ferry varado de fondo." style="position: absolute; width: 634px; height: auto; left: -24px; top: -79px;">
+          </div>
+        </div>
+        <span class="num" style="position: absolute; right: 16px; top: 16px;">2</span>
+        <div style="position: absolute; left: -14px; bottom: 0; width: 132px; background: var(--papel-puro); padding: 6px; box-sizing: border-box; box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 6px 14px rgba(0,0,0,.10);">
+          <div style="width: 120px; height: 150px; overflow: hidden; position: relative;">
+            <img src="ficha-fotografo.jpg" alt="Retrato de Herick Frontado." style="position: absolute; width: 906px; height: auto; left: -27px; top: -483px;">
+          </div>
+        </div>
+        <span class="num" style="position: absolute; left: 106px; bottom: 130px;">3</span>
+      </div>
+
+      <div style="display: flex; align-items: flex-start; gap: 16px; padding-left: 138px;">
+        <span class="num" style="margin-top: 4px;">4</span>
+        <p class="manuscrita" style="margin: 0; font-size: 22px; line-height: 1.5; letter-spacing: .01em; transform: rotate(-1deg); max-width: 44ch;">El suspiro involuntario al verme rodeado de mi gente, como quien ve tierra firme en el horizonte.</p>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
+        <span class="num">5</span>
+        <div style="border: 1px dashed var(--grafito); background: var(--papel-puro); width: 196px; height: 48px; display: flex; align-items: center; justify-content: center;">
+          <span class="etiqueta" style="font-size: 11px; color: var(--grafito);">[FIRMA ESCANEADA]</span>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--linea); padding-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="num">6</span>
+          <a href="#" style="font-family: var(--mono); font-weight: 700; font-size: 15px; letter-spacing: .03em; color: var(--azul-sello);">@herickfrontado</a>
+        </div>
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">FOTEA · SET 001 · EDICIÓN BUENOS AIRES 2026</span>
+      </div>
+
+    </div>
+
+    <!-- ANATOMÍA -->
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="nombre-comp">Anatomía</span>
+        <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span class="num">1</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">NÚMERO + NOMBRE</span>
+            <span class="nota">Mono 700, tres dígitos y nombre completo. El número es el orden del recorrido, no un ranking.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span class="num">2</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">FOTO PRINCIPAL</span>
+            <span class="nota">FotoPegada: borde blanco de 8 px, sombra suave y rotación entre -2° y 2°. Es la obra, manda ella.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span class="num">3</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">RETRATO 120 × 150</span>
+            <span class="nota">Quien mira también se deja ver. Superpuesto en la esquina inferior izquierda, siempre saliéndose del borde.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span class="num">4</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">FRASE MANUSCRITA</span>
+            <span class="nota">Escaneada de la letra de cada persona (SVG o PNG transparente) con el texto en el <span style="font-weight: 700;">alt</span>. Gochi Hand sólo si todavía no hay escaneo.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span class="num">5</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">FIRMA</span>
+            <span class="nota">Imagen aparte, a la derecha de la frase. Si falta, la caja punteada queda visible: es un pendiente, no un adorno.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <span class="num">6</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">INSTAGRAM</span>
+            <span class="nota">Link mono 700 en azul-sello, con el arroba incluido. Hover en azul-marcador.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="border-left: 2px solid var(--azul-sello); background: var(--azul-tinta-agua); padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
+        <span class="etiqueta" style="font-size: 12px; color: var(--azul-profundo);">REGLA</span>
+        <span class="nota" style="color: var(--tinta-suave);">La frase nunca va tipeada y escaneada a la vez. Si hay escaneo, el texto vive en el <span style="font-weight: 700;">alt</span>; si no, se compone en Gochi Hand y queda marcada como pendiente.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LISTA COMPACTA -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="nombre-comp">FichaFotografo</span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">LISTA COMPACTA</span>
+        <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+      </div>
+      <p class="desc-comp" style="margin: 0;">Una fila por persona para el índice de <span style="font-weight: 700;">/fotografos</span>: número, nombre, Instagram y rol. Sin foto: el índice es un listado de expediente y las imágenes aparecen recién en el perfil.</p>
+    </div>
+
+    <div style="border-top: 2px solid var(--tinta); display: flex; flex-direction: column;">
+
+      <div style="display: grid; grid-template-columns: 90px minmax(0, 1fr) 260px 150px; gap: 24px; padding: 10px 12px; border-bottom: 1px solid var(--linea);">
+        <span class="etiqueta" style="font-size: 11px; color: var(--grafito);">N.º</span>
+        <span class="etiqueta" style="font-size: 11px; color: var(--grafito);">NOMBRE</span>
+        <span class="etiqueta" style="font-size: 11px; color: var(--grafito);">INSTAGRAM</span>
+        <span class="etiqueta" style="font-size: 11px; color: var(--grafito);">ROL</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 90px minmax(0, 1fr) 260px 150px; gap: 24px; align-items: center; padding: 12px 12px; border-bottom: 1px solid var(--linea);">
+        <span class="etiqueta" style="font-size: 15px; color: var(--tinta);">001</span>
+        <span class="etiqueta" style="font-size: 15px; color: var(--tinta);">HERICK FRONTADO</span>
+        <span class="mono" style="font-size: 14px; color: var(--azul-sello);">@herickfrontado</span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">FOTEA</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 90px minmax(0, 1fr) 260px 150px; gap: 24px; align-items: center; padding: 12px 12px; border-bottom: 1px solid var(--linea); background: var(--azul-tinta-agua); box-shadow: inset 3px 0 0 0 var(--azul-marcador);">
+        <span class="etiqueta" style="font-size: 15px; color: var(--azul-profundo);">002</span>
+        <span class="etiqueta" style="font-size: 15px; color: var(--azul-profundo); text-decoration: underline; text-underline-offset: 4px;">NAIA GUANIPA</span>
+        <span class="mono" style="font-size: 14px; color: var(--azul-marcador);">@naianaianaia</span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--azul-profundo);">FOTEA</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 90px minmax(0, 1fr) 260px 150px; gap: 24px; align-items: center; padding: 16px 12px; border-bottom: 1px solid var(--linea);">
+        <span class="etiqueta" style="font-size: 15px; color: var(--tinta);">003</span>
+        <span class="etiqueta" style="font-size: 15px; color: var(--tinta);">ANGELA PÉREZ</span>
+        <span class="mono" style="font-size: 14px; color: var(--azul-sello);">@angelaluisap</span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">FOTEA</span>
+      </div>
+
+    </div>
+
+    <div style="display: flex; gap: 40px;">
+      <span class="nota">Fila 001 y 003: reposo.</span>
+      <span class="nota">Fila 002: hover / foco — fondo azul-tinta-agua, filete de 3 px azul-marcador y nombre subrayado.</span>
+      <span class="nota">Toda la fila es el área clicable (44 px de alto mínimo).</span>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

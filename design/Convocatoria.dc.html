@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/texturas.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/styles.css">
+  <script src="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/_ds_bundle.js"></script>
+  <style>
+    body { background: #ECEAE4; }
+    a { color: #1B4BAF; }
+    a:hover { color: #0B2FCD; }
+    .papel > .sc-host-x > header > a:first-child { font-size: 2rem !important; }
+  </style>
+</helmet>
+
+<section style="display:flex; align-items:flex-start; gap:96px; padding:64px; font-family:'Courier Prime', monospace;">
+
+  <!-- ============ CONVOCATORIA · DESKTOP 1440 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Convocatoria · Desktop · 1440</p>
+    <div class="papel" data-screen-label="Convocatoria · Desktop" style="width:1440px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" href-marca="/" links="{{ navLinks }}" hint-size="100%,80px"></x-import>
+
+      <!-- TITULAR -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 80px; box-sizing:border-box;">
+        <div style="position:relative; display:inline-block;">
+          <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:7.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Convocatoria<br>abierta</h1>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-6" tamano="4rem" style="position:absolute; right:-230px; bottom:24px;" hint-size="200px,72px">sumate</x-import>
+        </div>
+      </section>
+
+      <!-- TRES BLOQUES -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); grid-template-rows:auto auto; gap:24px 32px;">
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 2; gap:16px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="180px,44px">Qué buscamos</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Fotógraf@s para los sets.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Film y música para la jornada.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Manos para el equipo.</p>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 2; gap:16px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="200px,44px">Cómo funciona</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Recorrido por sets numerados.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Aporte solidario al llegar.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Las fotos llegan por email.</p>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 2; gap:16px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="280px,44px">Quién puede postularse</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Desde lo individual hasta lo familiar.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Todas las nacionalidades.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FORMULARIO -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 96px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:24px; align-items:start;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Postulate</h2>
+        <form style="border:2px solid #0B0B0B; background:#FFFFFF; padding:48px; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:32px 24px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Nombre" nombre="nombre" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Ciudad" nombre="ciudad" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="País" nombre="pais" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Email" nombre="email" tipo="email" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Instagram" nombre="instagram" placeholder="@usuario" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Portfolio (URL)" nombre="portfolio" tipo="url" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Disciplina" nombre="disciplina" tipo="select" opciones="{{ disciplinas }}" placeholder="Elegí una" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Edición a la que te postulás" nombre="edicion" placeholder="[PRÓXIMA EDICIÓN A CONFIRMAR]" hint-size="100%,74px"></x-import>
+          <div style="grid-column:1 / -1;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Mensaje corto" nombre="mensaje" tipo="textarea" filas="{{ 4 }}" hint-size="100%,140px"></x-import>
+          </div>
+          <div style="grid-column:1 / -1;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Acepto que usen mis datos para contactarme por esta convocatoria" nombre="consentimiento" tipo="checkbox" requerido="{{ true }}" hint-size="100%,44px"></x-import>
+          </div>
+          <div style="grid-column:1 / -1;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" type="submit" hint-size="180px,44px">Postulate</x-import>
+          </div>
+        </form>
+      </section>
+
+      <!-- PIE -->
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:48px 48px 32px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogo }}" hint-size="100%,36px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="120px" rotacion="-8" hint-size="120px,120px"></x-import>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(160px, auto)); gap:24px 48px; flex:1; min-width:220px;">
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A;">[EMAIL DEL COLECTIVO]</p>
+            </div>
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+              <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+            </div>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="2.25rem" hint-size="300px,44px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ CONVOCATORIA · MOBILE 390 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Convocatoria · Mobile · 390</p>
+    <div class="papel" data-screen-label="Convocatoria · Mobile" style="width:390px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" mobile="{{ true }}" style="--tipo-display-lg:2.5rem;" href-marca="/" links="{{ navLinks }}" hint-size="100%,68px"></x-import>
+
+      <section style="padding:32px 24px 48px; box-sizing:border-box;">
+        <div style="position:relative; display:inline-block;">
+          <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Convocatoria<br>abierta</h1>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-6" tamano="2.25rem" style="position:absolute; right:-8px; bottom:-24px;" hint-size="120px,40px">sumate</x-import>
+        </div>
+      </section>
+
+      <section style="padding:48px 24px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:32px;">
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="160px,32px">Qué buscamos</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Fotógraf@s para los sets.</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Film y música para la jornada.</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Manos para el equipo.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="180px,32px">Cómo funciona</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Recorrido por sets numerados.</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Aporte solidario al llegar.</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Las fotos llegan por email.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="240px,32px">Quién puede postularse</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Desde lo individual hasta lo familiar.</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Todas las nacionalidades.</p>
+        </div>
+      </section>
+
+      <section style="padding:48px 24px 64px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:24px;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:2rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Postulate</h2>
+        <form style="border:2px solid #0B0B0B; background:#FFFFFF; padding:24px; display:flex; flex-direction:column; gap:24px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Nombre" nombre="nombre-m" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Ciudad" nombre="ciudad-m" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="País" nombre="pais-m" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Email" nombre="email-m" tipo="email" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Instagram" nombre="instagram-m" placeholder="@usuario" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Portfolio (URL)" nombre="portfolio-m" tipo="url" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Disciplina" nombre="disciplina-m" tipo="select" opciones="{{ disciplinas }}" placeholder="Elegí una" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Edición a la que te postulás" nombre="edicion-m" placeholder="[PRÓXIMA EDICIÓN A CONFIRMAR]" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Mensaje corto" nombre="mensaje-m" tipo="textarea" filas="{{ 4 }}" hint-size="100%,140px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Acepto que usen mis datos para contactarme por esta convocatoria" nombre="consentimiento-m" tipo="checkbox" requerido="{{ true }}" hint-size="100%,44px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" type="submit" ancho="100%" hint-size="100%,44px">Postulate</x-import>
+        </form>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:40px 24px 24px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogoMobile }}" gap="{{ gapLogoMobile }}" justificar="flex-start" hint-size="100%,80px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-direction:column; gap:32px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr; gap:24px;">
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A; word-break:break-word;">[EMAIL DEL COLECTIVO]</p>
+              </div>
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+                <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+              </div>
+            </div>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="100px" rotacion="-8" hint-size="100px,100px"></x-import>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="1.75rem" hint-size="260px,36px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ FORMULARIO · ERROR · DESKTOP 1440 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Convocatoria · Formulario · error · Desktop · 1440</p>
+    <div class="papel" data-screen-label="Convocatoria · Formulario · error" style="width:1440px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" href-marca="/" links="{{ navLinks }}" hint-size="100%,80px"></x-import>
+
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 80px; box-sizing:border-box;">
+        <div style="position:relative; display:inline-block;">
+          <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:7.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Convocatoria<br>abierta</h1>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-6" tamano="4rem" style="position:absolute; right:-230px; bottom:24px;" hint-size="200px,72px">sumate</x-import>
+        </div>
+      </section>
+
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 96px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:24px; align-items:start;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Postulate</h2>
+        <form style="border:2px solid #0B0B0B; background:#FFFFFF; padding:48px; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:32px 24px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Nombre" nombre="nombre-e" valor="{{ valores.nombre }}" on-change="{{ cambiar.nombre }}" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Ciudad" nombre="ciudad-e" valor="{{ valores.ciudad }}" on-change="{{ cambiar.ciudad }}" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="País" nombre="pais-e" valor="{{ valores.pais }}" on-change="{{ cambiar.pais }}" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Email" nombre="email-e" tipo="email" valor="{{ valores.email }}" on-change="{{ cambiar.email }}" error="Falta el email." requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Instagram" nombre="instagram-e" valor="{{ valores.instagram }}" on-change="{{ cambiar.instagram }}" error="El usuario va con arroba: @usuario." hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Portfolio (URL)" nombre="portfolio-e" tipo="url" valor="{{ valores.portfolio }}" on-change="{{ cambiar.portfolio }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Disciplina" nombre="disciplina-e" tipo="select" opciones="{{ disciplinas }}" placeholder="Elegí una" valor="{{ valores.disciplina }}" on-change="{{ cambiar.disciplina }}" requerido="{{ true }}" hint-size="100%,74px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Edición a la que te postulás" nombre="edicion-e" placeholder="[PRÓXIMA EDICIÓN A CONFIRMAR]" valor="{{ valores.edicion }}" on-change="{{ cambiar.edicion }}" hint-size="100%,74px"></x-import>
+          <div style="grid-column:1 / -1;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Mensaje corto" nombre="mensaje-e" tipo="textarea" filas="{{ 4 }}" valor="{{ valores.mensaje }}" on-change="{{ cambiar.mensaje }}" hint-size="100%,140px"></x-import>
+          </div>
+          <div style="grid-column:1 / -1;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Campo" etiqueta="Acepto que usen mis datos para contactarme por esta convocatoria" nombre="consentimiento-e" tipo="checkbox" valor="{{ valores.consentimiento }}" on-change="{{ cambiar.consentimiento }}" requerido="{{ true }}" hint-size="100%,44px"></x-import>
+          </div>
+          <div style="grid-column:1 / -1; display:flex; flex-direction:column; gap:24px; align-items:flex-start;">
+            <p role="alert" style="margin:0; border:2px solid #B3261E; color:#B3261E; padding:12px 16px; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase;">Revisá los campos marcados</p>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" type="submit" hint-size="180px,44px">Postulate</x-import>
+          </div>
+        </form>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:48px 48px 32px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogo }}" hint-size="100%,36px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="120px" rotacion="-8" hint-size="120px,120px"></x-import>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(160px, auto)); gap:24px 48px; flex:1; min-width:220px;">
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A;">[EMAIL DEL COLECTIVO]</p>
+            </div>
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+              <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+            </div>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="2.25rem" hint-size="300px,44px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ GRACIAS · DESKTOP 1440 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Gracias · /gracias · Desktop · 1440</p>
+    <div class="papel" data-screen-label="Gracias · Desktop" style="width:1440px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" href-marca="/" links="{{ navLinks }}" hint-size="100%,80px"></x-import>
+
+      <section style="max-width:1280px; margin:0 auto; padding:96px 48px 128px; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; gap:48px;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello.png" tamano="320px" rotacion="-12" hint-size="320px,320px"></x-import>
+        <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:7.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Gracias</h1>
+        <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-align:center; max-width:50ch;">Te escribimos por email cuando cierre la convocatoria.</p>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/" hint-size="240px,44px">Volver al inicio</x-import>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:48px 48px 32px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogo }}" hint-size="100%,36px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="120px" rotacion="-8" hint-size="120px,120px"></x-import>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(160px, auto)); gap:24px 48px; flex:1; min-width:220px;">
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A;">[EMAIL DEL COLECTIVO]</p>
+            </div>
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+              <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+            </div>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="2.25rem" hint-size="300px,44px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ GRACIAS · MOBILE 390 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Gracias · /gracias · Mobile · 390</p>
+    <div class="papel" data-screen-label="Gracias · Mobile" style="width:390px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" mobile="{{ true }}" style="--tipo-display-lg:2.5rem;" href-marca="/" links="{{ navLinks }}" hint-size="100%,68px"></x-import>
+
+      <section style="padding:48px 24px 64px; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; gap:32px;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello.png" tamano="200px" rotacion="-12" hint-size="200px,200px"></x-import>
+        <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Gracias</h1>
+        <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-align:center; text-wrap:pretty;">Te escribimos por email cuando cierre la convocatoria.</p>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/" ancho="100%" hint-size="100%,44px">Volver al inicio</x-import>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:40px 24px 24px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogoMobile }}" gap="{{ gapLogoMobile }}" justificar="flex-start" hint-size="100%,80px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-direction:column; gap:32px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr; gap:24px;">
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A; word-break:break-word;">[EMAIL DEL COLECTIVO]</p>
+              </div>
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+                <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+              </div>
+            </div>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="100px" rotacion="-8" hint-size="100px,100px"></x-import>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="1.75rem" hint-size="260px,36px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ CONVOCATORIA CERRADA · DESKTOP 1440 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Convocatoria cerrada · Desktop · 1440</p>
+    <div class="papel" data-screen-label="Convocatoria cerrada · Desktop" style="width:1440px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" href-marca="/" links="{{ navLinks }}" hint-size="100%,80px"></x-import>
+
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 80px; box-sizing:border-box;">
+        <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:7.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Convocatoria</h1>
+      </section>
+
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); grid-template-rows:auto auto; gap:24px 32px;">
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 2; gap:16px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="180px,44px">Qué buscamos</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Fotógraf@s para los sets.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Film y música para la jornada.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Manos para el equipo.</p>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 2; gap:16px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="200px,44px">Cómo funciona</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Recorrido por sets numerados.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Aporte solidario al llegar.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Las fotos llegan por email.</p>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 2; gap:16px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="280px,44px">Quién puede postularse</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Desde lo individual hasta lo familiar.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Todas las nacionalidades.</p>
+          </div>
+        </div>
+      </section>
+
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 96px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:24px; align-items:start;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">La próxima</h2>
+        <div style="display:flex; flex-direction:column; gap:32px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" tono="grafito" hint-size="280px,44px">Convocatoria cerrada</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; max-width:65ch;">La próxima se anuncia por acá.</p>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" variante="sello" href="https://www.instagram.com/seresmigratorios/" hint-size="300px,44px">Seguinos en Instagram</x-import>
+        </div>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:48px 48px 32px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogo }}" hint-size="100%,36px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="120px" rotacion="-8" hint-size="120px,120px"></x-import>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(160px, auto)); gap:24px 48px; flex:1; min-width:220px;">
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A;">[EMAIL DEL COLECTIVO]</p>
+            </div>
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+              <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+            </div>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="2.25rem" hint-size="300px,44px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+</section>
+
+<!--
+NOTA PARA DESARROLLO · /convocatoria (+ /gracias)
+- Componentes del design system: Nav, Anotacion, CajaNombre, Campo, Boton, Sello, FranjaAliados, HiloTricolor. Nav y Pie idénticos a Home.dc.html (el Pie es único en todo el sitio y mantiene la FranjaAliados).
+- Pantallas: Desktop, Mobile, "Formulario · error", "Gracias" (/gracias, desktop y mobile) y "Convocatoria cerrada". El error y el cierre son estados de la misma ruta /convocatoria.
+- Titular: display 7.5rem en desktop / 3rem en mobile, partido en dos líneas, con la anotación manuscrita "sumate" superpuesta al ángulo inferior derecho (-6°).
+- Tres bloques: grilla de 3 columnas en desktop (subgrid para alinear las CajaNombre) y 1 columna en mobile.
+- Formulario: caja de papel-puro con borde 2 px tinta. Campos en 2 columnas en desktop, 1 en mobile; MENSAJE CORTO (textarea 4 filas) y el consentimiento ocupan el ancho completo (grid-column en un div contenedor, no en el componente: los estilos de posición no atraviesan el montaje). DISCIPLINA es un select con las opciones fotografía / film / música / otro y chevron en texto mono (lo dibuja el propio Campo). EDICIÓN A LA QUE TE POSTULÁS queda con placeholder [PRÓXIMA EDICIÓN A CONFIRMAR] hasta que haya fecha.
+- Estado de error: borde inferior y etiqueta en #B3261E más mensaje mono debajo del campo (nunca solo color) y resumen "REVISÁ LOS CAMPOS MARCADOS" con role="alert" arriba del botón. En la pantalla de error los tres bloques de arriba no cambian; se muestran solo titular y formulario para leer el estado.
+- Validación esperada: requeridos NOMBRE, CIUDAD, PAÍS, EMAIL, DISCIPLINA y consentimiento; INSTAGRAM debe empezar con arroba; PORTFOLIO es URL opcional. El envío exitoso lleva a /gracias.
+- "Convocatoria cerrada": la página no desaparece. El titular pierde "ABIERTA" y la anotación "sumate", los tres bloques quedan igual y el formulario se reemplaza por la CajaNombre en grafito, la línea "La próxima se anuncia por acá." y el Boton variante sello a Instagram.
+- El h1 y el h2 son condicionales según el estado de la convocatoria: abierta, h1 "CONVOCATORIA ABIERTA" + h2 "POSTULATE"; cerrada, h1 "CONVOCATORIA" + h2 "LA PRÓXIMA".
+- Las tres CajaNombre de los bloques van chicas en mobile (las tres del mismo tamaño) y grandes en desktop.
+- El valor de ejemplo de INSTAGRAM en el estado de error es "usuario" (genérico): nunca un handle real de una persona como dato de muestra.
+- Radio 0, foco outline 2 px azul-sello, mínimo 44 px en todo lo interactivo, sin emojis ni íconos.
+- Placeholders: [EMAIL DEL COLECTIVO], [PRÓXIMA EDICIÓN A CONFIRMAR], aliados a confirmar (logo tricolor de manos, CCC), endpoint del formulario.
+-->
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { nombre: "", ciudad: "", pais: "", email: "", instagram: "usuario", portfolio: "", disciplina: "", edicion: "", mensaje: "", consentimiento: false };
+  campo(k) { return (e) => this.setState({ [k]: e.target.value }); }
+  renderVals() {
+    return {
+      navLinks: [
+        { etiqueta: "Manifiesto", href: "/manifiesto" }, { etiqueta: "Artistas", href: "/artistas" }, { etiqueta: "Ediciones", href: "/ediciones" },
+        { etiqueta: "Convocatoria", href: "/convocatoria" }, { etiqueta: "Apoyar", href: "/apoyar" },
+      ],
+      disciplinas: ["fotografía", "film", "música", "otro"],
+      valores: this.state,
+      cambiar: {
+        nombre: this.campo("nombre"), ciudad: this.campo("ciudad"), pais: this.campo("pais"), email: this.campo("email"),
+        instagram: this.campo("instagram"), portfolio: this.campo("portfolio"), disciplina: this.campo("disciplina"),
+        edicion: this.campo("edicion"), mensaje: this.campo("mensaje"),
+        consentimiento: (e) => this.setState({ consentimiento: e.target.checked }),
+      },
+      altoLogo: 36, altoLogoMobile: 28, gapLogoMobile: 24,
+      aliados: [
+        { src: "assets/logos/consulado.png", alt: "CONSULADO Custom & Craft", href: "https://www.instagram.com/consulado.ba/" },
+        { src: "assets/logos/manos-tricolor.png", alt: "[ALIADO LOGO TRICOLOR — a confirmar]" },
+        { src: "assets/logos/infiltrado.png", alt: "infiltrado™", href: "https://www.instagram.com/infiltrado.tm/" },
+        { src: "assets/logos/ccc.png", alt: "CCC [a confirmar]" },
+      ],
+    };
+  }
+}
+
+</script>
+</body>
+</html>

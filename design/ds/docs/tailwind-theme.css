@@ -1,0 +1,230 @@
+/* ==========================================================================
+   SERES MIGRATORIOS — Tema de Tailwind CSS v4
+   Uso en Astro: importar este archivo una sola vez desde src/styles/global.css
+   (o el CSS global del layout raíz) con: @import "../../out-copiado/tailwind-theme.css";
+   El proyecto real debe copiar este archivo a src/styles/theme.css.
+   ========================================================================== */
+
+@import "tailwindcss";
+
+/* Fuentes web de marca. Ver design-system.md — Anton (SIL OFL 1.1) es la
+   fuente de display definitiva de la marca desde el 06.09.2026. Cuando exista
+   la fuente propia Seres Manuscrita, agregar su @font-face y reemplazar Gochi Hand. */
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gochi+Hand&display=swap');
+
+@theme {
+  /* ---- Color -----------------------------------------------------------
+     Genera utilidades bg-papel, text-tinta, border-azul-sello, etc. */
+  --color-papel: #FBFAF7;
+  --color-papel-puro: #FFFFFF;
+  --color-tinta: #0B0B0B;
+  --color-tinta-suave: #3A3A3A;
+  --color-grafito: #6B6B6B;
+  --color-linea: #D9D6CF;
+  --color-azul-sello: #1B4BAF;
+  --color-azul-marcador: #0B2FCD;
+  --color-azul-profundo: #0A2A78;
+  --color-azul-tinta-agua: #E4EAF8;
+  --color-tricolor-amarillo: #F2C230;
+  --color-tricolor-azul: #0033A0;
+  --color-tricolor-rojo: #E0393E;
+  --color-error: #B3261E;
+
+  /* ---- Tipografía: familias --------------------------------------------
+     Genera font-display, font-mono, font-manuscrita. */
+  --font-display: "Anton", Impact, "Arial Narrow Bold", sans-serif;
+  --font-mono: "Courier Prime", "Courier New", Courier, monospace;
+  --font-manuscrita: "Gochi Hand", "Comic Sans MS", cursive;
+
+  /* ---- Tipografía: escala display --------------------------------------
+     Genera text-display-xl / text-display-lg / text-display-md ya con
+     line-height y letter-spacing incluidos (Tailwind v4 los toma de los
+     sufijos --line-height / --letter-spacing del mismo token). */
+  --text-display-xl: clamp(4.5rem, 16vw, 14rem);
+  --text-display-xl--line-height: 0.85;
+  --text-display-xl--letter-spacing: -0.01em;
+
+  --text-display-lg: clamp(3rem, 9vw, 7.5rem);
+  --text-display-lg--line-height: 0.85;
+  --text-display-lg--letter-spacing: -0.01em;
+
+  --text-display-md: clamp(2rem, 5vw, 3.5rem);
+  --text-display-md--line-height: 0.85;
+  --text-display-md--letter-spacing: -0.01em;
+
+  /* Tamaños auxiliares que no tienen equivalente en la escala por defecto
+     de Tailwind (etiqueta y metadatos vienen de valores fijados en el
+     BRIEF/design-system.md, no de la escala tipográfica genérica). */
+  --text-etiqueta: 0.875rem;
+  --text-etiqueta--letter-spacing: 0.04em;
+  --text-metadatos: 0.8125rem;
+  --text-manuscrita: clamp(1.5rem, 4vw, 3rem);
+  --text-manuscrita--line-height: 1.05;
+
+  /* ---- Espaciado ---------------------------------------------------------
+     NO se sobreescribe: la escala por defecto de Tailwind v4 usa --spacing:
+     0.25rem (4px) como multiplicador, así que ya coincide con la escala del
+     BRIEF (base 4px). Equivalencias para usar en las clases de Astro:
+       espacio-1 (4px)  = p-1 / gap-1
+       espacio-2 (8px)  = p-2 / gap-2
+       espacio-3 (12px) = p-3 / gap-3
+       espacio-4 (16px) = p-4 / gap-4
+       espacio-5 (24px) = p-6 / gap-6
+       espacio-6 (32px) = p-8 / gap-8
+       espacio-7 (48px) = p-12 / gap-12
+       espacio-8 (64px) = p-16 / gap-16
+       espacio-9 (96px) = p-24 / gap-24
+       espacio-10 (128px) = p-32 / gap-32
+     El contenedor máximo (1280px) y los márgenes (24px mobile / 48px
+     desktop) se aplican con una clase .contenedor en @layer components,
+     no como token de @theme, porque Tailwind no tiene un slot de tema
+     dedicado a "contenedor con margen responsivo". */
+
+  /* ---- Sombra ------------------------------------------------------------
+     Genera shadow-foto. Única sombra del sistema, exclusiva de FotoPegada. */
+  --shadow-foto: 0 1px 2px rgba(0, 0, 0, .18), 0 6px 14px rgba(0, 0, 0, .10);
+
+  /* ---- Radios --------------------------------------------------------------
+     Radio 0 en todo el sistema salvo el sello circular y los números en
+     círculo, que usan la utilidad rounded-full de Tailwind (no depende de
+     estos tokens). Se pisan los radios de la escala por defecto a 0 para
+     que rounded-sm/md/lg/xl no cuelen esquinas curvas por accidente. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+
+  /* ---- Duraciones de transición y entrada (DS §11) ----------------------- */
+  --default-transition-duration: 150ms;
+  --duracion-rapida: 150ms;
+  --duracion-media: 250ms;
+  --duracion-entrada: 350ms;
+  --desfase-entrada: 40ms;
+}
+
+/* ==========================================================================
+   Componentes reutilizables — mismas reglas visuales que tokens.css,
+   expresadas con @apply para usarlas directo en las clases de Astro
+   (ej. <div class="papel">, <span class="caja-nombre">, <button class="boton">).
+   ========================================================================== */
+@layer components {
+  /* Contenedor con margen responsivo (BRIEF §2.3). Usar en el layout raíz
+     de cada página: <div class="contenedor">...</div> */
+  .contenedor {
+    @apply mx-auto w-full px-6 md:px-12;
+    max-width: 1280px; /* contenedor-max: sin token dedicado en @theme */
+  }
+
+  /* Papel con grano + motas. Aplicar a la sección/pieza que hace de fondo;
+     requiere position relative + isolation, que la clase ya trae. */
+  .papel {
+    @apply relative isolate bg-papel;
+  }
+  .papel::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 z-0;
+    opacity: .07;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  }
+  .papel::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 z-0;
+    opacity: .5;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><g fill='%230B0B0B'><circle cx='23' cy='41' r='1.1'/><circle cx='131' cy='17' r='.8'/><circle cx='202' cy='96' r='1.3'/><circle cx='377' cy='58' r='.9'/><circle cx='88' cy='188' r='1'/><circle cx='301' cy='161' r='.7'/><circle cx='159' cy='266' r='1.2'/><circle cx='352' cy='289' r='.8'/><circle cx='47' cy='343' r='.9'/><circle cx='238' cy='372' r='1.1'/><circle cx='399' cy='401' r='.7'/><circle cx='118' cy='402' r='.9'/><circle cx='279' cy='238' r='.6'/><circle cx='11' cy='229' r='.8'/></g></svg>");
+  }
+  .papel > * {
+    @apply relative z-[1];
+  }
+
+  /* Tinta de sello: máscara de grano grueso para Sello, Escudo, PalabrasClave. */
+  .sello-grano {
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>");
+    -webkit-mask-size: 200px 200px;
+    mask-size: 200px 200px;
+  }
+
+  /* Foto pegada: copia impresa con borde blanco y sombra. La rotación
+     (-2° a 2°) se aplica por instancia con un style inline o data-attribute
+     en el componente Astro, no acá (es aleatoria por foto). */
+  .foto-pegada {
+    @apply inline-block bg-papel-puro p-2 shadow-foto;
+  }
+  .foto-pegada img {
+    @apply block h-auto w-full;
+  }
+
+  /* Caja de nombre: usar para CajaNombre y como base del selector ES/EN en Nav. */
+  .caja-nombre {
+    @apply inline-flex min-h-11 items-center justify-center border-2 border-tinta bg-papel-puro px-6 py-3 font-bold uppercase tracking-wide;
+    font-family: var(--font-mono);
+  }
+
+  /* Hilo tricolor: único lugar del sistema con el tricolor completo. */
+  .hilo-tricolor {
+    @apply h-[3px] w-full;
+    background: linear-gradient(90deg, var(--color-tricolor-amarillo) 0 33.34%, var(--color-tricolor-azul) 33.34% 66.67%, var(--color-tricolor-rojo) 66.67% 100%);
+  }
+
+  /* Boton (BRIEF §2.4.13): mono 700 mayúsculas, borde 2px tinta, fondo
+     papel-puro; hover invierte a fondo tinta/texto papel; foco con outline
+     azul-sello. Variante "sello": borde y texto azul-sello, hover azul-profundo. */
+  .boton {
+    @apply inline-flex min-h-11 items-center justify-center border-2 border-tinta bg-papel-puro px-6 py-3.5 font-bold uppercase tracking-wide text-tinta transition-colors duration-150;
+    font-family: var(--font-mono);
+  }
+  .boton:hover {
+    @apply bg-tinta text-papel;
+  }
+  .boton:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-azul-sello;
+  }
+  .boton--sello {
+    @apply border-azul-sello text-azul-sello;
+  }
+  .boton--sello:hover {
+    @apply border-azul-profundo bg-transparent text-azul-profundo;
+  }
+}
+
+/* ==========================================================================
+   Entradas por scroll y cambio de página (DS §11). Mismo bloque que tokens.css;
+   repetido acá porque este archivo puede usarse solo en el proyecto Astro.
+   Reglas: @supports con animation-range, nada oculto fuera del bloque, solo
+   opacity / translate / scale / clip-path (nunca transform), duration auto.
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes entrada-papel { from { opacity: 0; translate: 0 12px; } }
+    @keyframes entrada-sello { from { opacity: 0; scale: 1.06; } }
+    @keyframes entrada-hilo  { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+    [data-entrada] {
+      animation: entrada-papel auto ease-out backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    [data-entrada="sello"] { animation-name: entrada-sello; }
+    [data-entrada="hilo"]  { animation-name: entrada-hilo; animation-range: entry 0% entry 100%; }
+  }
+  @view-transition { navigation: auto; }
+}
+
+/* ==========================================================================
+   Movimiento reducido (ver también tokens.css). Repetido acá porque este
+   archivo puede usarse solo, sin tokens.css, en el proyecto Astro.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .foto-pegada, .manuscrita, [class*="sello"], [class*="anotacion"], [data-rotacion] {
+    transform: none !important;
+  }
+}

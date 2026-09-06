@@ -1,0 +1,425 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<!-- ===== BASE COMPARTIDA DEL CANVAS — pegar ESTE bloque completo dentro de <helmet> ... </helmet> de CADA artboard, sin modificarlo. Agregá tus estilos propios DESPUÉS, en otro <style>. ===== -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gochi+Hand&display=swap">
+<style>
+  :root {
+    --papel: #FBFAF7; --papel-puro: #FFFFFF; --tinta: #0B0B0B; --tinta-suave: #3A3A3A; --grafito: #6B6B6B; --linea: #D9D6CF;
+    --azul-sello: #1B4BAF; --azul-marcador: #0B2FCD; --azul-profundo: #0A2A78; --azul-tinta-agua: #E4EAF8;
+    --tricolor-amarillo: #F2C230; --tricolor-azul: #0033A0; --tricolor-rojo: #E0393E;
+    --display: "Anton", Impact, "Arial Narrow Bold", sans-serif;
+    --mono: "Courier Prime", "Courier New", Courier, monospace;
+    --manuscrita: "Gochi Hand", "Comic Sans MS", cursive;
+  }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font-family: var(--mono); -webkit-font-smoothing: antialiased; }
+  a { color: var(--azul-sello); text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { color: var(--azul-marcador); }
+  /* Papel con grano + motas: aplicar la clase al elemento raíz del artboard (necesita position:relative). */
+  .papel { position: relative; background: var(--papel); isolation: isolate; }
+  .papel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .07; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"); }
+  .papel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><g fill='%230B0B0B'><circle cx='23' cy='41' r='1.1'/><circle cx='131' cy='17' r='.8'/><circle cx='202' cy='96' r='1.3'/><circle cx='377' cy='58' r='.9'/><circle cx='88' cy='188' r='1'/><circle cx='301' cy='161' r='.7'/><circle cx='159' cy='266' r='1.2'/><circle cx='352' cy='289' r='.8'/><circle cx='47' cy='343' r='.9'/><circle cx='238' cy='372' r='1.1'/><circle cx='399' cy='401' r='.7'/><circle cx='118' cy='402' r='.9'/><circle cx='279' cy='238' r='.6'/><circle cx='11' cy='229' r='.8'/></g></svg>"); }
+  .papel > * { position: relative; z-index: 1; }
+  /* Tinta de sello: textura "mal entintada" para sellos, escudo, palabras clave. Aplicar sobre elementos azules. */
+  .sello-grano { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>"); -webkit-mask-size: 200px 200px; mask-size: 200px 200px; }
+  /* Tipos */
+  .display { font-family: var(--display); font-weight: 400; text-transform: uppercase; line-height: .85; letter-spacing: -.01em; }
+  .mono { font-family: var(--mono); }
+  .etiqueta { font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  .manuscrita { font-family: var(--manuscrita); color: var(--azul-marcador); line-height: 1.05; }
+  /* Foto pegada */
+  .foto-pegada { background: var(--papel-puro); padding: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 6px 14px rgba(0,0,0,.10); display: inline-block; }
+  .foto-pegada img { display: block; width: 100%; height: auto; }
+  /* Caja de nombre / botón */
+  .caja-nombre { font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; border: 2px solid var(--tinta); background: var(--papel-puro); padding: 12px 24px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; box-sizing: border-box; }
+  .hilo-tricolor { height: 3px; width: 100%; background: linear-gradient(90deg, var(--tricolor-amarillo) 0 33.34%, var(--tricolor-azul) 33.34% 66.67%, var(--tricolor-rojo) 66.67% 100%); }
+</style>
+<!-- ===== FIN BASE COMPARTIDA ===== -->
+<style>
+  .nombre-comp { font-family: var(--mono); font-weight: 700; font-size: 18px; letter-spacing: .02em; color: var(--tinta); }
+  .desc-comp { font-family: var(--mono); font-weight: 400; font-size: 13px; line-height: 1.65; color: var(--tinta-suave); max-width: 88ch; }
+  .estado { font-family: var(--mono); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--grafito); }
+  .nota { font-family: var(--mono); font-weight: 400; font-size: 12px; line-height: 1.6; color: var(--grafito); }
+  .boton { font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; height: 44px; padding: 0 24px; border: 2px solid var(--tinta); background: var(--papel-puro); color: var(--tinta); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
+  .link-nav { font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--tinta); text-decoration: none; }
+</style>
+</helmet>
+
+<div class="papel" style="width: 1440px; min-height: 2790px; padding: 64px; box-sizing: border-box; display: flex; flex-direction: column; gap: 42px;">
+
+  <!-- ENCABEZADO DE SISTEMA -->
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px;">
+      <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">SERES MIGRATORIOS — SISTEMA DE DISEÑO V1</span>
+      <span class="etiqueta" style="font-size: 12px; color: var(--tinta);">LÁMINA 05 · COMPONENTES</span>
+    </div>
+    <div style="height: 1px; background: var(--linea);"></div>
+  </div>
+
+  <!-- TÍTULO DE LÁMINA -->
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 48px;">
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 900px;">
+      <h1 class="display" style="font-size: 48px; margin: 0; color: var(--tinta);">Componentes de interfaz</h1>
+      <p class="desc-comp" style="margin: 0; font-size: 14px;">Los componentes del expediente llevados a la web. Nombres canónicos del BRIEF §2.4. Cada pieza se muestra con sus variantes y estados uno al lado del otro; los estados están simulados con estilos, no son interactivos.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
+      <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">ALTURA MÍNIMA DE CONTROL</span>
+      <span class="etiqueta" style="font-size: 28px; color: var(--azul-sello);">44 PX</span>
+    </div>
+  </div>
+
+  <!-- 01 · BLOQUEFICHA -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="nombre-comp">BloqueFicha</span>
+        <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">01</span>
+      </div>
+      <p class="desc-comp" style="margin: 0;">Encabezado del expediente: tres columnas mono con <span style="font-weight: 700;">FECHA:</span> / <span style="font-weight: 700;">HORARIOS:</span> / <span style="font-weight: 700;">LUGAR:</span> y el valor debajo. Va arriba de todo en la home y en cada edición. Datos de la edición 1.</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px;">
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <span class="estado">EN PAPEL · POR DEFECTO</span>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="height: 1px; background: var(--linea);"></div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">FECHA:</span>
+              <span class="mono" style="font-size: 14px; color: var(--tinta);">08.08.2026</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">HORARIOS:</span>
+              <span class="mono" style="font-size: 14px; color: var(--tinta);">10:00 AM – 19:00</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">LUGAR:</span>
+              <span class="mono" style="font-size: 14px; color: var(--tinta); line-height: 1.5;">CONSULADO<br>HUMBERTO PRIMO 3032<br>BUENOS AIRES, ARG</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <span class="estado">EN CAJA · SOBRE FOTO O SECCIÓN</span>
+        <div style="border: 2px solid var(--tinta); background: var(--papel-puro); padding: 20px 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">FECHA:</span>
+            <span class="mono" style="font-size: 14px; color: var(--tinta);">08.08.2026</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">HORARIOS:</span>
+            <span class="mono" style="font-size: 14px; color: var(--tinta);">10:00 AM – 19:00</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">LUGAR:</span>
+            <span class="mono" style="font-size: 14px; color: var(--tinta); line-height: 1.5;">CONSULADO<br>HUMBERTO PRIMO 3032<br>BUENOS AIRES, ARG</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 02 · CAJANOMBRE -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="nombre-comp">CajaNombre</span>
+        <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">02</span>
+      </div>
+      <p class="desc-comp" style="margin: 0;">Mono 700 en mayúsculas, borde 2 px tinta, padding 12×24, fondo papel-puro. Se disponen en aparejo de ladrillo: filas alternadas de 3 y de 2, centradas, y el resto en la última fila. Abajo, los 9 nombres de <span style="font-weight: 700;">Exponen</span> de la edición 1.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
+      <div style="display: flex; justify-content: center; gap: 12px;">
+        <span class="caja-nombre" style="font-size: 14px;">GABRIELA RONDÓN</span>
+        <span class="caja-nombre" style="font-size: 14px;">RUBÉN MAVAREZ</span>
+        <span class="caja-nombre" style="font-size: 14px;">LEO SIMMONS</span>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 12px;">
+        <span class="caja-nombre" style="font-size: 14px;">DANIELA BARBERA</span>
+        <span class="caja-nombre" style="font-size: 14px;">ANGELA PÉREZ</span>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 12px;">
+        <span class="caja-nombre" style="font-size: 14px;">SOFÍA MARTÍN</span>
+        <span class="caja-nombre" style="font-size: 14px;">RONA RANGEL</span>
+        <span class="caja-nombre" style="font-size: 14px;">KREMLIN PRIETO</span>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 12px;">
+        <span class="caja-nombre" style="font-size: 14px;">GUSTAVO SÁNCHEZ</span>
+      </div>
+    </div>
+    <div style="display: flex; gap: 32px; align-items: flex-start;">
+      <p class="nota" style="margin: 0; max-width: 54ch;">Ancho por contenido, nunca estirada a la grilla. El aparejo se centra fila por fila; la separación entre cajas es de 12 px.</p>
+      <p class="nota" style="margin: 0; max-width: 54ch;">Variante <span style="font-weight: 700;">chica</span> (padding 8×14, 12 px): selector de idioma y filtros. Nunca en azul: la caja siempre es tinta sobre papel-puro.</p>
+    </div>
+  </div>
+
+  <!-- 03 · BOTON  +  04 · CAMPO -->
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; align-items: start;">
+
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="nombre-comp">Boton</span>
+          <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+          <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">03</span>
+        </div>
+        <p class="desc-comp" style="margin: 0;">Mono 700 mayúsculas, borde 2 px, padding 14×24, altura 44 px. Sin radio, sin sombra, sin degradado.</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <span class="estado">PRIMARIO</span>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; padding: 4px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="nota" style="margin: 0;">reposo</span>
+            <span class="boton">POSTULATE</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="nota" style="margin: 0;">hover</span>
+            <span class="boton" style="background: var(--tinta); color: var(--papel);">POSTULATE</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="nota" style="margin: 0;">foco</span>
+            <span class="boton" style="outline: 2px solid var(--azul-sello); outline-offset: 2px;">POSTULATE</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="nota" style="margin: 0;">deshabilitado</span>
+            <span class="boton" style="border-color: var(--linea); color: var(--grafito);">POSTULATE</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <span class="estado">VARIANTE SELLO</span>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; padding: 4px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="nota" style="margin: 0;">reposo</span>
+            <span class="boton" style="border-color: var(--azul-sello); color: var(--azul-sello);">APOYAR</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="nota" style="margin: 0;">hover</span>
+            <span class="boton" style="border-color: var(--azul-profundo); background: var(--azul-profundo); color: var(--papel);">APOYAR</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="nota" style="margin: 0;">foco</span>
+            <span class="boton" style="border-color: var(--azul-sello); color: var(--azul-sello); outline: 2px solid var(--azul-sello); outline-offset: 2px;">APOYAR</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span class="nota" style="margin: 0;">deshabilitado</span>
+            <span class="boton" style="border-color: var(--linea); color: var(--grafito);">APOYAR</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="nota" style="margin: 0; max-width: 60ch;">El foco se dibuja siempre con outline 2 px azul-sello y offset 2 px, en las dos variantes. El deshabilitado no cambia de fondo: baja a borde línea y texto grafito.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="nombre-comp">Campo</span>
+          <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+          <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">04</span>
+        </div>
+        <p class="desc-comp" style="margin: 0;">Formulario de papel: etiqueta mono 700 arriba, valor mono 400 y sólo borde inferior de 2 px. Ejemplo con los primeros campos del formulario de convocatoria.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 40px; padding: 4px;">
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <span class="nota" style="margin: 0;">reposo</span>
+          <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">NOMBRE</span>
+          <div style="border-bottom: 2px solid var(--tinta); padding: 10px 0; font-family: var(--mono); font-size: 15px; color: var(--grafito);">[NOMBRE Y APELLIDO]</div>
+          <div style="height: 18px;"></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <span class="nota" style="margin: 0;">foco</span>
+          <span class="etiqueta" style="font-size: 13px; color: var(--azul-sello);">CIUDAD</span>
+          <div style="border-bottom: 2px solid var(--azul-sello); background: var(--azul-tinta-agua); padding: 10px 8px; font-family: var(--mono); font-size: 15px; color: var(--tinta); outline: 2px solid var(--azul-sello); outline-offset: 2px;">Buenos Aires<span style="color: var(--azul-sello);">|</span></div>
+          <div style="height: 18px;"></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <span class="nota" style="margin: 0;">error</span>
+          <span class="etiqueta" style="font-size: 13px; color: #B3261E;">INSTAGRAM</span>
+          <div style="border-bottom: 2px solid #B3261E; padding: 10px 0; font-family: var(--mono); font-size: 15px; color: var(--tinta);">herickfrontado</div>
+          <div style="font-family: var(--mono); font-size: 12px; line-height: 1.5; color: #B3261E;">Falta el arroba: escribilo como @herickfrontado</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <span class="nota" style="margin: 0;">reposo · con valor</span>
+          <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">PORTFOLIO</span>
+          <div style="border-bottom: 2px solid var(--tinta); padding: 10px 0; font-family: var(--mono); font-size: 15px; color: var(--tinta);">[URL DEL PORTFOLIO]</div>
+          <div style="height: 18px;"></div>
+        </div>
+
+      </div>
+
+      <p class="nota" style="margin: 0; max-width: 60ch;">El mensaje de error va en mono 12 px sobre <span style="font-weight: 700; color: #B3261E;">#B3261E</span>, único color fuera de la paleta y sólo para error. La etiqueta acompaña el estado; el espacio del mensaje se reserva siempre para que el campo no salte.</p>
+    </div>
+
+  </div>
+
+  <!-- 05 · NAV DESKTOP -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span class="nombre-comp">Nav</span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">DESKTOP</span>
+        <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">05</span>
+      </div>
+      <p class="desc-comp" style="margin: 0;">Barra estilo ficha: el logo de texto a la izquierda en <span style="font-weight: 700;">display</span>, los links en mono 700 y el selector de idioma como CajaNombre chica. Se apoya en una línea de 1 px línea; nada de sombras ni fondo translúcido.</p>
+    </div>
+
+    <div style="border-top: 2px solid var(--tinta); border-bottom: 1px solid var(--linea); background: var(--papel-puro); padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+      <span class="display" style="font-size: 36px; color: var(--tinta);">SERES MIGRATORIOS</span>
+      <div style="display: flex; align-items: center; gap: 28px;">
+        <span class="link-nav" style="border-bottom: 2px solid var(--tinta); padding-bottom: 3px;">MANIFIESTO</span>
+        <span class="link-nav" style="color: var(--azul-marcador); text-decoration: underline; text-underline-offset: 4px;">FOTÓGRAFOS</span>
+        <span class="link-nav">EDICIONES</span>
+        <span class="link-nav">CONVOCATORIA</span>
+        <span class="link-nav">APOYAR</span>
+        <span style="display: inline-flex; border: 2px solid var(--tinta); background: var(--papel-puro);">
+          <span class="etiqueta" style="font-size: 12px; padding: 8px 12px; background: var(--tinta); color: var(--papel);">ES</span>
+          <span class="etiqueta" style="font-size: 12px; padding: 8px 12px; color: var(--tinta);">EN</span>
+        </span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 40px;">
+      <span class="nota">1 · MANIFIESTO: página activa (subrayado 2 px tinta).</span>
+      <span class="nota">2 · FOTÓGRAFOS: hover (azul-marcador + subrayado).</span>
+      <span class="nota">3 · ES / EN: idioma activo en negativo.</span>
+      <span class="nota">4 · Foco: outline 2 px azul-sello, offset 2 px.</span>
+    </div>
+  </div>
+
+  <!-- 06 · NAV MOBILE  |  07 · FRANJAALIADOS  +  08 · PIE -->
+  <div style="display: grid; grid-template-columns: 430px minmax(0, 1fr); gap: 48px; align-items: start;">
+
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="nombre-comp">Nav</span>
+          <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">MOBILE · ABIERTA</span>
+          <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+          <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">06</span>
+        </div>
+        <p class="desc-comp" style="margin: 0; font-size: 12px;">Menú a pantalla completa sobre papel, 390 px. Links en display-lg apilados.</p>
+      </div>
+
+      <div style="width: 390px; min-height: 520px; background: var(--papel); border: 1px solid var(--linea); padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <span class="display" style="font-size: 22px; color: var(--tinta);">SERES MIGRATORIOS</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" style="display: block; flex: none;" aria-hidden="true">
+            <path d="M 4 4 L 20 20 M 20 4 L 4 20" stroke="#0B0B0B" stroke-width="2.5" fill="none"></path>
+          </svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <span class="display" style="font-size: 48px; color: var(--tinta);">Manifiesto</span>
+          <span class="display" style="font-size: 48px; color: var(--azul-marcador);">Fotógrafos</span>
+          <span class="display" style="font-size: 48px; color: var(--tinta);">Ediciones</span>
+          <span class="display" style="font-size: 48px; color: var(--tinta);">Convocatoria</span>
+          <span class="display" style="font-size: 48px; color: var(--tinta);">Apoyar</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="display: inline-flex; border: 2px solid var(--tinta); background: var(--papel-puro);">
+            <span class="etiqueta" style="font-size: 12px; padding: 8px 12px; background: var(--tinta); color: var(--papel);">ES</span>
+            <span class="etiqueta" style="font-size: 12px; padding: 8px 12px; color: var(--tinta);">EN</span>
+          </span>
+          <span class="nota" style="margin: 0;">Idioma</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="hilo-tricolor"></div>
+          <span class="mono" style="font-size: 12px; color: var(--grafito);">[EMAIL] · [@CUENTA]</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 40px;">
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <span class="nombre-comp">FranjaAliados</span>
+            <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+            <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">07</span>
+          </div>
+          <p class="desc-comp" style="margin: 0;">Los logos en una sola fila sobre papel, altura óptica uniforme y separación de 40 px. Monocromo azul-sello salvo el logo tricolor de manos.</p>
+        </div>
+        <div style="background: var(--papel-puro); border: 1px solid var(--linea); padding: 24px 32px; display: flex; align-items: center; justify-content: center;">
+          <img src="logos-aliados.jpg" alt="Franja de aliados: CONSULADO Custom &amp; Craft, logo tricolor de manos, infiltrado™ y CCC." style="display: block; height: 36px; width: auto;">
+        </div>
+        <div style="display: flex; gap: 32px;">
+          <p class="nota" style="margin: 0; max-width: 42ch;">Regla de altura: todos los logos se escalan a <span style="font-weight: 700;">36 px</span> de alto de caja óptica (rango permitido 32–40 px), nunca al mismo ancho. Los que son sólo texto se ajustan a ojo, no por bounding box.</p>
+          <p class="nota" style="margin: 0; max-width: 42ch;">Pendiente: confirmar el logo tricolor de manos (¿Red de Voluntarios BA, @redvoluntariosba?) y CCC (¿Creer Crear Compartir, @creercrearcompartir?). Reemplazar el JPG por SVG antes de producción.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <span class="nombre-comp">Pie</span>
+            <span style="flex: 1; height: 2px; background: var(--tinta);"></span>
+            <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">08</span>
+          </div>
+          <p class="desc-comp" style="margin: 0;">Cierre del expediente: franja de aliados, hilo tricolor, sello chico, contacto en mono y la firma manuscrita del colectivo.</p>
+        </div>
+
+        <div style="border-top: 2px solid var(--tinta); background: var(--papel-puro); padding: 28px; display: flex; flex-direction: column; gap: 22px;">
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <img src="logos-aliados.jpg" alt="Franja de aliados." style="display: block; height: 32px; width: auto;">
+          </div>
+          <div class="hilo-tricolor"></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 32px;">
+            <div style="display: flex; align-items: center; gap: 24px;">
+              <svg width="110" height="110" viewBox="0 0 132 132" class="sello-grano" style="display: block; flex: none; transform: rotate(-12deg);" aria-hidden="true">
+                <defs>
+                  <path id="arco-sello-pie" d="M 20 66 A 46 46 0 0 1 112 66" fill="none"></path>
+                </defs>
+                <circle cx="66" cy="66" r="61" fill="none" stroke="#1B4BAF" stroke-width="3"></circle>
+                <circle cx="66" cy="66" r="54" fill="none" stroke="#1B4BAF" stroke-width="1.5"></circle>
+                <text style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; letter-spacing: 2.4px; fill: #1B4BAF;">
+                  <textPath href="#arco-sello-pie" startOffset="50%" text-anchor="middle">SERES MIGRATORIOS</textPath>
+                </text>
+                <text x="66" y="63" text-anchor="middle" style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; letter-spacing: .5px; fill: #1B4BAF;">BUENOS AIRES</text>
+                <text x="66" y="79" text-anchor="middle" style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; letter-spacing: .5px; fill: #1B4BAF;">08 AGO 2026</text>
+                <g fill="#1B4BAF">
+                  <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(50 96)"></path>
+                  <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(66 99)"></path>
+                  <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(82 96)"></path>
+                </g>
+              </svg>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">CONTACTO</span>
+                <span class="mono" style="font-size: 14px; color: var(--tinta);">[EMAIL]</span>
+                <span class="mono" style="font-size: 14px; color: var(--azul-sello);">[@CUENTA]</span>
+              </div>
+            </div>
+            <span class="manuscrita" style="font-size: 34px; transform: rotate(-2deg); display: inline-block; white-space: nowrap;">¡Aguante la fotografía!</span>
+          </div>
+        </div>
+
+        <p class="nota" style="margin: 0; max-width: 78ch;">El sello del pie usa la variante chica (110 px) con ciudad y fecha de la última edición. Para futuras ediciones cambian sólo las dos líneas del centro.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

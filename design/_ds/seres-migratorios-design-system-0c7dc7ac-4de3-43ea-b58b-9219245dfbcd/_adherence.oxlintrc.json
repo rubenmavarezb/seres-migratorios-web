@@ -1,0 +1,381 @@
+{
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "rules": {
+    "react/forbid-elements": [
+      "warn",
+      {
+        "forbid": []
+      }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": [
+              "components/aliados/**",
+              "components/expediente/**",
+              "components/formularios/**",
+              "components/fotos/**",
+              "components/navegacion/**",
+              "components/sellos/**",
+              "ui_kits/piezas/**",
+              "ui_kits/web/**"
+            ],
+            "message": "Import design-system components from 'index.js', not component internals."
+          }
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:Anton|Courier Prime|Gochi Hand))/i]",
+        "message": "Font not provided by the design system. Available: Anton, Courier Prime, Gochi Hand."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Anotacion'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|src|alt|rotacion|tamano|ancho|mayusculas|style|className|key|ref|className|style|children)$/]",
+        "message": "<Anotacion> doesn't accept that prop. Declared props: children, src, alt, rotacion, tamano, ancho, mayusculas, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Aparejo'] > JSXAttribute > JSXIdentifier[name!=/^(?:nombres|filas|hrefs|chica|gapFila|gapCaja|style|className|key|ref|className|style|children)$/]",
+        "message": "<Aparejo> doesn't accept that prop. Declared props: nombres, filas, hrefs, chica, gapFila, gapCaja, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='BloqueFicha'] > JSXAttribute > JSXIdentifier[name!=/^(?:fecha|horarios|lugar|extras|items|columnas|apilado|tamano|style|className|key|ref|className|style|children)$/]",
+        "message": "<BloqueFicha> doesn't accept that prop. Declared props: fecha, horarios, lugar, extras, items, columnas, apilado, tamano, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='BloqueFicha'] > JSXAttribute[name.name='tamano'] > Literal[value!=/^(?:sm|md|lg)$/]",
+        "message": "<BloqueFicha> tamano must be one of 'sm' | 'md' | 'lg'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Boton'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|variante|href|onClick|type|disabled|chico|ancho|style|className|key|ref|className|style|children)$/]",
+        "message": "<Boton> doesn't accept that prop. Declared props: children, variante, href, onClick, type, disabled, chico, ancho, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Boton'] > JSXAttribute[name.name='variante'] > Literal[value!=/^(?:tinta|sello)$/]",
+        "message": "<Boton> variante must be one of 'tinta' | 'sello'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Boton'] > JSXAttribute[name.name='type'] > Literal[value!=/^(?:button|submit|reset)$/]",
+        "message": "<Boton> type must be one of 'button' | 'submit' | 'reset'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='CajaNombre'] > JSXAttribute > JSXIdentifier[name!=/^(?:children|href|onClick|chica|tono|activo|style|className|key|ref|className|style|children)$/]",
+        "message": "<CajaNombre> doesn't accept that prop. Declared props: children, href, onClick, chica, tono, activo, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='CajaNombre'] > JSXAttribute[name.name='tono'] > Literal[value!=/^(?:tinta|grafito|sello)$/]",
+        "message": "<CajaNombre> tono must be one of 'tinta' | 'grafito' | 'sello'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Campo'] > JSXAttribute > JSXIdentifier[name!=/^(?:etiqueta|nombre|tipo|valor|onChange|placeholder|opciones|error|ayuda|requerido|filas|deshabilitado|style|className|key|ref|className|style|children)$/]",
+        "message": "<Campo> doesn't accept that prop. Declared props: etiqueta, nombre, tipo, valor, onChange, placeholder, opciones, error, ayuda, requerido, filas, deshabilitado, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Campo'] > JSXAttribute[name.name='tipo'] > Literal[value!=/^(?:text|email|url|tel|number|textarea|select|checkbox)$/]",
+        "message": "<Campo> tipo must be one of 'text' | 'email' | 'url' | 'tel' | 'number' | 'textarea' | 'select' | 'checkbox'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Escudo'] > JSXAttribute > JSXIdentifier[name!=/^(?:src|alt|ancho|rotacion|style|className|key|ref|className|style|children)$/]",
+        "message": "<Escudo> doesn't accept that prop. Declared props: src, alt, ancho, rotacion, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='FichaFotografo'] > JSXAttribute > JSXIdentifier[name!=/^(?:numero|nombre|foto|fotoAlt|retrato|retratoAlt|fraseManuscrita|frase|firma|instagram|href|ancho|altoFoto|retratoTamano|style|className|key|ref|className|style|children)$/]",
+        "message": "<FichaFotografo> doesn't accept that prop. Declared props: numero, nombre, foto, fotoAlt, retrato, retratoAlt, fraseManuscrita, frase, firma, instagram, href, ancho, altoFoto, retratoTamano, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='FotoPegada'] > JSXAttribute > JSXIdentifier[name!=/^(?:src|alt|variante|rotacion|ancho|alto|pie|credito|posicion|borde|style|className|key|ref|className|style|children)$/]",
+        "message": "<FotoPegada> doesn't accept that prop. Declared props: src, alt, variante, rotacion, ancho, alto, pie, credito, posicion, borde, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='FotoPegada'] > JSXAttribute[name.name='variante'] > Literal[value!=/^(?:pegada|recortada|sangrada)$/]",
+        "message": "<FotoPegada> variante must be one of 'pegada' | 'recortada' | 'sangrada'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Aliado'] > JSXAttribute > JSXIdentifier[name!=/^(?:src|alt|nombre|href|color|key|ref|className|style|children)$/]",
+        "message": "<Aliado> doesn't accept that prop. Declared props: src, alt, nombre, href, color."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='HiloTricolor'] > JSXAttribute > JSXIdentifier[name!=/^(?:alto|ancho|style|className|key|ref|className|style|children)$/]",
+        "message": "<HiloTricolor> doesn't accept that prop. Declared props: alto, ancho, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='NavLink'] > JSXAttribute > JSXIdentifier[name!=/^(?:etiqueta|href|key|ref|className|style|children)$/]",
+        "message": "<NavLink> doesn't accept that prop. Declared props: etiqueta, href."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='PalabrasClave'] > JSXAttribute > JSXIdentifier[name!=/^(?:src|palabras|vertical|tamano|alinear|color|grano|style|className|key|ref|className|style|children)$/]",
+        "message": "<PalabrasClave> doesn't accept that prop. Declared props: src, palabras, vertical, tamano, alinear, color, grano, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='PalabrasClave'] > JSXAttribute[name.name='alinear'] > Literal[value!=/^(?:center|left|right)$/]",
+        "message": "<PalabrasClave> alinear must be one of 'center' | 'left' | 'right'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Pie'] > JSXAttribute > JSXIdentifier[name!=/^(?:aliados|contacto|cierre|cierreSrc|ciudad|fecha|mobile|style|className|key|ref|className|style|children)$/]",
+        "message": "<Pie> doesn't accept that prop. Declared props: aliados, contacto, cierre, cierreSrc, ciudad, fecha, mobile, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Sello'] > JSXAttribute > JSXIdentifier[name!=/^(?:src|texto|ciudad|fecha|tamano|rotacion|color|grano|style|className|key|ref|className|style|children)$/]",
+        "message": "<Sello> doesn't accept that prop. Declared props: src, texto, ciudad, fecha, tamano, rotacion, color, grano, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='SelloHorario'] > JSXAttribute > JSXIdentifier[name!=/^(?:src|srcFecha|desde|hasta|fechaCorta|tamano|color|colorFecha|apilado|style|className|key|ref|className|style|children)$/]",
+        "message": "<SelloHorario> doesn't accept that prop. Declared props: src, srcFecha, desde, hasta, fechaCorta, tamano, color, colorFecha, apilado, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='TitularPartido'] > JSXAttribute > JSXIdentifier[name!=/^(?:arriba|abajo|tamano|children|gap|color|alinear|style|className|key|ref|className|style|children)$/]",
+        "message": "<TitularPartido> doesn't accept that prop. Declared props: arriba, abajo, tamano, children, gap, color, alinear, style, className."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='TitularPartido'] > JSXAttribute[name.name='alinear'] > Literal[value!=/^(?:center|left|right)$/]",
+        "message": "<TitularPartido> alinear must be one of 'center' | 'left' | 'right'."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/index.js"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
+  "x-omelette": {
+    "components": {
+      "Anotacion": {
+        "replaces": []
+      },
+      "Aparejo": {
+        "replaces": []
+      },
+      "BloqueFicha": {
+        "replaces": []
+      },
+      "Boton": {
+        "replaces": []
+      },
+      "CajaNombre": {
+        "replaces": []
+      },
+      "Campo": {
+        "replaces": []
+      },
+      "Escudo": {
+        "replaces": []
+      },
+      "FichaFotografo": {
+        "replaces": []
+      },
+      "FotoPegada": {
+        "replaces": []
+      },
+      "Aliado": {
+        "replaces": []
+      },
+      "HiloTricolor": {
+        "replaces": []
+      },
+      "NavLink": {
+        "replaces": []
+      },
+      "PalabrasClave": {
+        "replaces": []
+      },
+      "Pie": {
+        "replaces": []
+      },
+      "Sello": {
+        "replaces": []
+      },
+      "SelloHorario": {
+        "replaces": []
+      },
+      "TitularPartido": {
+        "replaces": []
+      }
+    },
+    "tokens": [
+      "--altura-interactiva",
+      "--azul-marcador",
+      "--azul-profundo",
+      "--azul-sello",
+      "--azul-tinta-agua",
+      "--borde-caja",
+      "--borde-divisor",
+      "--borde-fino",
+      "--borde-foco",
+      "--borde-grueso",
+      "--color-error",
+      "--contenedor-max",
+      "--duracion-media",
+      "--duracion-rapida",
+      "--enlace",
+      "--enlace-hover",
+      "--enlace-pressed",
+      "--espacio-1",
+      "--espacio-10",
+      "--espacio-2",
+      "--espacio-3",
+      "--espacio-4",
+      "--espacio-5",
+      "--espacio-6",
+      "--espacio-7",
+      "--espacio-8",
+      "--espacio-9",
+      "--foco",
+      "--foco-offset",
+      "--fondo-pagina",
+      "--foto-borde",
+      "--fuente-display",
+      "--fuente-manuscrita",
+      "--fuente-mono",
+      "--grafito",
+      "--grilla-columnas",
+      "--grilla-gap",
+      "--linea",
+      "--margen-desktop",
+      "--margen-mobile",
+      "--papel",
+      "--papel-puro",
+      "--radio-cero",
+      "--radio-circular",
+      "--rotacion-foto-max",
+      "--rotacion-foto-min",
+      "--rotacion-manuscrita-max",
+      "--rotacion-manuscrita-min",
+      "--sombra-foto",
+      "--superficie-suave",
+      "--superficie-tarjeta",
+      "--texto-error",
+      "--texto-manuscrito",
+      "--texto-metadatos",
+      "--texto-principal",
+      "--texto-secundario",
+      "--texto-sello",
+      "--tinta",
+      "--tinta-suave",
+      "--tipo-cuerpo",
+      "--tipo-cuerpo-line-height",
+      "--tipo-cuerpo-max-medida",
+      "--tipo-display-letter-spacing",
+      "--tipo-display-lg",
+      "--tipo-display-line-height",
+      "--tipo-display-md",
+      "--tipo-display-xl",
+      "--tipo-etiqueta",
+      "--tipo-etiqueta-letter-spacing",
+      "--tipo-manuscrita",
+      "--tipo-manuscrita-line-height",
+      "--tipo-metadatos",
+      "--tricolor-amarillo",
+      "--tricolor-azul",
+      "--tricolor-rojo",
+      "--z-contenido",
+      "--z-flotante",
+      "--z-modal",
+      "--z-textura"
+    ],
+    "tokenKinds": {
+      "--papel": "color",
+      "--papel-puro": "color",
+      "--tinta": "color",
+      "--tinta-suave": "color",
+      "--grafito": "color",
+      "--linea": "color",
+      "--azul-sello": "color",
+      "--azul-marcador": "color",
+      "--azul-profundo": "color",
+      "--azul-tinta-agua": "color",
+      "--tricolor-amarillo": "color",
+      "--tricolor-azul": "color",
+      "--tricolor-rojo": "color",
+      "--color-error": "color",
+      "--fondo-pagina": "color",
+      "--superficie-tarjeta": "color",
+      "--superficie-suave": "color",
+      "--texto-principal": "color",
+      "--texto-secundario": "color",
+      "--texto-metadatos": "color",
+      "--texto-manuscrito": "color",
+      "--texto-sello": "color",
+      "--texto-error": "color",
+      "--borde-caja": "color",
+      "--borde-divisor": "color",
+      "--enlace": "color",
+      "--enlace-hover": "color",
+      "--enlace-pressed": "color",
+      "--foco": "color",
+      "--fuente-display": "font",
+      "--fuente-mono": "font",
+      "--fuente-manuscrita": "font",
+      "--tipo-display-xl": "other",
+      "--tipo-display-lg": "other",
+      "--tipo-display-md": "other",
+      "--tipo-display-line-height": "other",
+      "--tipo-display-letter-spacing": "other",
+      "--tipo-cuerpo": "other",
+      "--tipo-cuerpo-line-height": "other",
+      "--tipo-cuerpo-max-medida": "other",
+      "--tipo-etiqueta": "other",
+      "--tipo-etiqueta-letter-spacing": "other",
+      "--tipo-metadatos": "other",
+      "--tipo-manuscrita": "other",
+      "--tipo-manuscrita-line-height": "other",
+      "--rotacion-manuscrita-min": "other",
+      "--rotacion-manuscrita-max": "other",
+      "--espacio-1": "spacing",
+      "--espacio-2": "spacing",
+      "--espacio-3": "spacing",
+      "--espacio-4": "spacing",
+      "--espacio-5": "spacing",
+      "--espacio-6": "spacing",
+      "--espacio-7": "spacing",
+      "--espacio-8": "spacing",
+      "--espacio-9": "spacing",
+      "--espacio-10": "spacing",
+      "--contenedor-max": "spacing",
+      "--margen-mobile": "spacing",
+      "--margen-desktop": "spacing",
+      "--grilla-columnas": "other",
+      "--grilla-gap": "spacing",
+      "--borde-grueso": "other",
+      "--borde-fino": "other",
+      "--borde-foco": "other",
+      "--foco-offset": "spacing",
+      "--radio-cero": "radius",
+      "--radio-circular": "radius",
+      "--sombra-foto": "shadow",
+      "--foto-borde": "spacing",
+      "--rotacion-foto-min": "other",
+      "--rotacion-foto-max": "other",
+      "--altura-interactiva": "spacing",
+      "--duracion-rapida": "other",
+      "--duracion-media": "other",
+      "--z-textura": "other",
+      "--z-contenido": "other",
+      "--z-flotante": "other",
+      "--z-modal": "other"
+    },
+    "fontFamilies": [
+      "Anton",
+      "Courier Prime",
+      "Gochi Hand"
+    ]
+  }
+}

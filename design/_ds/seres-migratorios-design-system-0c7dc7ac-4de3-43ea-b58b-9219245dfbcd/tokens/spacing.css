@@ -1,0 +1,47 @@
+:root {
+  /* Base 4 px */
+  --espacio-1: 4px;
+  --espacio-2: 8px;
+  --espacio-3: 12px;
+  --espacio-4: 16px;
+  --espacio-5: 24px;
+  --espacio-6: 32px;
+  --espacio-7: 48px;
+  --espacio-8: 64px;
+  --espacio-9: 96px;
+  --espacio-10: 128px;
+
+  /* Contenedor y grilla */
+  --contenedor-max: 1280px;
+  --margen-mobile: 24px;
+  --margen-desktop: 48px;
+  --grilla-columnas: 12; /* @kind other */
+  --grilla-gap: 24px;
+
+  /* Bordes */
+  --borde-grueso: 2px solid var(--tinta); /* @kind other */
+  --borde-fino: 1px solid var(--linea); /* @kind other */
+  --borde-foco: 2px solid var(--azul-sello); /* @kind other */
+  --foco-offset: 2px;
+
+  /* Radios: 0 en todo; 50% solo Sello y números en círculo */
+  --radio-cero: 0; /* @kind radius */
+  --radio-circular: 50%; /* @kind radius */
+
+  /* Sombra única, exclusiva de FotoPegada */
+  --sombra-foto: 0 1px 2px rgba(0, 0, 0, .18), 0 6px 14px rgba(0, 0, 0, .10); /* @kind shadow */
+  --foto-borde: 8px;
+  --rotacion-foto-min: -2deg; /* @kind other */
+  --rotacion-foto-max: 2deg; /* @kind other */
+
+  /* Interacción */
+  --altura-interactiva: 44px;
+  --duracion-rapida: 150ms; /* @kind other */
+  --duracion-media: 250ms; /* @kind other */
+
+  /* Z-index */
+  --z-textura: 0; /* @kind other */
+  --z-contenido: 1; /* @kind other */
+  --z-flotante: 10; /* @kind other */
+  --z-modal: 100; /* @kind other */
+}

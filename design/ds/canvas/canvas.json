@@ -1,0 +1,95 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1700,
+      "title": "01 · Portada"
+    },
+    {
+      "file": "Color.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 1320,
+      "title": "02 · Color"
+    },
+    {
+      "file": "Tipografia.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 2000,
+      "title": "03 · Tipografía"
+    },
+    {
+      "file": "Elementos.dc.html",
+      "x": 0,
+      "y": 2200,
+      "w": 1440,
+      "h": 1900,
+      "title": "04 · Elementos"
+    },
+    {
+      "file": "Componentes.dc.html",
+      "x": 1560,
+      "y": 2200,
+      "w": 1440,
+      "h": 2790,
+      "title": "05 · Componentes"
+    },
+    {
+      "file": "FichaFotografo.dc.html",
+      "x": 3120,
+      "y": 2200,
+      "w": 1200,
+      "h": 1330,
+      "title": "06 · Ficha de fotógrafo"
+    },
+    {
+      "file": "HomeDesktop.dc.html",
+      "x": 0,
+      "y": 5190,
+      "w": 1440,
+      "h": 3820,
+      "title": "07 · Home desktop"
+    },
+    {
+      "file": "HomeMobile.dc.html",
+      "x": 1560,
+      "y": 5190,
+      "w": 390,
+      "h": 4150,
+      "title": "08 · Home mobile"
+    },
+    {
+      "file": "Referencias.dc.html",
+      "x": 2070,
+      "y": 5190,
+      "w": 1440,
+      "h": 1420,
+      "title": "09 · Referencias"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "nota-version",
+      "x": 0,
+      "y": -170,
+      "w": 520,
+      "text": "SERES MIGRATORIOS · SISTEMA DE DISEÑO V1 · 05.09.2026\nOrden de lectura: 01 Portada → 02 Color → 03 Tipografía → 04 Elementos → 05 Componentes → 06 Ficha → 07/08 Home → 09 Referencias.\nTokens y documentación completa en ~/Documents/Seres Migratorios/02-Design-System/."
+    },
+    {
+      "id": "nota-pendientes",
+      "x": 1560,
+      "y": -170,
+      "w": 520,
+      "text": "PENDIENTES V1\n· Licencia web de Serial A (hoy los PSD usan la trial; en la web va Anton).\n· Vectorizar sello, escudo y letras manuscritas a SVG.\n· Confirmar nombre de los aliados: logo tricolor de manos y CCC.\n· Definir dominio y links de donación."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

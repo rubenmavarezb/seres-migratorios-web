@@ -1,0 +1,8 @@
+/* Fuentes web (Google Fonts). Anton (SIL OFL 1.1) es la fuente de display
+   DEFINITIVA de la marca desde el 06.09.2026, en piezas y en web: Serial A
+   quedó descartada por costo de licencia. Courier Prime sustituye a Courier Bold.
+   Gochi Hand es SOLO fallback para texto manuscrito dinámico: la letra real
+   de cada persona va escaneada (PNG en assets/manuscritas). Cuando exista la
+   fuente propia "Seres Manuscrita" (en desarrollo, a partir de la letra del
+   lettering azul), agregar su @font-face acá y reemplazar Gochi Hand. */
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gochi+Hand&display=swap");

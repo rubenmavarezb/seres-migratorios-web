@@ -1,0 +1,34 @@
+/* Base de página */
+body { margin: 0; background: var(--papel); color: var(--tinta); font-family: var(--fuente-mono); -webkit-font-smoothing: antialiased; }
+a { color: var(--azul-sello); text-decoration: underline; text-underline-offset: 3px; transition: color var(--duracion-rapida) ease; }
+a:hover { color: var(--azul-marcador); }
+a:active { color: var(--azul-profundo); }
+:focus-visible { outline: var(--borde-foco); outline-offset: var(--foco-offset); }
+
+/* Papel con grano + motas: aplicar al elemento raíz de la pieza o sección */
+.papel { position: relative; background: var(--papel); isolation: isolate; }
+.papel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: var(--z-textura); opacity: .07; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyNjAnIGhlaWdodD0nMjYwJz48ZmlsdGVyIGlkPSdnJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nLjknIG51bU9jdGF2ZXM9JzMnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnLz48ZmVDb2xvck1hdHJpeCB2YWx1ZXM9JzAgMCAwIDAgMCAgMCAwIDAgMCAwICAwIDAgMCAwIDAgIDAgMCAwIDEgMCcvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNnKScvPjwvc3ZnPg=="); }
+.papel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: var(--z-textura); opacity: .5;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0MjAnIGhlaWdodD0nNDIwJz48ZyBmaWxsPScjMEIwQjBCJz48Y2lyY2xlIGN4PScyMycgY3k9JzQxJyByPScxLjEnLz48Y2lyY2xlIGN4PScxMzEnIGN5PScxNycgcj0nLjgnLz48Y2lyY2xlIGN4PScyMDInIGN5PSc5Nicgcj0nMS4zJy8+PGNpcmNsZSBjeD0nMzc3JyBjeT0nNTgnIHI9Jy45Jy8+PGNpcmNsZSBjeD0nODgnIGN5PScxODgnIHI9JzEnLz48Y2lyY2xlIGN4PSczMDEnIGN5PScxNjEnIHI9Jy43Jy8+PGNpcmNsZSBjeD0nMTU5JyBjeT0nMjY2JyByPScxLjInLz48Y2lyY2xlIGN4PSczNTInIGN5PScyODknIHI9Jy44Jy8+PGNpcmNsZSBjeD0nNDcnIGN5PSczNDMnIHI9Jy45Jy8+PGNpcmNsZSBjeD0nMjM4JyBjeT0nMzcyJyByPScxLjEnLz48Y2lyY2xlIGN4PSczOTknIGN5PSc0MDEnIHI9Jy43Jy8+PGNpcmNsZSBjeD0nMTE4JyBjeT0nNDAyJyByPScuOScvPjxjaXJjbGUgY3g9JzI3OScgY3k9JzIzOCcgcj0nLjYnLz48Y2lyY2xlIGN4PScxMScgY3k9JzIyOScgcj0nLjgnLz48L2c+PC9zdmc+"); }
+.papel > * { position: relative; z-index: var(--z-contenido); }
+
+/* Tinta de sello: máscara "mal entintada" para Sello, Escudo, PalabrasClave, SelloHorario */
+.sello-grano { -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAnIGhlaWdodD0nMjAwJz48ZmlsdGVyIGlkPSduJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nMS40JyBudW1PY3RhdmVzPScyJyBzdGl0Y2hUaWxlcz0nc3RpdGNoJy8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPScwIDAgMCAwIDAgIDAgMCAwIDAgMCAgMCAwIDAgMCAwICAwIDAgMCAyLjIgLTAuNTUnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWxsPSd3aGl0ZScvPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScgb3BhY2l0eT0nLjg1Jy8+PC9zdmc+"); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAnIGhlaWdodD0nMjAwJz48ZmlsdGVyIGlkPSduJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nMS40JyBudW1PY3RhdmVzPScyJyBzdGl0Y2hUaWxlcz0nc3RpdGNoJy8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPScwIDAgMCAwIDAgIDAgMCAwIDAgMCAgMCAwIDAgMCAwICAwIDAgMCAyLjIgLTAuNTUnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWxsPSd3aGl0ZScvPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScgb3BhY2l0eT0nLjg1Jy8+PC9zdmc+"); -webkit-mask-size: 200px 200px; mask-size: 200px 200px; }
+
+/* Utilidades tipográficas */
+.display { font-family: var(--fuente-display); font-weight: 400; text-transform: uppercase; line-height: var(--tipo-display-line-height); letter-spacing: var(--tipo-display-letter-spacing); }
+.mono { font-family: var(--fuente-mono); }
+.etiqueta { font-family: var(--fuente-mono); font-weight: 700; text-transform: uppercase; letter-spacing: var(--tipo-etiqueta-letter-spacing); font-size: var(--tipo-etiqueta); }
+.manuscrita { font-family: var(--fuente-manuscrita); color: var(--azul-marcador); line-height: var(--tipo-manuscrita-line-height); }
+
+/* Foto pegada, caja de nombre, hilo tricolor (bases visuales) */
+.foto-pegada { background: var(--papel-puro); padding: var(--foto-borde); box-shadow: var(--sombra-foto); display: inline-block; }
+.foto-pegada img { display: block; width: 100%; height: auto; }
+.caja-nombre { font-family: var(--fuente-mono); font-weight: 700; text-transform: uppercase; letter-spacing: var(--tipo-etiqueta-letter-spacing); font-size: var(--tipo-etiqueta); border: var(--borde-grueso); background: var(--papel-puro); padding: 12px 24px; display: inline-flex; align-items: center; justify-content: center; min-height: var(--altura-interactiva); box-sizing: border-box; color: var(--tinta); }
+.hilo-tricolor { height: 3px; width: 100%; background: linear-gradient(90deg, var(--tricolor-amarillo) 0 33.34%, var(--tricolor-azul) 33.34% 66.67%, var(--tricolor-rojo) 66.67% 100%); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .foto-pegada, .manuscrita, [class*="sello"], [class*="anotacion"], [data-rotacion] { transform: none !important; }
+}

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/texturas.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/styles.css">
+  <script src="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/_ds_bundle.js"></script>
+  <style>
+    body { background: #ECEAE4; }
+    a { color: #1B4BAF; }
+    a:hover { color: #0B2FCD; }
+    .papel > .sc-host-x > header > a:first-child { font-size: 2rem !important; }
+  </style>
+</helmet>
+
+<section style="display:flex; align-items:flex-start; gap:96px; padding:64px; font-family:'Courier Prime', monospace;">
+
+  <!-- ============ MANIFIESTO · DESKTOP 1440 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Manifiesto · Desktop · 1440</p>
+    <div class="papel" data-screen-label="Manifiesto · Desktop" style="width:1440px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" href-marca="/" links="{{ navLinks }}" hint-size="100%,80px"></x-import>
+
+      <!-- TITULAR + CITA -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 80px; box-sizing:border-box; display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:48px 24px; align-items:start;">
+        <h1 style="grid-column:1 / -1; margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:7.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Manifiesto</h1>
+        <div style="grid-column:2; display:flex; flex-direction:column; gap:24px; align-items:flex-start;">
+          <blockquote style="margin:0; font-family:'Courier Prime', monospace; font-size:20px; line-height:1.6; max-width:60ch; color:#0B0B0B; text-wrap:pretty;">“En la vorágine de la rutina en el exilio buscamos la manera de ayudar, de agruparnos y compartir esto que sentimos en el pecho, de mirar a los ojos a quienes comparten un dolor que no se puede describir en palabras y que tratamos de codificar en una imagen, un retrato. En momentos como estos entendemos la importancia de la fotografía, y de nuestra labor como fotograf@s”.</blockquote>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Post del 31.07.2026</p>
+        </div>
+      </section>
+
+      <!-- CÓMO EMPEZÓ -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:64px;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Cómo empezó</h2>
+
+        <div style="display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:24px; align-items:start;">
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#1B4BAF;">01</p>
+          <div style="display:flex; flex-direction:column; gap:24px; align-items:flex-start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="220px,32px">13.07.2026 · el reel</x-import>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">Herick Frontado convoca a fotógraf@s de la diáspora para documentar el exilio.</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">La idea: juntar fondos para las víctimas de los terremotos en Venezuela.</p>
+            </div>
+            <div style="padding-left:8px;">
+              <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FotoPegada" src="assets/obra/herick-frontado-02.png" alt="Obra de Herick Frontado" rotacion="-2" ancho="420px" alto="300px" pie="Herick Frontado" hint-size="436px,350px"></x-import>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:24px; align-items:start;">
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#1B4BAF;">02</p>
+          <div style="display:flex; flex-direction:column; gap:24px; align-items:flex-start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="220px,32px">31.07.2026 · el post</x-import>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">Se anuncia la edición 01: un recorrido fotográfico por los sets 001 a 007.</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">Exposición de nueve artistas, música en vivo y café de especialidad.</p>
+            </div>
+            <div style="padding-left:8px;">
+              <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FotoPegada" src="assets/obra/leo-simmons-01.png" alt="Obra de Leo Simmons" rotacion="2" ancho="420px" alto="300px" pie="Leo Simmons" hint-size="436px,350px"></x-import>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:24px; align-items:start;">
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#1B4BAF;">03</p>
+          <div style="display:flex; flex-direction:column; gap:24px; align-items:flex-start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="280px,32px">08.08.2026 · la edición 01</x-import>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">CONSULADO, Humberto Primo 3032, Buenos Aires.</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">De 10:00 a 19:00.</p>
+            </div>
+            <div style="padding-left:8px;">
+              <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FotoPegada" src="assets/obra/carlos-vazquez-01.png" alt="Obra de Carlos Vázquez" rotacion="-1" ancho="420px" alto="300px" pie="Carlos Vázquez" hint-size="436px,350px"></x-import>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CIERRE -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 96px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; align-items:center; gap:48px;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.PalabrasClave" src="assets/marca/palabras-clave.png" hint-size="376px,281px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/ediciones/buenos-aires-2026" hint-size="260px,44px">Ver la edición 01</x-import>
+      </section>
+
+      <!-- PIE -->
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:48px 48px 32px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogo }}" hint-size="100%,36px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="120px" rotacion="-8" hint-size="120px,120px"></x-import>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(160px, auto)); gap:24px 48px; flex:1; min-width:220px;">
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A;">[EMAIL DEL COLECTIVO]</p>
+            </div>
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+              <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+            </div>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="2.25rem" hint-size="300px,44px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ MANIFIESTO · MOBILE 390 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Manifiesto · Mobile · 390</p>
+    <div class="papel" data-screen-label="Manifiesto · Mobile" style="width:390px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" mobile="{{ true }}" style="--tipo-display-lg:2.5rem;" href-marca="/" links="{{ navLinks }}" hint-size="100%,68px"></x-import>
+
+      <section style="padding:32px 24px 48px; box-sizing:border-box; display:flex; flex-direction:column; gap:24px;">
+        <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Manifiesto</h1>
+        <blockquote style="margin:0; font-family:'Courier Prime', monospace; font-size:20px; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">“En la vorágine de la rutina en el exilio buscamos la manera de ayudar, de agruparnos y compartir esto que sentimos en el pecho, de mirar a los ojos a quienes comparten un dolor que no se puede describir en palabras y que tratamos de codificar en una imagen, un retrato. En momentos como estos entendemos la importancia de la fotografía, y de nuestra labor como fotograf@s”.</blockquote>
+        <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Post del 31.07.2026</p>
+      </section>
+
+      <section style="padding:48px 24px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:48px;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:2rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Cómo empezó</h2>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,5fr); gap:16px; align-items:start;">
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#1B4BAF;">01</p>
+          <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="200px,32px">13.07.2026 · el reel</x-import>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Herick Frontado convoca a fotógraf@s de la diáspora para documentar el exilio.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">La idea: juntar fondos para las víctimas de los terremotos en Venezuela.</p>
+            <div style="padding-left:8px;">
+              <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FotoPegada" src="assets/obra/herick-frontado-02.png" alt="Obra de Herick Frontado" rotacion="-2" ancho="240px" alto="180px" pie="Herick Frontado" hint-size="256px,230px"></x-import>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,5fr); gap:16px; align-items:start;">
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#1B4BAF;">02</p>
+          <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="200px,32px">31.07.2026 · el post</x-import>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Se anuncia la edición 01: un recorrido fotográfico por los sets 001 a 007.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Exposición de nueve artistas, música en vivo y café de especialidad.</p>
+            <div style="padding-left:8px;">
+              <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FotoPegada" src="assets/obra/leo-simmons-01.png" alt="Obra de Leo Simmons" rotacion="2" ancho="240px" alto="180px" pie="Leo Simmons" hint-size="256px,230px"></x-import>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,5fr); gap:16px; align-items:start;">
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#1B4BAF;">03</p>
+          <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="240px,32px">08.08.2026 · la edición 01</x-import>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">CONSULADO, Humberto Primo 3032, Buenos Aires.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">De 10:00 a 19:00.</p>
+            <div style="padding-left:8px;">
+              <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FotoPegada" src="assets/obra/carlos-vazquez-01.png" alt="Obra de Carlos Vázquez" rotacion="-1" ancho="240px" alto="180px" pie="Carlos Vázquez" hint-size="256px,230px"></x-import>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding:48px 24px 64px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; align-items:center; gap:32px;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.PalabrasClave" src="assets/marca/palabras-clave.png" style="width:260px; height:auto; margin:0 auto;" hint-size="260px,195px"></x-import>
+        <div style="align-self:stretch;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/ediciones/buenos-aires-2026" ancho="100%" hint-size="100%,44px">Ver la edición 01</x-import>
+        </div>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:40px 24px 24px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogoMobile }}" gap="{{ gapLogoMobile }}" justificar="flex-start" hint-size="100%,80px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-direction:column; gap:32px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr; gap:24px;">
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A; word-break:break-word;">[EMAIL DEL COLECTIVO]</p>
+              </div>
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+                <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+              </div>
+            </div>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="100px" rotacion="-8" hint-size="100px,100px"></x-import>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="1.75rem" hint-size="260px,36px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+</section>
+
+<!--
+NOTA PARA DESARROLLO · /manifiesto
+- Componentes del design system: Nav, CajaNombre, FotoPegada, PalabrasClave, Boton, Sello, Anotacion, FranjaAliados, HiloTricolor. Nav y Pie idénticos a Home.dc.html (el Pie es único en todo el sitio y mantiene la FranjaAliados).
+- Pantallas: Desktop 1440 y Mobile 390.
+- Cita: texto literal aprobado del post del 31.07.2026, entre comillas, mono 20 px a 60 ch. No se edita ni se recorta. Debajo, "Post del 31.07.2026" en etiqueta mono grafito.
+- "Cómo empezó": tres bloques en grilla 4fr/8fr (1fr/5fr en mobile). El número va en mono 700 azul-sello y hace de guía de lectura; no es un dato del contenido.
+- Cada bloque: fecha en CajaNombre chica, dos líneas en mono y una FotoPegada con el pie de autoría. Las fotos son de la obra existente en assets/obra/; el pie es el crédito, no el título de la obra.
+- Cierre: PalabrasClave con la capa real assets/marca/palabras-clave.png (FAMILIA / RESILIENCIA / EXILIO, siempre las tres en ese orden) y Boton a /ediciones/buenos-aires-2026.
+- Sin cifras: no hay montos recaudados ni cantidades de asistentes confirmados.
+- La colocación (grid, márgenes, rotación) siempre va en un div envolvente, nunca en el componente: los estilos de posición no atraviesan el montaje.
+- Radio 0, foco outline 2 px azul-sello, mínimo 44 px en todo lo interactivo, sin emojis ni íconos.
+- Placeholders: [EMAIL DEL COLECTIVO], aliados a confirmar (logo tricolor de manos, CCC).
+-->
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      navLinks: [
+        { etiqueta: "Manifiesto", href: "/manifiesto" }, { etiqueta: "Artistas", href: "/artistas" }, { etiqueta: "Ediciones", href: "/ediciones" },
+        { etiqueta: "Convocatoria", href: "/convocatoria" }, { etiqueta: "Apoyar", href: "/apoyar" },
+      ],
+      altoLogo: 36, altoLogoMobile: 28, gapLogoMobile: 24,
+      aliados: [
+        { src: "assets/logos/consulado.png", alt: "CONSULADO Custom & Craft", href: "https://www.instagram.com/consulado.ba/" },
+        { src: "assets/logos/manos-tricolor.png", alt: "[ALIADO LOGO TRICOLOR — a confirmar]" },
+        { src: "assets/logos/infiltrado.png", alt: "infiltrado™", href: "https://www.instagram.com/infiltrado.tm/" },
+        { src: "assets/logos/ccc.png", alt: "CCC [a confirmar]" },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
