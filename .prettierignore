@@ -1,0 +1,8 @@
+dist/
+.astro/
+node_modules/
+design/
+docs/capturas/
+package-lock.json
+playwright-report/
+test-results/
