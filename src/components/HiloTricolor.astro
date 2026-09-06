@@ -1,0 +1,38 @@
+---
+/**
+ * HiloTricolor (design-system.md §7.12, item 12; design/ds/canvas/Elementos.dc.html
+ * block "HILOTRICOLOR"): a 3px line in three equal solid thirds — yellow /
+ * blue / red, the only place in the whole UI where the Venezuelan tricolor
+ * appears in full (design-system.md §3.3, "tricolor solo en HiloTricolor...
+ * nunca como fondo, botón o acento de UI"). Detail of `Pie` (SM-028) or of a
+ * future edition badge, never a generic section divider.
+ *
+ * The three colors are fixed and carry no props (backlog SM-024, "sin props
+ * de color"; PLAN.md §5, "el tricolor es fijo"): the `.hilo-tricolor` class
+ * in theme.css supplies the 3px height and the hard-stopped gradient that
+ * renders as three solid blocks. `ancho` (PLAN.md §5) is the only prop, for
+ * a narrower badge use case; it is applied as an inline style because
+ * Tailwind's `w-*` utilities need a literal class string at build time and
+ * cannot take an arbitrary value from a runtime prop.
+ *
+ * Purely decorative — it carries no information of its own — so it is
+ * `aria-hidden`.
+ *
+ * The scroll-triggered sweep of design-system.md §11.4 (`data-entrada="hilo"`)
+ * is SM-069 (Fase 2, movimiento) and out of this ticket's scope: this
+ * component renders only the static line. `theme.css` already scopes that
+ * animation to elements carrying `[data-entrada='hilo']`, so omitting the
+ * attribute here is enough to leave it unanimated for now.
+ *
+ * No position classes are accepted here (diseno-web-indice.md, decision 13):
+ * a caller that needs to place this within a layout wraps it instead.
+ */
+interface Props {
+  /** CSS width value. Defaults to 100%, the `Pie` use case. */
+  ancho?: string;
+}
+
+const { ancho = '100%' } = Astro.props;
+---
+
+<div class="hilo-tricolor" aria-hidden="true" style={`width: ${ancho};`}></div>
