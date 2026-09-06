@@ -1,0 +1,219 @@
+---
+/**
+ * PalabrasClave — the brand's three-word mark (design-system.md §7, item 10
+ * "Palabras clave (`PalabrasClave`)": «FAMILIA / RESILIENCIA / EXILIO
+ * apiladas, condensadas, azul-sello con textura de sello; horizontal o
+ * vertical en un margen, siempre las tres juntas y en ese orden»;
+ * design/ds/canvas/Elementos.dc.html, block "PALABRASCLAVE";
+ * design/ds/components/expediente/PalabrasClave.jsx is the reference for the
+ * exact CSS mechanics — translated here to Tailwind utilities and
+ * astro:assets, never copied as React).
+ *
+ * The three words are never translated (CLAUDE.md, "No se traducen"), so the
+ * default lives in `consts.ts` rather than `i18n/*.json`: this component's
+ * prop list carries no `idioma` prop to key a dictionary lookup on.
+ *
+ * Two independent axes, checked against the two pages that use it today:
+ * - Shape: text (default — `font-display`, `text-azul-sello`, `.sello-grano`
+ *   texture) or `imagen` (the real printed capa,
+ *   `assets/marca/palabras-clave.png`).
+ * - `orientacion`: `horizontal` (default) or `vertical` (Edicion.dc.html:
+ *   "vertical en el margen derecho del desktop, horizontal centrada al final
+ *   en mobile").
+ *
+ * ROTATION. Vertical text uses `writing-mode: vertical-rl` (turns the words
+ * into columns reading top to bottom) plus a 180° rotation so the block reads
+ * bottom to top instead, matching PalabrasClave.jsx (`writingMode:
+ * "vertical-rl", transform: "rotate(180deg)"`) and its vertical image
+ * (`transform: "rotate(-90deg)"`).
+ *
+ * That rotation is applied with the standalone CSS `rotate` property, never
+ * `transform`. Tailwind v4's `rotate-*` utilities compile to exactly that
+ * (verified against this repo's own build output: `.rotate-180{rotate:180deg}`,
+ * `.-rotate-90{rotate:-90deg}`). It matters because the text branch carries
+ * `.sello-grano`, and theme.css's `prefers-reduced-motion: reduce` block
+ * force-clears `transform` on `[class*='sello']` — a rule aimed at the
+ * *decorative* small-angle rotations of FotoPegada / Anotacion / Sello. Written
+ * as `transform: rotate(180deg)` this structural rotation would be stripped
+ * under reduced motion, leaving the text vertical but reading top to bottom;
+ * `rotate` is a separate property, so that rule does not reach it (confirmed at
+ * runtime with reduced motion emulated: `getComputedStyle(...).rotate` stays
+ * `180deg`).
+ *
+ * VERTICAL IMAGE. `rotate`, like `transform`, spins an element's paint without
+ * swapping its layout box: a 376×281 image rotated -90° still occupies a
+ * 376px-wide box while painting 281px wide. So the image is wrapped in a `div`
+ * sized to the POST-rotation footprint (dimensions swapped, via
+ * `aspect-ratio`) — that wrapper is what participates in layout — and the
+ * `<Image>` is centred on it with percentage `top`/`left` plus the standalone
+ * `translate` property, at percentage width/height of its own un-rotated ratio,
+ * so the rotated result lands exactly on the wrapper at whatever size the
+ * wrapper ends up. Those percentages are >100% pre-rotation (376/281 ≈
+ * 133.8%), which collides with Tailwind's preflight `img { max-width: 100% }`;
+ * `max-w-none` opts back out of it, and the wrapper's own `min(100%, …)`
+ * remains the only real width limit.
+ *
+ * NO HORIZONTAL OVERFLOW (this ticket's acceptance criterion, and the reason
+ * every branch below states a width instead of leaving it `auto`). Each of the
+ * four shapes resolves its own width to at most 100% of its container:
+ * `width: min(100%, …); height: auto` on the horizontal image, the same
+ * `min(100%, …)` plus `aspect-ratio` on the vertical image's wrapper, `w-fit`
+ * on the text branch. Two consequences, both load-bearing:
+ * - The component cannot itself grow past its container in either orientation,
+ *   so it cannot be the cause of a horizontal scrollbar. (Where the caller
+ *   *puts* it is a separate matter — Edicion.dc.html's desktop margin instance
+ *   sits at `right: -88px` on its own wrapper. Placement belongs to the
+ *   wrapper, per diseno-web-indice.md decision 13.)
+ * - None of the four widths is the keyword `auto`, which is what flexbox's
+ *   cross-axis stretch requires in order to apply. A caller's plain
+ *   `display:flex; flex-direction:column` wrapper — the literal pattern of the
+ *   cierre sections of Manifiesto.dc.html and Edicion.dc.html — therefore
+ *   cannot stretch these boxes to the container's full width and squash the
+ *   image's 376:281 aspect ratio.
+ *
+ * IMAGE SIZING — `tamano` picks one of two algorithms, resolved from whether
+ * the caller passed it at all (checked before the text branch's own `3rem`
+ * default):
+ * - Omitted (Manifiesto.dc.html's cierre): the source's native size, capped so
+ *   it still shrinks in a narrower wrapper (Manifiesto's mobile passes
+ *   `width:260px` on its own `<div>`).
+ * - Given (both of Edicion.dc.html's image instances): PalabrasClave.jsx's
+ *   formula, `calc(tamano * 3.2)` tall, expressed here as the width it implies
+ *   (`× 376/281`) so both branches share a single `min(100%, …)` +
+ *   `height:auto` cap. Written that way rather than as a fixed height with
+ *   `width:auto`, the cap shrinks the box proportionally instead of squashing
+ *   it — the behaviour measured on the no-`tamano` branch (376 → 342 → 272px
+ *   at 1440 / 390 / 320, ratio held at 1.338). The `tamano` branch is never
+ *   capped at the sizes this ticket exercises (`2.5rem` → 171px, narrower than
+ *   any of the three viewports), so there the proportional shrink is design
+ *   intent, not a measured result.
+ *
+ * OBSERVACIÓN: that split reconciles two pages that disagree. Manifiesto's
+ * cierre passes no `tamano` and its `hint-size` is the PNG's native 376×281,
+ * while both Edicion instances pass `tamano` and their `hint-size` matches the
+ * .jsx formula (`2.5rem` → 128px tall, hint 170×128; `3rem` → 153.6px, hint
+ * 200×160). PalabrasClave.jsx's own `tamano = "3rem"` default would render
+ * Manifiesto's cierre at 205×154 instead of 376×281, so a single always-on rule
+ * contradicts one page or the other's literal pixels.
+ *
+ * Placement (grid position, margins, the wrapper's own rotation) is the
+ * caller's job: per decision 13, this component accepts no position classes.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import { PALABRAS_CLAVE } from '../consts.ts';
+
+interface Props {
+  /** The three words, always in this order. Defaults to `consts.ts`'s `PALABRAS_CLAVE`. */
+  palabras?: [string, string, string];
+  /** Defaults to `horizontal` (words stacked top to bottom). */
+  orientacion?: 'horizontal' | 'vertical';
+  /** CSS length, e.g. `"3rem"`. Text branch: its font-size (defaults to `3rem`). Image branch: its presence (not the value alone) switches from native-size to the `calc(tamano * 3.2)` formula — see "IMAGE SIZING" above. */
+  tamano?: string;
+  /** The real printed capa (`assets/marca/palabras-clave.png`). Omit to render the font-display text branch instead. */
+  imagen?: ImageMetadata;
+  /** Cross-axis alignment of the stacked words. Defaults to `centro`. */
+  alinear?: 'centro' | 'izquierda' | 'derecha';
+}
+
+const {
+  palabras = PALABRAS_CLAVE,
+  orientacion = 'horizontal',
+  tamano,
+  imagen,
+  alinear = 'centro',
+} = Astro.props;
+
+const vertical = orientacion === 'vertical';
+
+// Text branch always needs a font-size; `3rem` matches the .jsx default.
+const tamanoTexto = tamano ?? '3rem';
+
+// Shared accessible name for both branches: joined with " · ", matching this
+// ticket's literal instruction for the image `alt` ("Familia · Resiliencia ·
+// Exilio") and reused as `aria-label` on the text branch so a screen reader
+// reads the three words as one phrase regardless of how the
+// writing-mode/rotate combination reorders them visually.
+const etiqueta = palabras.join(' · ');
+
+const CLASE_ALINEACION: Record<'centro' | 'izquierda' | 'derecha', string> = {
+  centro: 'items-center',
+  izquierda: 'items-start',
+  derecha: 'items-end',
+};
+
+// `w-fit` (never an implicit `auto`) is what keeps this box at its own
+// content's width inside a caller's column-flex wrapper — see "NO HORIZONTAL
+// OVERFLOW" above. The rest mirrors the .jsx reference's hardcoded display
+// styles (line-height 1.05, letter-spacing .06em, uppercase).
+const clasesTexto = [
+  'sello-grano',
+  'inline-flex',
+  'w-fit',
+  'flex-col',
+  CLASE_ALINEACION[alinear],
+  'font-display',
+  'text-azul-sello',
+  'uppercase',
+  'leading-[1.05]',
+  'tracking-[0.06em]',
+  vertical ? '[writing-mode:vertical-rl] rotate-180' : '',
+]
+  .filter(Boolean)
+  .join(' ');
+
+// The source's natural size: the default box, and always the origin of the
+// ratios that size the un-rotated <Image> as a percentage of its wrapper.
+// Rounded so the emitted inline style is deterministic build to build.
+const anchoOriginal = imagen?.width ?? 0;
+const altoOriginal = imagen?.height ?? 0;
+const relacion = altoOriginal > 0 ? anchoOriginal / altoOriginal : 1;
+const porcentajeAncho = (relacion * 100).toFixed(4);
+const porcentajeAlto = (anchoOriginal > 0 ? (altoOriginal / anchoOriginal) * 100 : 0).toFixed(4);
+
+// Width cap per branch. Horizontal: the natural width, or the .jsx height
+// formula expressed as the width it implies. Vertical: the same values after
+// the -90° swap, where the un-rotated *height* becomes the rendered width.
+const anchoMaximoHorizontal = tamano
+  ? `calc(${tamano} * 3.2 * ${relacion.toFixed(5)})`
+  : `${anchoOriginal}px`;
+const anchoMaximoVertical = tamano ? `calc(${tamano} * 3.2)` : `${altoOriginal}px`;
+---
+
+{
+  imagen ? (
+    vertical ? (
+      <div
+        class="relative inline-block"
+        style={`width: min(100%, ${anchoMaximoVertical}); aspect-ratio: ${altoOriginal} / ${anchoOriginal};`}
+      >
+        <Image
+          src={imagen}
+          alt={etiqueta}
+          loading="lazy"
+          class="absolute block max-w-none -rotate-90"
+          style={`top: 50%; left: 50%; width: ${porcentajeAncho}%; height: ${porcentajeAlto}%; translate: -50% -50%;`}
+        />
+      </div>
+    ) : (
+      <Image
+        src={imagen}
+        alt={etiqueta}
+        loading="lazy"
+        class="block"
+        style={`width: min(100%, ${anchoMaximoHorizontal}); height: auto;`}
+      />
+    )
+  ) : (
+    // `role="img"` makes `aria-label` the authoritative accessible name and
+    // collapses the subtree for assistive tech, so the `aria-hidden` spans
+    // below never risk announcing as nothing (a role-less `<div>` with
+    // `aria-label` is not guaranteed to do that on its own).
+    <div class={clasesTexto} style={`font-size: ${tamanoTexto};`} role="img" aria-label={etiqueta}>
+      {palabras.map((palabra) => (
+        <span aria-hidden="true">{palabra}</span>
+      ))}
+    </div>
+  )
+}
