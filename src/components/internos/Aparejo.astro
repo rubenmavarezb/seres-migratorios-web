@@ -1,0 +1,85 @@
+---
+/**
+ * Aparejo — internal helper (not a canonical component; diseno-web-indice.md
+ * decision 3) that lays out CajaNombre items in a brick-bond pattern: rows
+ * cycling through a `filas` pattern, each row centered and separated by
+ * 12px (design/ds/canvas/Componentes.dc.html "02 · CAJANOMBRE").
+ *
+ * OBSERVACIÓN (documented, not corrected — design-system.md §13): design-
+ * system.md §7.3 and the SM-016 backlog describe a single alternating 3/2
+ * pattern ("filas alternadas de 3 y 2"). design/Edicion.dc.html's
+ * renderVals() instead uses a fixed [3, 3, 3] pattern on desktop for
+ * "Exponen" (its NOTA PARA DESARROLLO says the same: "Aparejo 3/3/3 en
+ * desktop, 2/1 en mobile"). Resolved per tech-lead instruction with a
+ * `filas` prop: it defaults to the design-system's alternating [3, 2], and
+ * a caller that needs the edition page's fixed rhythm passes
+ * `filas={[3, 3, 3]}` explicitly.
+ *
+ * Two independent renders (desktop / mobile), each toggled with a `hidden`
+ * Tailwind breakpoint class, are used instead of one flex-wrapped list so
+ * the row groups can differ (3/2 vs 2/1) without CSS keyed off child index
+ * ("Sin CSS generado por índice"). No `flex-wrap` on a row: a row that
+ * cannot fit its boxes on one line shrinks them instead (CSS flexbox
+ * automatic minimum size lets the text inside a box wrap to a second line
+ * before the row itself would overflow).
+ */
+import CajaNombre from '../CajaNombre.astro';
+
+interface ItemAparejo {
+  texto: string;
+  href?: string;
+}
+
+interface Props {
+  items: ItemAparejo[];
+  /** Row pattern, desktop and up. Cycles: [3, 2] → 3, 2, 3, 2, … */
+  filas?: number[];
+  /** Row pattern, below the desktop breakpoint. */
+  filasMobile?: number[];
+}
+
+const { items, filas = [3, 2], filasMobile = [2, 1] } = Astro.props;
+
+/** Splits `items` into rows, cycling through `patron` (non-positive entries ignored). */
+function agruparEnFilas(items: ItemAparejo[], patron: number[]): ItemAparejo[][] {
+  const tamanos = patron.filter((n) => n > 0);
+  if (tamanos.length === 0) return items.length > 0 ? [items] : [];
+
+  const filasResultado: ItemAparejo[][] = [];
+  let indice = 0;
+  let fila = 0;
+  while (indice < items.length) {
+    const n = tamanos[fila % tamanos.length];
+    filasResultado.push(items.slice(indice, indice + n));
+    indice += n;
+    fila += 1;
+  }
+  return filasResultado;
+}
+
+const filasDesktop = agruparEnFilas(items, filas);
+const filasMobileCalculadas = agruparEnFilas(items, filasMobile);
+---
+
+<div class="hidden flex-col items-center gap-3 md:flex" data-aparejo="desktop">
+  {
+    filasDesktop.map((fila) => (
+      <div class="flex justify-center gap-3">
+        {fila.map((item) => (
+          <CajaNombre texto={item.texto} href={item.href} />
+        ))}
+      </div>
+    ))
+  }
+</div>
+<div class="flex flex-col items-center gap-3 md:hidden" data-aparejo="mobile">
+  {
+    filasMobileCalculadas.map((fila) => (
+      <div class="flex justify-center gap-3">
+        {fila.map((item) => (
+          <CajaNombre texto={item.texto} href={item.href} />
+        ))}
+      </div>
+    ))
+  }
+</div>
