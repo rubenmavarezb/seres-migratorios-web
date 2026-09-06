@@ -1,0 +1,74 @@
+---
+/**
+ * BloqueFicha (design-system.md §7.1): expediente header with three mono
+ * columns — FECHA: / HORARIOS: / LUGAR: — each with its value below,
+ * collapsing to a single column on mobile.
+ *
+ * Spec source: design/ds/canvas/Componentes.dc.html, block "01 · BLOQUEFICHA"
+ * (labels at 13px "etiqueta" style, values at 14px plain mono, 20px gap
+ * between the three groups). Values arrive already formatted by the caller
+ * (e.g. "08.08.2026", "10:00 AM – 19:00"): this component never formats
+ * dates or times itself.
+ *
+ * Placement (grid position, margins, container rotation) is the caller's
+ * job — this component accepts no position classes, per diseno-web-indice.md
+ * decision 13.
+ *
+ * Every value renders through `uppercase` (text-transform), never baked-in
+ * caps, so the caller can always pass real-case content (CLAUDE.md, "Mayúsculas
+ * solo con text-transform") — labels stay legible in source and LUGAR's three
+ * lines still render capitalized as in the lamina.
+ */
+import { t, type Idioma } from '../i18n/utils.ts';
+
+interface Props {
+  fecha: string;
+  horario: string;
+  lugar: {
+    nombre: string;
+    direccion: string;
+    ciudad: string;
+  };
+  variante?: 'papel' | 'caja';
+  idioma?: Idioma;
+}
+
+const { fecha, horario, lugar, variante = 'papel', idioma } = Astro.props;
+
+// Falls back to Astro.currentLocale (typed 'string | undefined' by Astro
+// itself), narrowed to the two locales this site supports.
+const idiomaActual: Idioma = idioma ?? (Astro.currentLocale === 'en' ? 'en' : 'es');
+
+// "En papel": a 1px top rule (variant used inline in a page section).
+// "En caja": a 2px ink border with a pure-white fill, for use over a photo
+// or a colored section (design/ds/canvas/Componentes.dc.html, "01 · BLOQUEFICHA").
+const clasesVariante =
+  variante === 'caja'
+    ? 'border-2 border-tinta bg-papel-puro px-[22px] py-5'
+    : 'border-t border-linea pt-3.5';
+---
+
+<dl class:list={['grid grid-cols-1 gap-5 text-tinta md:grid-cols-3', clasesVariante]}>
+  <div class="flex flex-col gap-1.5">
+    <dt class="font-mono text-metadatos font-bold uppercase tracking-wide">
+      {t(idiomaActual, 'ficha.fecha')}
+    </dt>
+    <dd class="font-mono text-[0.875rem] font-normal uppercase">{fecha}</dd>
+  </div>
+  <div class="flex flex-col gap-1.5">
+    <dt class="font-mono text-metadatos font-bold uppercase tracking-wide">
+      {t(idiomaActual, 'ficha.horarios')}
+    </dt>
+    <dd class="font-mono text-[0.875rem] font-normal uppercase">{horario}</dd>
+  </div>
+  <div class="flex flex-col gap-1.5">
+    <dt class="font-mono text-metadatos font-bold uppercase tracking-wide">
+      {t(idiomaActual, 'ficha.lugar')}
+    </dt>
+    <dd class="font-mono text-[0.875rem] font-normal uppercase leading-normal">
+      {lugar.nombre}<br />
+      {lugar.direccion}<br />
+      {lugar.ciudad}
+    </dd>
+  </div>
+</dl>
