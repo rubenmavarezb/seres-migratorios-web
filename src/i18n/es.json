@@ -1,6 +1,7 @@
 {
   "comun": {
-    "irAlContenido": "Ir al contenido"
+    "irAlContenido": "Ir al contenido",
+    "cargando": "Cargando…"
   },
   "nav": {
     "manifiesto": "Manifiesto",
@@ -10,6 +11,152 @@
     "apoyar": "Apoyar",
     "idioma": "Idioma",
     "abrirMenu": "Abrir menú",
-    "cerrarMenu": "Cerrar menú"
+    "cerrarMenu": "Cerrar menú",
+    "menu": "Menú"
+  },
+  "ficha": {
+    "fecha": "Fecha:",
+    "horarios": "Horarios:",
+    "lugar": "Lugar:",
+    "ciudad": "Ciudad:",
+    "instagram": "Instagram:",
+    "ediciones": "Ediciones:",
+    "rol": "Rol:",
+    "musica": "Música"
+  },
+  "roles": {
+    "fotea": "Fotea",
+    "expone": "Expone",
+    "film": "Film",
+    "musica": "Música"
+  },
+  "botones": {
+    "leerElManifiesto": "Leer el manifiesto",
+    "verTodosLosArtistas": "Ver todos",
+    "aportar": "Aportar",
+    "postulate": "Postulate",
+    "comoParticipar": "Cómo participar",
+    "verLaEdicion": "Ver la edición",
+    "verLaUltimaEdicion": "Ver la última edición",
+    "seguinosEnInstagram": "Seguinos en Instagram",
+    "volverAlInicio": "Volver al inicio",
+    "enviarPostulacion": "Postulate",
+    "verLaPrimeraEdicion": "Ver la primera edición",
+    "comoApoyar": "Cómo apoyar",
+    "cerrar": "Cerrar",
+    "anterior": "Anterior",
+    "siguiente": "Siguiente"
+  },
+  "formulario": {
+    "etiquetas": {
+      "nombre": "Nombre",
+      "ciudad": "Ciudad",
+      "pais": "País",
+      "email": "Email",
+      "instagram": "Instagram",
+      "portfolio": "Portfolio (URL)",
+      "disciplina": "Disciplina",
+      "edicion": "Edición a la que te postulás",
+      "mensaje": "Mensaje corto",
+      "consentimiento": "Acepto que usen mis datos para contactarme por esta convocatoria"
+    },
+    "placeholders": {
+      "instagram": "@usuario",
+      "disciplina": "Elegí una",
+      "edicion": "[PRÓXIMA EDICIÓN A CONFIRMAR]"
+    },
+    "opciones": {
+      "fotografia": "fotografía",
+      "film": "film",
+      "musica": "música",
+      "otro": "otro"
+    },
+    "errores": {
+      "faltaNombre": "Falta el nombre.",
+      "faltaCiudad": "Falta la ciudad.",
+      "faltaPais": "Falta el país.",
+      "faltaEmail": "Falta el email.",
+      "emailInvalido": "El email no es válido.",
+      "instagramInvalido": "El usuario va con arroba: @usuario.",
+      "portfolioInvalido": "El portfolio tiene que ser una URL.",
+      "faltaDisciplina": "Elegí una disciplina.",
+      "faltaConsentimiento": "Tenés que aceptar el consentimiento."
+    },
+    "resumen": "Revisá los campos marcados"
+  },
+  "convocatoria": {
+    "abierta": {
+      "h1": "Convocatoria abierta",
+      "anotacion": "sumate",
+      "h2": "Postulate"
+    },
+    "cerrada": {
+      "h1": "Convocatoria",
+      "h2": "La próxima",
+      "caja": "Convocatoria cerrada",
+      "linea": "La próxima se anuncia por acá."
+    },
+    "queBuscamos": {
+      "titulo": "Qué buscamos",
+      "linea1": "Fotógraf@s para los sets.",
+      "linea2": "Film y música para la jornada.",
+      "linea3": "Manos para el equipo."
+    },
+    "comoFunciona": {
+      "titulo": "Cómo funciona",
+      "linea1": "Recorrido por sets numerados.",
+      "linea2": "Aporte solidario al llegar.",
+      "linea3": "Las fotos llegan por email."
+    },
+    "quienPuedePostularse": {
+      "titulo": "Quién puede postularse",
+      "linea1": "Desde lo individual hasta lo familiar.",
+      "linea2": "Todas las nacionalidades."
+    }
+  },
+  "estados": {
+    "sinProximaEdicion": "[PRÓXIMA EDICIÓN A CONFIRMAR]",
+    "aConfirmar": "[A CONFIRMAR]",
+    "proximaEdicionAConfirmar": "[PRÓXIMA EDICIÓN A CONFIRMAR]",
+    "todaviaNoHayFecha": "Todavía no hay fecha para la próxima edición.",
+    "fotosDelDia": "Las fotos del día se publican acá cuando estén listas.",
+    "laProximaSeAnunciaPorAca": "La próxima se anuncia por acá."
+  },
+  "gracias": {
+    "titulo": "Gracias",
+    "linea": "Te escribimos por email cuando cierre la convocatoria."
+  },
+  "noEncontrada": {
+    "titulo": "Página no encontrada",
+    "anotacion": "acá no hay nada",
+    "linea": "Puede que el link esté mal o que la página se haya movido."
+  },
+  "pie": {
+    "contacto": {
+      "email": "Email:",
+      "instagram": "Instagram:"
+    },
+    "aguante": "¡Aguante la fotografía!",
+    "aliados": "[ALIADOS]"
+  },
+  "seo": {
+    "tituloSitio": "Seres Migratorios",
+    "separador": "·",
+    "descripcionPorDefecto": "La fotografía como refugio en el exilio"
+  },
+  "apoyar": {
+    "titulo": "Cómo apoyar",
+    "anotacion": "Toooda ayuda es bienvenida",
+    "aporte": "Aporte",
+    "copiasEnVenta": "Copias en venta",
+    "voluntariadoYDifusion": "Voluntariado y difusión",
+    "loRecaudadoVaALaCausa": "Lo recaudado va a la causa.",
+    "escribinosPorInstagram": "Escribinos por Instagram.",
+    "aDondeVaLaPlata": "A dónde va la plata",
+    "textoTransparencia": "[TEXTO DE TRANSPARENCIA: destino de los fondos de cada edición]",
+    "edicion01Monto": "Edición 01 · [MONTO Y DESTINO A CONFIRMAR]"
+  },
+  "manifiesto": {
+    "comoEmpezo": "Cómo empezó"
   }
 }

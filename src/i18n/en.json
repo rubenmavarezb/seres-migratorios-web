@@ -1,6 +1,7 @@
 {
   "comun": {
-    "irAlContenido": "Skip to content"
+    "irAlContenido": "Skip to content",
+    "cargando": "Loading…"
   },
   "nav": {
     "manifiesto": "Manifesto",
@@ -10,6 +11,152 @@
     "apoyar": "Support",
     "idioma": "Language",
     "abrirMenu": "Open menu",
-    "cerrarMenu": "Close menu"
+    "cerrarMenu": "Close menu",
+    "menu": "Menu"
+  },
+  "ficha": {
+    "fecha": "Date:",
+    "horarios": "Hours:",
+    "lugar": "Location:",
+    "ciudad": "City:",
+    "instagram": "Instagram:",
+    "ediciones": "Editions:",
+    "rol": "Role:",
+    "musica": "Music"
+  },
+  "roles": {
+    "fotea": "Shoots",
+    "expone": "Exhibits",
+    "film": "Film",
+    "musica": "Music"
+  },
+  "botones": {
+    "leerElManifiesto": "Read the manifesto",
+    "verTodosLosArtistas": "See all",
+    "aportar": "Contribute",
+    "postulate": "Apply",
+    "comoParticipar": "How to join",
+    "verLaEdicion": "See the edition",
+    "verLaUltimaEdicion": "See the latest edition",
+    "seguinosEnInstagram": "Follow us on Instagram",
+    "volverAlInicio": "Back to home",
+    "enviarPostulacion": "Apply",
+    "verLaPrimeraEdicion": "See the first edition",
+    "comoApoyar": "How to support",
+    "cerrar": "Close",
+    "anterior": "Previous",
+    "siguiente": "Next"
+  },
+  "formulario": {
+    "etiquetas": {
+      "nombre": "Name",
+      "ciudad": "City",
+      "pais": "Country",
+      "email": "Email",
+      "instagram": "Instagram",
+      "portfolio": "Portfolio (URL)",
+      "disciplina": "Discipline",
+      "edicion": "Edition you're applying to",
+      "mensaje": "Short message",
+      "consentimiento": "I agree to my data being used to contact me about this open call"
+    },
+    "placeholders": {
+      "instagram": "@handle",
+      "disciplina": "Pick one",
+      "edicion": "[NEXT EDITION TO BE CONFIRMED]"
+    },
+    "opciones": {
+      "fotografia": "photography",
+      "film": "film",
+      "musica": "music",
+      "otro": "other"
+    },
+    "errores": {
+      "faltaNombre": "Please enter your name.",
+      "faltaCiudad": "Please enter your city.",
+      "faltaPais": "Please enter your country.",
+      "faltaEmail": "Please enter your email.",
+      "emailInvalido": "That email doesn't look right.",
+      "instagramInvalido": "Your handle needs an @: @handle.",
+      "portfolioInvalido": "Portfolio has to be a URL.",
+      "faltaDisciplina": "Pick a discipline.",
+      "faltaConsentimiento": "You need to accept the consent."
+    },
+    "resumen": "Check the highlighted fields"
+  },
+  "convocatoria": {
+    "abierta": {
+      "h1": "Open call",
+      "anotacion": "join us",
+      "h2": "Apply"
+    },
+    "cerrada": {
+      "h1": "Open call",
+      "h2": "The next one",
+      "caja": "Open call closed",
+      "linea": "We'll announce the next one here."
+    },
+    "queBuscamos": {
+      "titulo": "What we're looking for",
+      "linea1": "Photographers for the sets.",
+      "linea2": "Film and music for the day.",
+      "linea3": "Hands for the crew."
+    },
+    "comoFunciona": {
+      "titulo": "How it works",
+      "linea1": "A route through numbered sets.",
+      "linea2": "A solidarity donation on arrival.",
+      "linea3": "Photos arrive by email."
+    },
+    "quienPuedePostularse": {
+      "titulo": "Who can apply",
+      "linea1": "From solo to family.",
+      "linea2": "Every nationality."
+    }
+  },
+  "estados": {
+    "sinProximaEdicion": "[NEXT EDITION TO BE CONFIRMED]",
+    "aConfirmar": "[TO BE CONFIRMED]",
+    "proximaEdicionAConfirmar": "[NEXT EDITION TO BE CONFIRMED]",
+    "todaviaNoHayFecha": "There's no date yet for the next edition.",
+    "fotosDelDia": "Photos from the day go up here once they're ready.",
+    "laProximaSeAnunciaPorAca": "We'll announce the next one here."
+  },
+  "gracias": {
+    "titulo": "Thanks",
+    "linea": "We'll email you when the open call closes."
+  },
+  "noEncontrada": {
+    "titulo": "Page not found",
+    "anotacion": "nothing here",
+    "linea": "The link might be wrong, or the page may have moved."
+  },
+  "pie": {
+    "contacto": {
+      "email": "Email:",
+      "instagram": "Instagram:"
+    },
+    "aguante": "¡Aguante la fotografía!",
+    "aliados": "[PARTNERS]"
+  },
+  "seo": {
+    "tituloSitio": "Seres Migratorios",
+    "separador": "·",
+    "descripcionPorDefecto": "Photography as a refuge in exile"
+  },
+  "apoyar": {
+    "titulo": "How to support",
+    "anotacion": "[EN PENDIENTE]",
+    "aporte": "Contribution",
+    "copiasEnVenta": "Prints for sale",
+    "voluntariadoYDifusion": "Volunteer & spread the word",
+    "loRecaudadoVaALaCausa": "All proceeds go to the cause.",
+    "escribinosPorInstagram": "Message us on Instagram.",
+    "aDondeVaLaPlata": "Where the money goes",
+    "textoTransparencia": "[TRANSPARENCY TEXT: what each edition's funds go to]",
+    "edicion01Monto": "Edition 01 · [AMOUNT AND USE TO BE CONFIRMED]"
+  },
+  "manifiesto": {
+    "comoEmpezo": "How it began"
   }
 }
