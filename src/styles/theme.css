@@ -164,9 +164,10 @@
      line-height 1: con padding 12 y borde 2 la caja mide exactamente los 44 px
      de min-h-11, como CajaNombre.jsx (line-height normal + min-height 44). Con
      tracking-wide (0.025em) y el 1.5 heredado medía 49 px y 0.35 px de
-     espaciado (QA visual de Fase 2, R07 y R08). */
+     espaciado (QA visual de Fase 2, R07 y R08). whitespace-nowrap como
+     CajaNombre.jsx: un nombre nunca parte en dos líneas dentro de la caja. */
   .caja-nombre {
-    @apply inline-flex min-h-11 items-center justify-center border-2 border-tinta bg-papel-puro px-6 py-3 font-bold uppercase leading-none tracking-(--text-etiqueta--letter-spacing);
+    @apply inline-flex min-h-11 items-center justify-center border-2 border-tinta bg-papel-puro px-6 py-3 font-bold whitespace-nowrap uppercase leading-none tracking-(--text-etiqueta--letter-spacing);
     font-family: var(--font-mono);
   }
 

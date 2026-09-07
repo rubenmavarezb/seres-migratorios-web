@@ -18,10 +18,12 @@
  * Two independent renders (desktop / mobile), each toggled with a `hidden`
  * Tailwind breakpoint class, are used instead of one flex-wrapped list so
  * the row groups can differ (3/2 vs 2/1) without CSS keyed off child index
- * ("Sin CSS generado por índice"). No `flex-wrap` on a row: a row that
- * cannot fit its boxes on one line shrinks them instead (CSS flexbox
- * automatic minimum size lets the text inside a box wrap to a second line
- * before the row itself would overflow).
+ * ("Sin CSS generado por índice"). No `flex-wrap` on a row: `.caja-nombre`
+ * carries `whitespace-nowrap` (QA visual de Fase 2, R04), so a box never
+ * grows to a second line — a row relies on `tamanoMobile="chica"` (smaller
+ * type and padding) and on the `filasMobile` pattern to keep every row's
+ * names within the viewport; a name long enough to break that budget would
+ * overflow the row horizontally instead of wrapping.
  *
  * That row-per-render structure is also what makes SM-069's entrance possible:
  * design-system.md §11.4 asks for "cada fila es una unidad `[data-entrada]`",
@@ -44,9 +46,23 @@ interface Props {
   filas?: number[];
   /** Row pattern, below the desktop breakpoint. */
   filasMobile?: number[];
+  /** `CajaNombre` size of the desktop rows. Defaults to `normal`. */
+  tamano?: 'normal' | 'chica';
+  /** `CajaNombre` size of the mobile rows. Defaults to `chica`: the two
+   * láminas that use an Aparejo (Home.dc.html:198, Edicion.dc.html:242) pass
+   * `chica` to the mobile x-import and keep the desktop one normal, so the
+   * 2/1 rows fit in 342px without wrapping a name to two lines (QA visual de
+   * Fase 2, R04). */
+  tamanoMobile?: 'normal' | 'chica';
 }
 
-const { items, filas = [3, 2], filasMobile = [2, 1] } = Astro.props;
+const {
+  items,
+  filas = [3, 2],
+  filasMobile = [2, 1],
+  tamano = 'normal',
+  tamanoMobile = 'chica',
+} = Astro.props;
 
 /** Splits `items` into rows, cycling through `patron` (non-positive entries ignored). */
 function agruparEnFilas(items: ItemAparejo[], patron: number[]): ItemAparejo[][] {
@@ -74,7 +90,7 @@ const filasMobileCalculadas = agruparEnFilas(items, filasMobile);
     filasDesktop.map((fila) => (
       <div class="flex justify-center gap-3" data-entrada>
         {fila.map((item) => (
-          <CajaNombre texto={item.texto} href={item.href} />
+          <CajaNombre texto={item.texto} href={item.href} tamano={tamano} />
         ))}
       </div>
     ))
@@ -85,7 +101,7 @@ const filasMobileCalculadas = agruparEnFilas(items, filasMobile);
     filasMobileCalculadas.map((fila) => (
       <div class="flex justify-center gap-3" data-entrada>
         {fila.map((item) => (
-          <CajaNombre texto={item.texto} href={item.href} />
+          <CajaNombre texto={item.texto} href={item.href} tamano={tamanoMobile} />
         ))}
       </div>
     ))
