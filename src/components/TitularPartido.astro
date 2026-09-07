@@ -20,7 +20,36 @@
  * three rows with `grid-template-rows: subgrid` and places its two spans on
  * row 1 and row 3, and the slot wrapper is a plain sibling placed on row 2 —
  * visually in the middle, structurally outside the heading.
+ *
+ * The three rows are `auto`, never `grid-rows-3`: that utility is
+ * `repeat(3, minmax(0, 1fr))`, and equal fractions grow to the tallest row,
+ * so a slot with a 238 px claim stretched "Seres" and "Migratorios" from
+ * their 190 px line box to 238 px each (QA visual de Fase 2, R01: Home hero
+ * 714 px instead of the lámina's 634, Edición 01 960 instead of 651). With
+ * `auto` each word measures its own line-height and only the slot row is as
+ * tall as its content, which is what TitularPartido.jsx's flex column does.
+ *
+ * `separacion` / `separacionMobile` is the space between the three rows
+ * (TitularPartido.jsx `gap`), as a step of the project's spacing scale
+ * (theme.css "Espaciado": 1 = 4px, 2 = 8px, 3 = 12px, 4 = 16px), applied as
+ * the matching `gap-N` utility so the value stays a token: the láminas pass
+ * 8px / 4px on the Home (`Home.dc.html:51` and `:161`) and 16px / 12px on the
+ * edition page (`Edicion.dc.html:48` and `:197`). The subgrid heading inherits
+ * the gap, so it separates the words from the slot on both sides. Same
+ * `separacion` / `separacionMobile` pair as `FranjaAliados`; default `0`, the
+ * spacing the site had before the prop.
+ *
+ * `alinear` is the text alignment of the two words (`alinear` in the JSX:
+ * the Home lámina centers them on desktop and aligns them left on mobile),
+ * with `alinearMobile` for the band below `md`; the slot stays centered in
+ * every case, as in the JSX. The font size is not a prop beyond `tamano`: a
+ * page that needs another size on one breakpoint redefines the token on a
+ * wrapper (`max-md:[--text-display-xl:3rem]`), the pattern
+ * `/ediciones/[slug]` already uses for its 11rem.
  */
+/** Steps of the spacing scale a `TitularPartido` can put between its rows (theme.css "Espaciado", 0 to 16px). */
+type PasoDeEspaciado = 0 | 1 | 2 | 3 | 4;
+
 interface Props {
   /** Top word ("Seres"). Written in real capitalization; `uppercase` is a visual transform, not part of the text. */
   arriba: string;
@@ -30,9 +59,62 @@ interface Props {
   tamano?: 'xl' | 'lg';
   /** Heading level of the rendered element: 1 for the page's single `<h1>` (default), 2 for a secondary use so the page keeps exactly one `<h1>`. */
   nivel?: 1 | 2;
+  /** Space between the two words and the slot from `md` up, as a step of the spacing scale (theme.css "Espaciado": 2 = 8px on the Home, 4 = 16px on the edition page). Defaults to `0`. */
+  separacion?: PasoDeEspaciado;
+  /** Same, below `md` (1 = 4px on the Home, 3 = 12px on the edition page). Defaults to `separacion`. */
+  separacionMobile?: PasoDeEspaciado;
+  /** Text alignment of the two words from `md` up. Defaults to `centro`. */
+  alinear?: 'centro' | 'izquierda' | 'derecha';
+  /** Text alignment of the two words below `md`. Defaults to `alinear`. */
+  alinearMobile?: 'centro' | 'izquierda' | 'derecha';
 }
 
-const { arriba, abajo, tamano = 'xl', nivel = 1 } = Astro.props;
+const {
+  arriba,
+  abajo,
+  tamano = 'xl',
+  nivel = 1,
+  separacion = 0,
+  separacionMobile = separacion,
+  alinear = 'centro',
+  alinearMobile = alinear,
+} = Astro.props;
+
+// Literal class names, never `gap-${n}`: Tailwind v4 only generates the
+// utilities it can read verbatim in the source.
+const CLASE_SEPARACION_MOBILE: Record<PasoDeEspaciado, string> = {
+  0: 'gap-0',
+  1: 'gap-1',
+  2: 'gap-2',
+  3: 'gap-3',
+  4: 'gap-4',
+};
+const CLASE_SEPARACION_DESKTOP: Record<PasoDeEspaciado, string> = {
+  0: 'md:gap-0',
+  1: 'md:gap-1',
+  2: 'md:gap-2',
+  3: 'md:gap-3',
+  4: 'md:gap-4',
+};
+const claseSeparacion =
+  separacionMobile === separacion
+    ? CLASE_SEPARACION_MOBILE[separacion]
+    : `${CLASE_SEPARACION_MOBILE[separacionMobile]} ${CLASE_SEPARACION_DESKTOP[separacion]}`;
+
+const CLASE_ALINEACION_MOBILE = {
+  centro: 'text-center',
+  izquierda: 'text-left',
+  derecha: 'text-right',
+} as const;
+const CLASE_ALINEACION_DESKTOP = {
+  centro: 'md:text-center',
+  izquierda: 'md:text-left',
+  derecha: 'md:text-right',
+} as const;
+const claseAlineacion =
+  alinearMobile === alinear
+    ? CLASE_ALINEACION_MOBILE[alinear]
+    : `${CLASE_ALINEACION_MOBILE[alinearMobile]} ${CLASE_ALINEACION_DESKTOP[alinear]}`;
 
 // Dynamic tag (docs.astro.build, "Using dynamic tags and components"): the
 // variable must be capitalized so the compiler renders it as an element,
@@ -68,9 +150,9 @@ const claseTamano = tamano === 'xl' ? 'text-display-xl' : 'text-display-lg';
 const estiloTransicion = nivel === 1 ? 'view-transition-name: titular;' : undefined;
 ---
 
-<div class="grid grid-cols-1 grid-rows-3">
+<div class={`grid grid-cols-1 grid-rows-[auto_auto_auto] ${claseSeparacion}`}>
   <Etiqueta
-    class={`col-start-1 row-start-1 row-span-3 grid grid-rows-subgrid font-display uppercase text-center text-tinta ${claseTamano}`}
+    class={`col-start-1 row-start-1 row-span-3 grid grid-rows-subgrid font-display uppercase text-tinta ${claseAlineacion} ${claseTamano}`}
     style={estiloTransicion}
   >
     <span class="row-start-1">{arriba}</span>

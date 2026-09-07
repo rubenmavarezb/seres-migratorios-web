@@ -99,10 +99,10 @@ const CLASE_DIALOGO = [
   'grid-cols-[44px_minmax(0,1fr)_44px] grid-rows-[72px_minmax(0,1fr)_auto]',
   'md:grid-cols-[96px_minmax(0,1fr)_96px] md:grid-rows-[96px_minmax(0,1fr)_120px]',
 ].join(' ');
-/** Borderless mono arrow of the design, 44px minimum on both axes (CLAUDE.md, "objetivo táctil ≥ 44 px"). */
+/** Borderless mono arrow of the design at 2rem (Artista.dc.html "Lightbox", `font-size: 2rem`; QA visual de Fase 2, R12), 44px minimum on both axes (CLAUDE.md, "objetivo táctil ≥ 44 px"). */
 const CLASE_FLECHA = [
   'row-start-2 flex min-h-11 min-w-11 items-center justify-center self-center justify-self-center',
-  'font-mono text-2xl font-bold text-tinta transition-colors hover:text-azul-marcador',
+  'font-mono text-[2rem] font-bold text-tinta transition-colors hover:text-azul-marcador',
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello',
 ].join(' ');
 /** `[&_img]:` reaches the `<img>` inside `FotoPegada` (a descendant selector beats its own `w-full`), which is what bounds the photo to the viewport: the component has no size prop and is not modified here. */
