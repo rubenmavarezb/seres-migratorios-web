@@ -1,28 +1,56 @@
 ---
 /**
- * Top bar of every page (design system §7.15): the text logo on the left and
- * the five section links in mono 700 uppercase on the right, on `papel-puro`
- * between a 2 px `tinta` rule above and a 1 px `linea` rule below.
+ * Nav — top bar of every page (design-system.md §7, item 15; approved design
+ * at design/Home.dc.html, screens "Home · Desktop", "Home · Mobile" and
+ * "Home · Mobile · Menú abierto"; reference implementation at
+ * design/ds/components/navegacion/Nav.jsx, read for the exact shape and
+ * translated here to theme.css classes + Tailwind tokens, never copied as
+ * React).
  *
- * NOTE: this is the SM-012 skeleton, already carrying the definitive props of
- * PLAN.md §5. SM-027 completes it with the three pieces missing on purpose: the
- * full-screen mobile menu (`aria-expanded`, focus moved to the first link), the
- * `ES / EN` selector as a small `CajaNombre`, and the visual treatment of the
- * active link — the 2 px `tinta` underline of the approved design, which today
- * is only announced with `aria-current="page"`.
+ * Completes the SM-012 skeleton with the three pieces it left open: the
+ * full-screen mobile menu, the `ES / EN` selector as a small `CajaNombre`, and
+ * the visual treatment of the active link.
  *
- * Until that mobile menu exists the five links stay inline and wrap on a narrow
- * viewport, so the bar is given the design height (80 px desktop, 68 px mobile)
- * as a floor with `min-h-*` instead of a fixed height that would clip them. The
- * vertical padding is what keeps the logo whole: `display` runs at
- * `line-height: 0.85`, so its glyphs are taller than their own line box and a
- * bar with no padding cuts their tops off against the top of the viewport. On
- * desktop it is 14 px, the value that leaves the bar exactly on the 80 px of
- * the approved design once the two rules are counted in.
+ * Desktop (from `md`): brand on the left, the five section links in mono 700
+ * uppercase and the language selector on the right. Mobile (below `md`): the
+ * links collapse into a "Menú" control that opens a full-screen `<dialog>` on
+ * `papel` with the links in `display-lg`.
+ *
+ * ── The menu works without JavaScript ────────────────────────────────────
+ * The opener is an `<a href="#menu">` and the `<style>` below shows the panel
+ * with `#menu:target { display: flex }`; the close control is an
+ * `<a href="#menu-abrir">`, which drops the `:target` match (closing the
+ * panel) and lands the reader back on the "Menú" control. With JavaScript the
+ * `<script>` intercepts both clicks and upgrades the very same element to a
+ * real modal: `showModal()`, `aria-expanded`, focus moved to the first menu
+ * link on open, native `Esc` to close and focus returned to the opener.
+ *
+ * The two mechanisms must never overlap: `#menu:target` paints the panel from
+ * the hash alone, with no regard for `[open]`, and `close()` cannot take that
+ * back — a URL carrying `#menu` (bookmarked from a session without
+ * JavaScript, shared, or produced by a click that beat the script) would
+ * render a full-screen panel that neither "Cerrar" nor `Esc` can dismiss. So
+ * the script marks the dialog with `data-modal` as soon as it takes over, and
+ * the `:target` rule is written to stand down for exactly that mark: from
+ * there on the menu opens only as a modal, and `#menu` is no longer a state
+ * (the hash is dropped from the URL too, on load and on `hashchange`).
+ *
+ * `#menu[open]` is deliberately NOT inside the mobile media query: hiding an
+ * open modal `<dialog>` (which is what a `md:hidden` utility would do if the
+ * viewport widened while the menu is up) leaves the document inert with no way
+ * out. The script closes the dialog instead, on a `matchMedia` change.
+ *
+ * No opening/closing transition yet: the `@starting-style` +
+ * `transition-behavior: allow-discrete` of design-system.md §11 belongs to
+ * SM-069, and nothing here carries `data-entrada`.
  */
+import Sello from './Sello.astro';
+import selloCompacto from '../assets/marca/sello-compacto.png';
 import {
   type ClaveDeRuta,
   type ClaveDeTexto,
+  IDIOMAS,
+  IDIOMA_POR_DEFECTO,
   type Idioma,
   rutaBase,
   rutaLocalizada,
@@ -30,11 +58,22 @@ import {
 } from '../i18n/utils.ts';
 
 interface Props {
-  idioma: Idioma;
+  /** Falls back to `Astro.currentLocale`, which `Base.astro` already resolves. */
+  idioma?: Idioma;
+  /** Falls back to `Astro.url.pathname`: the route the active link is matched against. */
   rutaActual?: string;
 }
 
-const { idioma, rutaActual } = Astro.props;
+const { idioma: idiomaProp, rutaActual: rutaProp } = Astro.props;
+
+/** Narrows `Astro.currentLocale`, typed `string | undefined`, to `Idioma`. */
+function esIdioma(valor: string | undefined): valor is Idioma {
+  return valor !== undefined && (IDIOMAS as readonly string[]).includes(valor);
+}
+
+const localeActual = Astro.currentLocale;
+const idioma: Idioma = idiomaProp ?? (esIdioma(localeActual) ? localeActual : IDIOMA_POR_DEFECTO);
+const rutaActual = rutaProp ?? Astro.url.pathname;
 
 /**
  * The five links of the approved design, in its order. The Spanish route is the
@@ -53,29 +92,199 @@ const ENLACES = [
  * Route key of the page being rendered, matched through `rutaBase()` so the
  * comparison holds in both languages without string-matching localized paths.
  */
-const claveActual = rutaActual === undefined ? undefined : rutaBase(rutaActual)?.clave;
+const claveActual = rutaBase(rutaActual)?.clave;
 
 /** "Seres Migratorios" is the brand name: same string in both dictionaries, never translated. */
 const marca = t(idioma, 'seo.tituloSitio');
+
+/**
+ * A `PUBLIC_*` variable of PLAN.md §14 as a string, same helper (and same
+ * fallback) as `Pie.astro`: Vite types `import.meta.env` with an `any` index
+ * signature, so the value is narrowed here instead of spreading `any` through
+ * the component.
+ */
+function variablePublica(valor: unknown, respaldo: string): string {
+  return typeof valor === 'string' && valor !== '' ? valor : respaldo;
+}
+
+const instagram = variablePublica(
+  import.meta.env.PUBLIC_INSTAGRAM_URL,
+  'https://www.instagram.com/seresmigratorios/'
+);
+
+/** Official handle (design-system.md §13, v1.1). A handle is never translated. */
+const HANDLE = '@seresmigratorios';
+
+/**
+ * City and date engraved on the scanned stamp (`src/content/ediciones/
+ * buenos-aires-2026.md`: `ciudad: Buenos Aires`, `fecha: 2026-08-08`; same
+ * pair drawn inside the stamp of design/ds/canvas/Componentes.dc.html, block
+ * "08 · PIE"). `Sello` requires them even on its `<Image>` branch, where they
+ * only ever feed the `alt` — and this instance is `decorativo`, so its `alt`
+ * is empty and neither string ever reaches the page. See the OBSERVACIÓN in
+ * this ticket's report.
+ */
+const SELLO_CIUDAD = 'Buenos Aires';
+const SELLO_FECHA = '08 ago 2026';
+
+/**
+ * Small `CajaNombre` of the language selector: `.caja-nombre` (theme.css) plus
+ * the same `chica` modifiers `CajaNombre.astro` applies.
+ *
+ * The component itself is not imported here on purpose: the entry that points
+ * at the other language needs `lang` and `hreflang` on its `<a>`, and
+ * `CajaNombre`'s `Props` accepts neither (nor does it spread unknown props on
+ * to the element). Adding them there is outside this ticket's Alcance, so the
+ * two chips are written here with the component's own classes — see the
+ * OBSERVACIÓN in this ticket's report.
+ */
+const CHIP = 'caja-nombre px-3.5 py-2 text-xs';
+const CHIP_ACTIVO = `${CHIP} bg-tinta text-papel`;
+const CHIP_ENLACE = `${CHIP} text-tinta transition-colors duration-150 hover:text-azul-marcador focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello`;
+
+/**
+ * Desktop link. `min-h-11` is what guarantees the 44 px touch target: the
+ * 12 px vertical padding of the approved design only reaches ~40 px on its
+ * own. Active = azul-sello with a 2 px underline at offset 4 (Nav.jsx);
+ * hover = azul-marcador with the same underline (Componentes.dc.html, block
+ * "05 · NAV DESKTOP", note 2).
+ */
+const ENLACE =
+  'font-mono text-etiqueta inline-flex min-h-11 items-center py-3 font-bold uppercase transition-colors duration-150 hover:text-azul-marcador hover:underline hover:decoration-2 hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello';
+const ENLACE_ACTIVO = `${ENLACE} text-azul-sello underline decoration-2 underline-offset-4`;
+const ENLACE_NORMAL = `${ENLACE} text-tinta`;
+
+/**
+ * Menu link. `text-display-lg` is `clamp(3rem, 9vw, 7.5rem)`: 9vw only reaches
+ * 3rem at a 533.33 px viewport, so the token holds the 3rem of the approved
+ * screen from 320 px up to ~533 px — the whole band the design draws, 390
+ * included — and grows from there to ~4.31rem (69.03 px) at 767 px, the last
+ * width where the menu exists (`width < 48rem`); the 7.5rem ceiling is never
+ * reached below `md`. No approved screen falls inside that 534–767 px band,
+ * so the token is kept instead of pinning an arbitrary size. Only the 0.9
+ * line-height of the approved screen is layered on top of the token's own
+ * 0.85.
+ */
+const ENLACE_MENU =
+  'font-display text-display-lg leading-[0.9] uppercase transition-colors duration-150 hover:text-azul-marcador focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello';
+const ENLACE_MENU_ACTIVO = `${ENLACE_MENU} text-azul-sello`;
+const ENLACE_MENU_NORMAL = `${ENLACE_MENU} text-tinta`;
+
+/** "Menú" / "Cerrar" controls: mono 700 0.75rem, 2 px border, 44 px minimum. */
+const CONTROL =
+  'inline-flex min-h-11 items-center justify-center border-2 border-tinta px-3 py-1.5 font-mono text-xs font-bold tracking-[0.04em] uppercase transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello';
 ---
 
 <header
-  class="flex min-h-17 flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t-2 border-b border-t-tinta border-b-linea bg-papel-puro px-6 py-3 md:min-h-20 md:px-12 md:py-3.5"
+  class="relative z-10 flex min-h-[4.25rem] items-center justify-between gap-4 border-b border-linea bg-papel px-6 py-3 md:min-h-[5rem] md:gap-6 md:px-12 md:py-4"
 >
+  {
+    /* Brand at the size of the approved screens (1.75rem mobile, 2rem desktop),
+      with the display line-height and letter-spacing of `--text-display-md`.
+      See the OBSERVACIÓN in this ticket's report on why it is not
+      `text-display-md`'s own 3.5rem. */
+  }
   <a
+    id="nav-marca"
     href={rutaLocalizada('/', idioma)}
-    class="font-display text-display-md text-tinta uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+    class="font-display text-tinta text-[1.75rem] leading-[0.85] tracking-[-0.01em] whitespace-nowrap uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello md:text-[2rem]"
     >{marca}</a
   >
-  <nav aria-label={t(idioma, 'nav.menu')}>
-    <ul class="m-0 flex list-none flex-wrap items-center gap-x-6 p-0">
+
+  <nav aria-label={t(idioma, 'nav.principal')} class="hidden items-center gap-8 md:flex">
+    <ul class="m-0 flex list-none flex-wrap items-center gap-6 p-0">
       {
         ENLACES.map((enlace) => (
           <li>
             <a
               href={rutaLocalizada(enlace.ruta, idioma)}
               aria-current={enlace.clave === claveActual ? 'page' : undefined}
-              class="font-mono text-etiqueta text-tinta inline-flex min-h-11 items-center py-3 font-bold uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+              class={enlace.clave === claveActual ? ENLACE_ACTIVO : ENLACE_NORMAL}
+            >
+              {t(idioma, enlace.texto)}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div role="group" aria-label={t(idioma, 'nav.idioma')} class="flex gap-1">
+      {
+        IDIOMAS.map((codigo) =>
+          codigo === idioma ? (
+            <span class={CHIP_ACTIVO} aria-current="true">
+              {codigo}
+            </span>
+          ) : (
+            <a
+              href={rutaLocalizada(rutaActual, codigo)}
+              lang={codigo}
+              hreflang={codigo}
+              class={CHIP_ENLACE}
+            >
+              {codigo}
+            </a>
+          )
+        )
+      }
+    </div>
+  </nav>
+
+  <a
+    id="menu-abrir"
+    href="#menu"
+    aria-controls="menu"
+    aria-expanded="false"
+    aria-label={t(idioma, 'nav.abrirMenu')}
+    class={`${CONTROL} bg-papel-puro text-tinta hover:bg-tinta hover:text-papel md:hidden`}
+    >{t(idioma, 'nav.menu')}</a
+  >
+</header>
+
+<dialog
+  id="menu"
+  aria-label={t(idioma, 'nav.menu')}
+  class="papel fixed inset-0 z-100 m-0 h-full max-h-none w-full max-w-none flex-col gap-8 overflow-y-auto border-0 p-6 text-tinta"
+>
+  <div class="flex items-center justify-between gap-4">
+    <div role="group" aria-label={t(idioma, 'nav.idioma')} class="flex gap-1">
+      {
+        IDIOMAS.map((codigo) =>
+          codigo === idioma ? (
+            <span class={CHIP_ACTIVO} aria-current="true">
+              {codigo}
+            </span>
+          ) : (
+            <a
+              href={rutaLocalizada(rutaActual, codigo)}
+              lang={codigo}
+              hreflang={codigo}
+              class={CHIP_ENLACE}
+            >
+              {codigo}
+            </a>
+          )
+        )
+      }
+    </div>
+    <a
+      id="menu-cerrar"
+      href="#menu-abrir"
+      aria-label={t(idioma, 'nav.cerrarMenu')}
+      class={`${CONTROL} bg-tinta text-papel hover:bg-papel-puro hover:text-tinta`}
+      >{t(idioma, 'botones.cerrar')}</a
+    >
+  </div>
+
+  <nav aria-label={t(idioma, 'nav.principal')}>
+    <ul class="m-0 flex list-none flex-col gap-4 p-0">
+      {
+        ENLACES.map((enlace, indice) => (
+          <li>
+            <a
+              id={indice === 0 ? 'menu-primer-enlace' : undefined}
+              href={rutaLocalizada(enlace.ruta, idioma)}
+              aria-current={enlace.clave === claveActual ? 'page' : undefined}
+              class={enlace.clave === claveActual ? ENLACE_MENU_ACTIVO : ENLACE_MENU_NORMAL}
             >
               {t(idioma, enlace.texto)}
             </a>
@@ -84,4 +293,136 @@ const marca = t(idioma, 'seo.tituloSitio');
       }
     </ul>
   </nav>
-</header>
+
+  <div class="mt-auto flex items-end justify-between gap-4">
+    <a
+      href={instagram}
+      class="font-mono text-etiqueta text-azul-sello inline-flex min-h-11 items-center py-3 font-bold uppercase underline underline-offset-[3px] transition-colors duration-150 hover:text-azul-marcador focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+      >{HANDLE}</a
+    >
+    <Sello
+      ciudad={SELLO_CIUDAD}
+      fecha={SELLO_FECHA}
+      imagen={selloCompacto}
+      tamano={96}
+      rotacion={-8}
+      decorativo
+      idioma={idioma}
+    />
+  </div>
+</dialog>
+
+<style>
+  /* Without JavaScript the menu opens through `:target` (the "Menú" control is
+     an <a href="#menu">) and closes through <a href="#menu-abrir">, which stops
+     matching this selector. Only below `md`, which is where the control that
+     opens it exists.
+
+     `:not([data-modal])` is what keeps the two mechanisms from overlapping: the
+     script marks the <dialog> with `data-modal` as soon as it takes over, and
+     from there on the panel is painted by `[open]` alone. Without that
+     condition a URL carrying `#menu` would paint a full-screen panel with the
+     dialog closed, and `close()` could not take it back. Dropping the hash is
+     not enough either: `replaceState()` changes the URL but does not
+     re-evaluate `:target`. */
+  @media (width < 48rem) {
+    #menu:target:not([data-modal]) {
+      display: flex;
+    }
+  }
+
+  /* With JavaScript the same <dialog> is opened modal with showModal().
+     Outside the media query on purpose: hiding an open modal <dialog> leaves
+     the rest of the document inert with no way out if the viewport widens. The
+     script closes it in that case. */
+  #menu[open] {
+    display: flex;
+  }
+</style>
+
+<script>
+  // Progressive enhancement over the `:target` menu above: the same <a> pair
+  // becomes a real modal dialog. Everything is guarded by `instanceof`, so a
+  // page that somehow renders without one of these ids keeps the CSS-only
+  // behaviour instead of throwing.
+  const boton = document.getElementById('menu-abrir');
+  const dialogo = document.getElementById('menu');
+  const cerrar = document.getElementById('menu-cerrar');
+  const primerEnlace = document.getElementById('menu-primer-enlace');
+  const marca = document.getElementById('nav-marca');
+
+  if (
+    boton instanceof HTMLAnchorElement &&
+    dialogo instanceof HTMLDialogElement &&
+    cerrar instanceof HTMLAnchorElement
+  ) {
+    // Hands the panel over to `[open]`: from here on the `#menu:target` rule
+    // of the <style> above no longer matches, so a URL carrying the hash can
+    // no longer paint a full-screen panel that `close()` is unable to hide.
+    // Set inside this guard on purpose — if any of the three elements were
+    // missing, the CSS-only menu would have to stay in charge.
+    dialogo.setAttribute('data-modal', '');
+
+    /**
+     * Erases a `#menu` hash. Only address-bar hygiene: with `data-modal` set
+     * the hash paints nothing, and dropping it here is what keeps the URL from
+     * claiming a state the page no longer has. It is NOT what closes the
+     * panel — `replaceState` updates the URL without re-evaluating `:target` —
+     * and it fires neither `hashchange` nor `popstate`, so it cannot loop with
+     * the listener below nor leave a history entry behind.
+     */
+    const soltarHash = () => {
+      if (window.location.hash === '#menu') {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    };
+
+    /**
+     * Returns focus to the control that opened the menu. From `md` up the
+     * opener is `md:hidden` — `display: none`, which cannot take focus and
+     * would drop the caret on `<body>` — so the brand link, the first control
+     * of the header at every width, stands in for it. Reached on a viewport
+     * that widens while the menu is open.
+     */
+    const devolverFoco = () => {
+      const destino = boton.offsetParent === null ? marca : boton;
+      if (destino instanceof HTMLElement) destino.focus();
+    };
+
+    boton.addEventListener('click', (evento) => {
+      evento.preventDefault();
+      if (dialogo.open) return;
+      dialogo.showModal();
+      boton.setAttribute('aria-expanded', 'true');
+      // `showModal()` focuses the first focusable child (the language chip);
+      // the menu's first link is the meaningful entry point.
+      if (primerEnlace instanceof HTMLAnchorElement) primerEnlace.focus();
+    });
+
+    cerrar.addEventListener('click', (evento) => {
+      evento.preventDefault();
+      dialogo.close();
+    });
+
+    // Reached by the close control, by the native `Esc` and by the viewport
+    // guard below, so every path clears `aria-expanded` and places focus.
+    dialogo.addEventListener('close', () => {
+      boton.setAttribute('aria-expanded', 'false');
+      devolverFoco();
+    });
+
+    // The opener does not exist from `md` up: closing the dialog when the
+    // viewport crosses that width keeps the document from staying inert.
+    const escritorio = window.matchMedia('(min-width: 48rem)');
+    escritorio.addEventListener('change', (evento) => {
+      if (evento.matches && dialogo.open) dialogo.close();
+    });
+
+    // A page that already arrives at `#menu` (a bookmark from a session
+    // without JavaScript, a shared link, a click that beat this script) and an
+    // address bar edited to it afterwards leave the same URL behind, and it is
+    // cleaned the same way.
+    window.addEventListener('hashchange', soltarHash);
+    soltarHash();
+  }
+</script>

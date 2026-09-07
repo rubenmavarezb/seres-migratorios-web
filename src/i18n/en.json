@@ -12,7 +12,8 @@
     "idioma": "Language",
     "abrirMenu": "Open menu",
     "cerrarMenu": "Close menu",
-    "menu": "Menu"
+    "menu": "Menu",
+    "principal": "Main navigation"
   },
   "ficha": {
     "fecha": "Date:",
