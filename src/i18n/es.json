@@ -272,5 +272,11 @@
     "otros": "Otros artistas",
     "anterior": "← {nombre}",
     "siguiente": "{nombre} →"
+  },
+  "lightbox": {
+    "titulo": "Visor de fotos",
+    "contador": "{indice} / {total}",
+    "anterior": "Foto anterior",
+    "siguiente": "Foto siguiente"
   }
 }
