@@ -285,5 +285,13 @@
     "contador": "{indice} / {total}",
     "anterior": "Foto anterior",
     "siguiente": "Foto siguiente"
+  },
+  "ediciones": {
+    "titulo": "Ediciones",
+    "subtitulo": "Archivo del colectivo",
+    "descripcionSeo": "El archivo de las ediciones de Seres Migratorios.",
+    "proximaEdicion": "Próxima edición",
+    "proximaLinea": "La próxima edición se arma con quienes se postulan: fotógraf@s, film, música y manos para el equipo.",
+    "edicionesPasadas": "Ediciones pasadas"
   }
 }
