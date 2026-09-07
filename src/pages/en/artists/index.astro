@@ -1,0 +1,14 @@
+---
+/**
+ * `/en/artists` — English twin of `/artistas` (SM-036, SM-048). Shared body in
+ * `internos/paginas/Artistas.astro`; this file only fixes the locale, so the
+ * two languages cannot drift apart.
+ */
+import PlantillaArtistas from '../../../components/internos/paginas/Artistas.astro';
+import type { Idioma } from '../../../i18n/utils.ts';
+
+/** This file only ever renders under the `/en/` locale. */
+const idioma: Idioma = 'en';
+---
+
+<PlantillaArtistas idioma={idioma} />
