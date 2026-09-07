@@ -8,8 +8,11 @@
  *
  * A short word or phrase in azul-marcador, always meant to sit overlaid on
  * something else (never alone in empty space — design-system.md §7, item 6),
- * at the fixed "manuscrita" size (`text-manuscrita`, theme.css:
- * `clamp(1.5rem, 4vw, 3rem)` — design-system.md §4 Escala). Rendered either
+ * at the "manuscrita" size by default (`text-manuscrita`, theme.css:
+ * `clamp(1.5rem, 4vw, 3rem)` — design-system.md §4 Escala); a lámina that
+ * sets a specific size for one annotation (the `Pie`'s closing line, 2.25rem
+ * desktop / 1.75rem mobile) passes it through `tamano`, the same prop the
+ * reference Anotacion.jsx exposes, as an inline `font-size`. Rendered either
  * from the real scanned handwriting (`imagen`, `alt` mandatory) or from the
  * Gochi Hand fallback (`texto`). The two shapes are a discriminated union
  * (PLAN.md §5): passing `imagen` without `alt` is a TypeScript error, not a
@@ -38,6 +41,8 @@ interface PropsTexto {
   ancho?: undefined;
   /** Degrees, clamped to [-3, 2] (design-system.md §7 item 6). Defaults to -3. */
   rotacion?: number;
+  /** CSS font-size (e.g. `"clamp(1.75rem, 3vw, 2.25rem)"`) when a lámina sizes this annotation differently from the `text-manuscrita` token. Text branch only: a scan is sized with `ancho`. */
+  tamano?: string;
 }
 
 interface PropsImagen {
@@ -77,6 +82,12 @@ function limitarRotacion(valor: number): number {
 
 const rotacion = limitarRotacion(props.rotacion ?? -3);
 const estiloRotacion = `transform: rotate(${rotacion}deg);`;
+// `tamano` goes inline like every other dynamic geometry in this repo (colors
+// stay tokens); without it the `text-manuscrita` class keeps the §4 size.
+const estiloTexto =
+  props.texto !== undefined && props.tamano !== undefined
+    ? `${estiloRotacion} font-size: ${props.tamano};`
+    : estiloRotacion;
 
 // widths/sizes only make sense when there is an image: scaled around the
 // rendered width (never the full decode when the caller renders it smaller)
@@ -109,7 +120,7 @@ if (props.imagen) {
     <span
       class="inline-block font-manuscrita text-manuscrita text-azul-marcador"
       data-rotacion
-      style={estiloRotacion}
+      style={estiloTexto}
     >
       {props.texto}
     </span>

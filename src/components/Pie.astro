@@ -38,22 +38,11 @@
  * Removed here to match the design; `Nav.astro`'s `bg-papel` is a different
  * case (an opaque bar the mobile menu slides under).
  *
- * OBSERVACIÓN (handwritten size): the láminas set the closing annotation at
- * `2.25rem` desktop / `1.75rem` mobile, and the reference
- * `design/ds/components/expediente/Anotacion.jsx` does expose the prop they
- * use for it (`tamano = "var(--tipo-manuscrita)"`, which `Pie.jsx` overrides
- * with `clamp(1.5rem, 3vw, 2.25rem)`). `Anotacion.astro` (SM-018) has no such
- * prop and renders the fixed `text-manuscrita` token of design-system.md §4,
- * `clamp(1.5rem, 4vw, 3rem)` — 1.5rem at 390 and 3rem at 1440, so the closing
- * line is larger than the lámina's at desktop width. That is the only visible
- * difference between this footer and the approved screen, and it also shifts
- * the second contact column ~50px left, since a wider annotation leaves the
- * `flex-1` contact grid less room. Not fixed here: adding a prop to another
- * ticket's canonical component is outside this ticket's scope, and the
- * skeleton's workaround — a raw `<span class="font-manuscrita">` instead of
- * the canonical `Anotacion` — contradicts §7.16 and decision 2.
- * Ruben/SM-018 to decide whether `Anotacion` gains `tamano` or whether §4's
- * token wins over the láminas.
+ * Handwritten size: the láminas set the closing annotation at `2.25rem`
+ * desktop / `1.75rem` mobile, not the `text-manuscrita` token (`clamp(1.5rem,
+ * 4vw, 3rem)`, 3rem at 1440). `Anotacion` takes that as `tamano`, the prop the
+ * reference Anotacion.jsx exposes and Pie.jsx overrides (SM-028 fix round):
+ * `clamp(1.75rem, 3vw, 2.25rem)` gives the lámina's value at both breakpoints.
  *
  * OBSERVACIÓN (global link rule): the design system ships a base rule
  * (`design/_ds/…/tokens/texturas.css`: `a { color: azul-sello;
@@ -251,7 +240,11 @@ const HANDLE = '@seresmigratorios';
       </div>
     </div>
     <div class="order-3 basis-full md:basis-auto">
-      <Anotacion texto={t(idioma, 'pie.aguante')} rotacion={-2} />
+      <Anotacion
+        texto={t(idioma, 'pie.aguante')}
+        rotacion={-2}
+        tamano="clamp(1.75rem, 3vw, 2.25rem)"
+      />
     </div>
   </div>
 </footer>
