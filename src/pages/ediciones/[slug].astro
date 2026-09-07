@@ -102,6 +102,7 @@ import FranjaAliados from '../../components/FranjaAliados.astro';
 import PalabrasClave from '../../components/PalabrasClave.astro';
 import TitularPartido from '../../components/TitularPartido.astro';
 import Aparejo from '../../components/internos/Aparejo.astro';
+import Lightbox from '../../components/internos/Lightbox.astro';
 import Pagina from '../../layouts/Pagina.astro';
 import escudoImagen from '../../assets/marca/escudo.png';
 import palabrasClaveImagen from '../../assets/marca/palabras-clave.png';
@@ -219,6 +220,19 @@ const POSICIONES = [
 
 /** design-system.md §7 item 7 keeps every tilt inside [-2, 2]. */
 const ROTACIONES = [-2, 1.5, -1];
+
+/**
+ * The same photos, in the shape `internos/Lightbox.astro` takes (SM-038). The
+ * collage keeps the lamina's own slots instead of `Galeria.astro`'s artist
+ * layout; the viewer only needs each anchor to carry `data-galeria-foto` +
+ * `data-indice`, which is what it binds to. The credit doubles as the
+ * caption's title ("Edición 01 · [AUTORÍA A CONFIRMAR]").
+ */
+const fotosDelDia = data.galeria.map((foto) => ({
+  imagen: foto.image,
+  alt: foto.alt[idioma],
+  titulo: foto.credito,
+}));
 
 /**
  * One chip per act (Edicion.dc.html "MÚSICA"), linked to its Instagram profile
@@ -495,13 +509,16 @@ const eventoJson = JSON.stringify(evento).replaceAll('<', '\\u003c');
               class={POSICIONES[indice % POSICIONES.length]}
               style={`max-width: ${foto.image.width}px;`}
             >
-              {/* TODO(SM-038): replace with internos/Galeria + Lightbox at integration */}
               {/* `grid`, not `block`: this anchor is what actually contains
                   `.foto-pegada`, so it is the box that has to give the
-                  inline-block a definite width (see POSICIONES above). */}
+                  inline-block a definite width (see POSICIONES above). Without
+                  JavaScript it is a plain link to the file; `Lightbox.astro`
+                  upgrades it through `data-galeria-foto` (SM-038). */}
               <a
                 href={foto.image.src}
                 class="grid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+                data-galeria-foto
+                data-indice={String(indice)}
               >
                 <FotoPegada
                   imagen={foto.image}
@@ -551,4 +568,10 @@ const eventoJson = JSON.stringify(evento).replaceAll('<', '\\u003c');
       {t(idioma, 'botones.comoApoyar')}
     </Boton>
   </section>
+
+  {
+    fotosDelDia.length > 0 && (
+      <Lightbox fotos={fotosDelDia} prefijoPie={etiquetaCorta} idioma={idioma} />
+    )
+  }
 </Pagina>
