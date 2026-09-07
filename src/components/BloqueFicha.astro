@@ -4,11 +4,17 @@
  * columns — FECHA: / HORARIOS: / LUGAR: — each with its value below,
  * collapsing to a single column on mobile.
  *
- * Spec source: design/ds/canvas/Componentes.dc.html, block "01 · BLOQUEFICHA"
- * (labels at 13px "etiqueta" style, values at 14px plain mono, 20px gap
- * between the three groups). Values arrive already formatted by the caller
- * (e.g. "08.08.2026", "10:00 AM – 19:00"): this component never formats
- * dates or times itself.
+ * Spec source: design/ds/components/expediente/BloqueFicha.jsx, the component
+ * every page lámina renders (Home hero and próxima edición, Ediciones, Edición
+ * 01): label and value share one style — the etiqueta role at 14px, 700,
+ * uppercase, 0.04em, line-height 1.35, no space between them — with a 24px
+ * gap between the three groups and no rule above the block. Until the QA
+ * visual de Fase 2 (R06) this file followed design/ds/canvas/Componentes.dc.html
+ * "01 · BLOQUEFICHA" instead (13px labels, 14px plain values, 20px gap and a
+ * 1px `linea` rule on top for the "papel" variant), which none of the page
+ * láminas draws; the page lámina wins. Values arrive already formatted by the
+ * caller (e.g. "08.08.2026", "10:00 AM – 19:00"): this component never
+ * formats dates or times itself.
  *
  * Placement (grid position, margins, container rotation) is the caller's
  * job — this component accepts no position classes, per diseno-web-indice.md
@@ -39,33 +45,47 @@ const { fecha, horario, lugar, variante = 'papel', idioma } = Astro.props;
 // itself), narrowed to the two locales this site supports.
 const idiomaActual: Idioma = idioma ?? (Astro.currentLocale === 'en' ? 'en' : 'es');
 
-// "En papel": a 1px top rule (variant used inline in a page section).
-// "En caja": a 2px ink border with a pure-white fill, for use over a photo
+// "En papel" (default): the bare block the page láminas draw, nothing around
+// it. "En caja": a 2px ink border with a pure-white fill, for use over a photo
 // or a colored section (design/ds/canvas/Componentes.dc.html, "01 · BLOQUEFICHA").
 const clasesVariante =
-  variante === 'caja'
-    ? 'border-2 border-tinta bg-papel-puro px-[22px] py-5'
-    : 'border-t border-linea pt-3.5';
+  variante === 'caja' ? 'border-2 border-tinta bg-papel-puro px-[22px] py-5' : undefined;
+
+// "Papel": one style for label and value (BloqueFicha.jsx `etiqueta` /
+// `valor`): `text-etiqueta` brings the 14px and the 0.04em of the role,
+// `leading-[1.35]` the line-height the JSX fixes on both, no gap between them,
+// 24px between the groups. "Caja" keeps the spec of Componentes.dc.html
+// "01 · BLOQUEFICHA" it was built from (13px labels, 14px plain values, 6px
+// between them, 20px between the groups), with the role's letter-spacing on
+// the label instead of `tracking-wide`.
+const esCaja = variante === 'caja';
+const CLASE_LINEA_PAPEL = 'font-mono text-etiqueta font-bold uppercase leading-[1.35]';
+const CLASE_ETIQUETA_CAJA =
+  'font-mono text-metadatos font-bold uppercase tracking-(--text-etiqueta--letter-spacing)';
+const CLASE_VALOR_CAJA = 'font-mono text-[0.875rem] font-normal uppercase';
+const claseEtiqueta = esCaja ? CLASE_ETIQUETA_CAJA : CLASE_LINEA_PAPEL;
+const claseValor = esCaja ? CLASE_VALOR_CAJA : CLASE_LINEA_PAPEL;
+const claseGrupo = esCaja ? 'flex flex-col gap-1.5' : 'flex flex-col';
 ---
 
-<dl class:list={['grid grid-cols-1 gap-5 text-tinta md:grid-cols-3', clasesVariante]}>
-  <div class="flex flex-col gap-1.5">
-    <dt class="font-mono text-metadatos font-bold uppercase tracking-wide">
-      {t(idiomaActual, 'ficha.fecha')}
-    </dt>
-    <dd class="font-mono text-[0.875rem] font-normal uppercase">{fecha}</dd>
+<dl
+  class:list={[
+    'grid grid-cols-1 text-tinta md:grid-cols-3',
+    esCaja ? 'gap-5' : 'gap-6',
+    clasesVariante,
+  ]}
+>
+  <div class={claseGrupo}>
+    <dt class={claseEtiqueta}>{t(idiomaActual, 'ficha.fecha')}</dt>
+    <dd class={claseValor}>{fecha}</dd>
   </div>
-  <div class="flex flex-col gap-1.5">
-    <dt class="font-mono text-metadatos font-bold uppercase tracking-wide">
-      {t(idiomaActual, 'ficha.horarios')}
-    </dt>
-    <dd class="font-mono text-[0.875rem] font-normal uppercase">{horario}</dd>
+  <div class={claseGrupo}>
+    <dt class={claseEtiqueta}>{t(idiomaActual, 'ficha.horarios')}</dt>
+    <dd class={claseValor}>{horario}</dd>
   </div>
-  <div class="flex flex-col gap-1.5">
-    <dt class="font-mono text-metadatos font-bold uppercase tracking-wide">
-      {t(idiomaActual, 'ficha.lugar')}
-    </dt>
-    <dd class="font-mono text-[0.875rem] font-normal uppercase leading-normal">
+  <div class={claseGrupo}>
+    <dt class={claseEtiqueta}>{t(idiomaActual, 'ficha.lugar')}</dt>
+    <dd class:list={[claseValor, esCaja && 'leading-normal']}>
       {lugar.nombre}<br />
       {lugar.direccion}<br />
       {lugar.ciudad}

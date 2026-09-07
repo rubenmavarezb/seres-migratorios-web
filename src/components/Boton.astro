@@ -19,17 +19,15 @@
  * `theme.css` is not touched: it is outside this ticket's Alcance and the
  * tech lead's instructions say to use the two classes as they stand.
  *
- * OBSERVACIÓN (letter-spacing): neither `.boton` nor `.boton--sello` sets a
+ * Letter-spacing and line-height: neither `.boton` nor `.boton--sello` sets a
  * font-size, so `text-etiqueta` supplies the 0.875rem "etiqueta" role's size
- * here — but not its 0.04em letter-spacing: `.boton` already applies
- * `tracking-wide` (0.025em), and Tailwind v4's `text-*` utilities only read
- * their own letter-spacing as a *fallback* for the shared `--tw-tracking`
- * custom property, which `tracking-wide` already pinned. Same root cause
- * already flagged on `CajaNombre` (its own ticket's report) for the same
- * `.caja-nombre`/`text-etiqueta` combination; `theme.css` is outside this
- * ticket's Alcance too, so it is left as-is and reported again here rather
- * than "fixed" unilaterally (CLAUDE.md: un posible error de diseño no se
- * corrige por cuenta propia, se documenta).
+ * here. The role's 0.04em letter-spacing and the 1.2 line-height of
+ * `Boton.jsx` (48.8px of height with padding 14 and border 2) live on
+ * `.boton` itself since the QA visual de Fase 2 (R07): until then the class
+ * applied `tracking-wide` (0.025em), which pinned the shared `--tw-tracking`
+ * custom property that Tailwind v4's `text-*` utilities only read as a
+ * *fallback*, and the button inherited the 1.5 line-height, measuring 53px.
+ * Same root cause, same fix, on `CajaNombre` (R08).
  *
  * OBSERVACIÓN (hover de la variante sello): design/ds/canvas/Componentes.dc.html
  * "03 · BOTON", estado "VARIANTE SELLO → hover" shows a full invert

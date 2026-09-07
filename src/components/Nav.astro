@@ -137,10 +137,16 @@ const SELLO_FECHA = '08 ago 2026';
  * to the element). Adding them there is outside this ticket's Alcance, so the
  * two chips are written here with the component's own classes — see the
  * OBSERVACIÓN in this ticket's report.
+ *
+ * Same `chica` geometry as `CajaNombre.astro` since the QA visual de Fase 2
+ * (R03): 32px box, padding 6×12, 12px type, the chip every lámina renders. The
+ * linked chip keeps the 44px touch target of CLAUDE.md with the same invisible
+ * `::before` `CajaNombre` uses: insets of 8px, counted from the padding box
+ * inside the 2px border, reach 6px past the box on each side (28 + 16 = 44).
  */
-const CHIP = 'caja-nombre px-3.5 py-2 text-xs';
+const CHIP = 'caja-nombre min-h-8 px-3 py-1.5 text-xs';
 const CHIP_ACTIVO = `${CHIP} bg-tinta text-papel`;
-const CHIP_ENLACE = `${CHIP} text-tinta transition-colors duration-150 hover:text-azul-marcador focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello`;
+const CHIP_ENLACE = `${CHIP} relative text-tinta transition-colors duration-150 before:absolute before:-inset-x-0.5 before:-inset-y-2 before:content-[''] hover:text-azul-marcador focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello`;
 
 /**
  * Desktop link. `min-h-11` is what guarantees the 44 px touch target: the

@@ -15,26 +15,75 @@ interface Props {
   /** Visible text, written with its real capitalization; CSS applies uppercase. */
   texto: string;
   href?: string;
-  /** 'normal': padding 12×24 (default). 'chica': padding 8×14, 12px type —
-   * language selector and filters, never in azul-sello (Componentes.dc.html). */
+  /** 'normal': padding 12×24, 14px type, 44px box (default). 'chica': padding
+   * 6×12, 12px type, 32px box — `chica` in CajaNombre.jsx and what every page
+   * lámina renders for the language selector, the dates of Manifiesto and the
+   * chips of the artist ficha on mobile (QA visual de Fase 2, R03; the 8×14 of
+   * Componentes.dc.html loses to the page láminas). Never in azul-sello. */
   tamano?: 'normal' | 'chica';
+  /** Size below `md`. Defaults to `tamano`. `tamanoMobile="chica"` on a
+   * `tamano="normal"` chip is the mobile-only small box the láminas draw for
+   * `Aparejo` (Home, Edición 01) and the three columns of Apoyar. */
+  tamanoMobile?: 'normal' | 'chica';
   /** Inverts to fondo tinta / texto papel: the active entry of a selector. */
   activa?: boolean;
 }
 
-const { texto, href, tamano = 'normal', activa = false } = Astro.props;
+const { texto, href, tamano = 'normal', tamanoMobile = tamano, activa = false } = Astro.props;
+
+/**
+ * Size classes per breakpoint. `.caja-nombre` (theme.css) carries the normal
+ * geometry (`min-h-11 px-6 py-3`), so `normal` only adds the font size and
+ * `chica` overrides the three with utilities (a later layer than the
+ * component class, so they win). A chip that changes size at `md` spells out
+ * both sets with the `md:` prefix on the desktop one.
+ */
+const CLASE_NORMAL = 'text-etiqueta';
+const CLASE_CHICA = 'min-h-8 px-3 py-1.5 text-xs';
+const CLASE_NORMAL_DESDE_MD = 'md:min-h-11 md:px-6 md:py-3 md:text-etiqueta';
+const CLASE_CHICA_DESDE_MD = 'md:min-h-8 md:px-3 md:py-1.5 md:text-xs';
+const claseTamano =
+  tamanoMobile === tamano
+    ? tamano === 'chica'
+      ? CLASE_CHICA
+      : CLASE_NORMAL
+    : tamanoMobile === 'chica'
+      ? `${CLASE_CHICA} ${CLASE_NORMAL_DESDE_MD}`
+      : `${CLASE_NORMAL} ${CLASE_CHICA_DESDE_MD}`;
+
+/**
+ * A linked `chica` box is 32px tall, below the 44px touch target CLAUDE.md
+ * requires ("Objetivo táctil ≥ 44 px"); the lámina draws it at 32 anyway (the
+ * language selector, the edition chip of the artist ficha on mobile). Both are
+ * kept: the visible box stays 32px and an invisible `::before`, absolutely
+ * positioned over the link, takes the hit area to 44. An absolute pseudo is
+ * placed against the padding box, inside the 2px border, so the insets count
+ * from there: `-inset-y-2` (8px) reaches 6px past the border on each side
+ * (28 + 16 = 44) and `-inset-x-0.5` (2px) covers the border-box width. Only
+ * on the breakpoints where the box is actually small.
+ */
+const CLASE_AREA_DE_TOQUE = "relative before:absolute before:-inset-x-0.5 before:content-['']";
+const claseAreaDeToque = !href
+  ? ''
+  : tamanoMobile === 'chica' && tamano === 'chica'
+    ? `${CLASE_AREA_DE_TOQUE} before:-inset-y-2`
+    : tamanoMobile === 'chica'
+      ? `${CLASE_AREA_DE_TOQUE} max-md:before:-inset-y-2`
+      : tamano === 'chica'
+        ? `${CLASE_AREA_DE_TOQUE} md:before:-inset-y-2`
+        : '';
 
 // `.caja-nombre` (theme.css) sets no font-size at all, so `text-etiqueta`
 // supplies the 0.875rem/14px of design-system.md §4's "etiqueta" role here.
-// It does NOT end up changing letter-spacing to that role's 0.04em, though:
-// `.caja-nombre` already applies `tracking-wide`, which pins the shared
-// `--tw-tracking` custom property to 0.025em, and Tailwind v4's `text-*`
-// utilities only read `--tw-tracking` as a *fallback* — see the OBSERVACIÓN
-// in this ticket's report. Left as-is: `theme.css` is outside this ticket's
-// Alcance, and the acceptance criteria do not name letter-spacing.
+// The role's 0.04em letter-spacing and the 44px box come from `.caja-nombre`
+// itself (`tracking-(--text-etiqueta--letter-spacing)` and `leading-none`)
+// since the QA visual de Fase 2 (R08): until then the class applied
+// `tracking-wide`, which pinned the shared `--tw-tracking` custom property to
+// 0.025em, and the box measured 49px on the inherited 1.5 line-height.
 const clases = [
   'caja-nombre',
-  tamano === 'chica' ? 'px-3.5 py-2 text-xs' : 'text-etiqueta',
+  claseTamano,
+  claseAreaDeToque,
   activa ? 'bg-tinta text-papel' : 'text-tinta',
   href
     ? 'transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello'
