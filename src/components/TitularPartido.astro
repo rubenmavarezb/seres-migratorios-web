@@ -45,11 +45,33 @@ const Etiqueta = nivel === 1 ? 'h1' : 'h2';
 // font-size theme convention), so no separate leading/tracking utility is
 // needed here.
 const claseTamano = tamano === 'xl' ? 'text-display-xl' : 'text-display-lg';
+
+/**
+ * `view-transition-name: titular` (SM-069; design-system.md §11.4, "Cambio de
+ * página: el `TitularPartido` persiste entre Home e internas", with
+ * `@view-transition { navigation: auto }` already in theme.css — inside its
+ * `prefers-reduced-motion: no-preference` block, so reduced motion disables
+ * the whole thing and this name then names nothing).
+ *
+ * Only on `nivel === 1`. A `view-transition-name` must be unique in the
+ * document: two elements sharing one name make the browser skip the
+ * transition entirely. `nivel={1}` is by definition once per page (it renders
+ * the page's single `<h1>`, CLAUDE.md), while `nivel={2}` exists precisely so
+ * a page can show more than one — `/kit` renders three — so the secondary
+ * instances stay unnamed.
+ *
+ * Written as an inline `style` because there is no Tailwind utility for this
+ * property; the same "dynamic or unsupported geometry goes inline, colors stay
+ * tokens" split the other components use. It is not a `transform`, so
+ * theme.css's reduced-motion rules have nothing to undo here.
+ */
+const estiloTransicion = nivel === 1 ? 'view-transition-name: titular;' : undefined;
 ---
 
 <div class="grid grid-cols-1 grid-rows-3">
   <Etiqueta
     class={`col-start-1 row-start-1 row-span-3 grid grid-rows-subgrid font-display uppercase text-center text-tinta ${claseTamano}`}
+    style={estiloTransicion}
   >
     <span class="row-start-1">{arriba}</span>
     {' '}

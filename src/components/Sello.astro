@@ -38,7 +38,13 @@
  * criteria; default -12° per design-system.md §7 item 4) is applied the same
  * way on both branches: an inline `transform: rotate()` plus `data-rotacion`,
  * which theme.css's `prefers-reduced-motion: reduce` block selects to force
- * `transform: none`. On the `<Image>` branch this attribute serializes as
+ * `transform: none`. Both branches also carry `data-entrada="sello"` (SM-069,
+ * design-system.md §11.4: "Estampado: opacidad 0 → 1 con scale 1.06 → 1.
+ * Nunca gira al aparecer: la rotación es estática"), whose keyframes and two
+ * mandatory guards live in theme.css — so the stamp never starts hidden on a
+ * browser without scroll-driven animations, and the entrance only touches
+ * `opacity` and `scale`, leaving the static `transform` rotation alone.
+ * On the `<Image>` branch this attribute serializes as
  * `data-rotacion="true"` rather than a bare attribute (Astro 7 renders
  * non-boolean attributes explicitly — see the Astro v5 upgrade notes; `data-*`
  * is never a boolean attribute) — that is fine, the `[data-rotacion]`
@@ -144,6 +150,7 @@ const ESTRELLA =
       height={tamano}
       class="block shrink-0 object-contain"
       aria-hidden={decorativo || undefined}
+      data-entrada="sello"
       data-rotacion
       style={estiloRotacion}
     />
@@ -156,6 +163,7 @@ const ESTRELLA =
       role={decorativo ? undefined : 'img'}
       aria-label={decorativo ? undefined : etiqueta}
       aria-hidden={decorativo || undefined}
+      data-entrada="sello"
       data-rotacion
       style={estiloRotacion}
     >

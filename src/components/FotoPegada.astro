@@ -28,6 +28,16 @@
  * `transform: rotate()` plus the `data-rotacion` attribute that theme.css's
  * `prefers-reduced-motion` block selects to force `transform: none`.
  *
+ * `data-entrada` (SM-069, design-system.md §11.4 "FotoPegada — Se apoya:
+ * opacidad más translate de 12 px hacia arriba") rides on the same wrapper.
+ * The keyframes and both required guards — `@media (prefers-reduced-motion:
+ * no-preference)` and `@supports ((animation-timeline: view()) and
+ * (animation-range: entry))` — live in theme.css, so nothing here can start
+ * hidden: on a browser without scroll-driven animations, or under reduced
+ * motion, the attribute matches no rule at all. It animates `opacity` and
+ * `translate`, never `transform`, which is why it can coexist with the static
+ * rotation above (§11.6, rule 3).
+ *
  * OBSERVACIÓN: the FotoPegada.jsx reference and the Elementos.dc.html canvas
  * both special-case `sangrada` to never rotate (a rotated bleed can leave a
  * gap at the canvas edge once the wrapper crops it). This component does not
@@ -89,7 +99,12 @@ const clasesEnvoltorio =
   variante === 'pegada' ? ['foto-pegada', CLASE_BORDE[bordePx]].join(' ') : undefined;
 ---
 
-<div class={clasesEnvoltorio} data-rotacion style={`transform: rotate(${rotacionClamp}deg)`}>
+<div
+  class={clasesEnvoltorio}
+  data-entrada
+  data-rotacion
+  style={`transform: rotate(${rotacionClamp}deg)`}
+>
   <Image
     src={imagen}
     alt={alt}

@@ -198,7 +198,12 @@ const HANDLE = '@seresmigratorios';
       32px gap where the strip would be. */
   }
   {aliados.length > 0 && <FranjaAliados aliados={aliados} idioma={idioma} />}
-  <HiloTricolor />
+  {
+    /* `entrada` is the one place in the site that turns on the tricolor sweep
+      of design-system.md §11.4 ("Solo en el `Pie`, una vez por página") — see
+      HiloTricolor.astro, including the device test Ruben still owes it. */
+  }
+  <HiloTricolor entrada />
   {
     /* One wrapping flex row at every width. Mobile: contact and stamp share
       the first line (`gap-x-4` = the láminas' 16px) and the annotation is

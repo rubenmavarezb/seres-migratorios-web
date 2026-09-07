@@ -59,6 +59,14 @@
  * was added). The Instagram link (`z-20`) stays independently clickable atop
  * that same overlay for the same reason.
  *
+ * `data-entrada` on the `<article>` (SM-069, design-system.md §11.4:
+ * "FichaFotografo — Igual que FotoPegada; cada ficha entra cuando aparece en
+ * el viewport", with no artificial stagger — the attribute alone, no per-index
+ * CSS). Keyframes and the two mandatory guards live in theme.css, so nothing
+ * starts hidden without scroll-driven animation support or under reduced
+ * motion, and only `opacity`/`translate` move — never `transform`, which the
+ * rotations inside this card rely on.
+ *
  * Placement (grid position, container width, wrapper rotation) is the
  * caller's job — this component accepts no position classes, per
  * diseno-web-indice.md decision 13.
@@ -245,7 +253,7 @@ const claseLinkNombre =
   "after:absolute after:inset-0 after:z-10 after:content-[''] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello";
 ---
 
-<article class="relative flex flex-col gap-3">
+<article class="relative flex flex-col gap-3" data-entrada>
   <h3 class={claseH3}><a href={href} class={claseLinkNombre}>{prefijoNumero + nombre}</a></h3>
 
   <div class="relative" style={estiloEnvoltorioFoto}>

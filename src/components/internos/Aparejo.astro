@@ -22,6 +22,14 @@
  * cannot fit its boxes on one line shrinks them instead (CSS flexbox
  * automatic minimum size lets the text inside a box wrap to a second line
  * before the row itself would overflow).
+ *
+ * That row-per-render structure is also what makes SM-069's entrance possible:
+ * design-system.md §11.4 asks for "cada fila es una unidad `[data-entrada]`",
+ * so every row `<div>` carries `data-entrada` — the row, not the `CajaNombre`,
+ * which is why `CajaNombre.astro` needs no attribute of its own. Keyframes and
+ * the two mandatory guards live in theme.css. Only the visible render animates:
+ * the hidden one is `display: none`, and a `display: none` element runs no
+ * animation, so the same markup never plays twice.
  */
 import CajaNombre from '../CajaNombre.astro';
 
@@ -64,7 +72,7 @@ const filasMobileCalculadas = agruparEnFilas(items, filasMobile);
 <div class="hidden flex-col items-center gap-3 md:flex" data-aparejo="desktop">
   {
     filasDesktop.map((fila) => (
-      <div class="flex justify-center gap-3">
+      <div class="flex justify-center gap-3" data-entrada>
         {fila.map((item) => (
           <CajaNombre texto={item.texto} href={item.href} />
         ))}
@@ -75,7 +83,7 @@ const filasMobileCalculadas = agruparEnFilas(items, filasMobile);
 <div class="flex flex-col items-center gap-3 md:hidden" data-aparejo="mobile">
   {
     filasMobileCalculadas.map((fila) => (
-      <div class="flex justify-center gap-3">
+      <div class="flex justify-center gap-3" data-entrada>
         {fila.map((item) => (
           <CajaNombre texto={item.texto} href={item.href} />
         ))}
