@@ -169,7 +169,10 @@
     "aporteLinea1": "Cada edición recauda fondos para las víctimas de los terremotos en Venezuela.",
     "aporteLinea2": "Elegí la vía que te quede más cómoda.",
     "copiasLinea1": "Copias de la obra expuesta en cada edición.",
-    "voluntariadoLinea1": "Sumate al equipo de la próxima edición o compartí la convocatoria."
+    "voluntariadoLinea1": "Sumate al equipo de la próxima edición o compartí la convocatoria.",
+    "muestraCopiaAlt": "Copia en venta: obra de Rubén Mavarez",
+    "muestraCopiaPie": "[TÍTULO] · [PRECIO]",
+    "linkCopias": "[LINK COPIAS EN VENTA]"
   },
   "manifiesto": {
     "comoEmpezo": "Cómo empezó",
@@ -222,12 +225,16 @@
       },
       "copiasEnVenta": {
         "titulo": "Copias en venta",
-        "texto": "Copias de la obra expuesta en cada edición. Lo recaudado va a la causa."
+        "texto": "Copias de la obra expuesta en cada edición. Lo recaudado va a la causa.",
+        "link": "[LINK COPIAS EN VENTA]"
       },
       "voluntariado": {
         "titulo": "Voluntariado",
         "texto": "Sumate al equipo de la próxima edición o compartí la convocatoria. Escribinos por Instagram."
       }
+    },
+    "hero": {
+      "anotacion": "edición 01"
     }
   },
   "sello": {

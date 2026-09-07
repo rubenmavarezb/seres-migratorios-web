@@ -169,7 +169,10 @@
     "aporteLinea1": "[EN PENDIENTE]",
     "aporteLinea2": "[EN PENDIENTE]",
     "copiasLinea1": "[EN PENDIENTE]",
-    "voluntariadoLinea1": "[EN PENDIENTE]"
+    "voluntariadoLinea1": "[EN PENDIENTE]",
+    "muestraCopiaAlt": "Print for sale: work by Rubén Mavarez",
+    "muestraCopiaPie": "[TITLE] · [PRICE]",
+    "linkCopias": "[PRINTS FOR SALE LINK]"
   },
   "manifiesto": {
     "comoEmpezo": "How it began",
@@ -222,12 +225,16 @@
       },
       "copiasEnVenta": {
         "titulo": "Prints for sale",
-        "texto": "[EN PENDIENTE]"
+        "texto": "[EN PENDIENTE]",
+        "link": "[PRINTS FOR SALE LINK]"
       },
       "voluntariado": {
         "titulo": "Volunteer",
         "texto": "[EN PENDIENTE]"
       }
+    },
+    "hero": {
+      "anotacion": "edition 01"
     }
   },
   "sello": {

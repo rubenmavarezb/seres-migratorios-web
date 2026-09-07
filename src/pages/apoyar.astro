@@ -127,16 +127,16 @@ const CLASE_PLACEHOLDER_MONO =
           <figure class="m-0 flex max-w-[280px] flex-col gap-2 pl-2">
             <FotoPegada
               imagen={muestraCopia}
-              alt="Copia en venta, obra de Rubén Mavarez"
+              alt={t(idioma, 'apoyar.muestraCopiaAlt')}
               rotacion={-2}
               widths={[280, 560]}
               sizes="(min-width: 768px) 280px, 100vw"
             />
             <figcaption class="font-mono text-metadatos text-grafito">
-              [TÍTULO] · [PRECIO]
+              {t(idioma, 'apoyar.muestraCopiaPie')}
             </figcaption>
           </figure>
-          <span class={CLASE_PLACEHOLDER_MONO}>[LINK COPIAS EN VENTA]</span>
+          <span class={CLASE_PLACEHOLDER_MONO}>{t(idioma, 'apoyar.linkCopias')}</span>
         </div>
       </div>
 

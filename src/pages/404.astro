@@ -32,6 +32,8 @@
  *    wrapper (the component takes a single `tamano`), so it is generated at
  *    320 and scaled down on mobile with the direct-child variant.
  */
+import { getCollection } from 'astro:content';
+
 import Anotacion from '../components/Anotacion.astro';
 import Boton from '../components/Boton.astro';
 import Sello from '../components/Sello.astro';
@@ -41,10 +43,24 @@ import { type Idioma, rutaLocalizada, t } from '../i18n/utils.ts';
 
 const idioma: Idioma = 'es';
 
-// The seal names edition 01 (the compact scan the site ships). Read from the
-// same source the Pie uses so the accessible name stays accurate.
-const SELLO_CIUDAD = 'Buenos Aires';
-const SELLO_FECHA = '08 ago 2026';
+// The seal is edition 01's scan, so its accessible name reads the oldest
+// edition of the collection — the same lookup `Pie.astro` does — never a
+// literal written into the page.
+const ediciones = await getCollection('ediciones');
+const edicionMasAntigua = [...ediciones].sort(
+  (a, b) => a.data.fecha.getTime() - b.data.fecha.getTime()
+)[0];
+const aConfirmar = t(idioma, 'estados.aConfirmar');
+const SELLO_CIUDAD = edicionMasAntigua?.data.sello.ciudad ?? aConfirmar;
+const SELLO_FECHA = edicionMasAntigua?.data.sello.fechaCorta ?? aConfirmar;
+
+// The lámina breaks the title after "Página no". The dictionary keeps the
+// sentence whole (`noEncontrada.titulo`) and the last word moves to the second
+// line, so the accessible name is still the full title.
+const titulo404 = t(idioma, 'noEncontrada.titulo');
+const corte = titulo404.lastIndexOf(' ');
+const tituloLineas =
+  corte === -1 ? [titulo404, ''] : [titulo404.slice(0, corte), titulo404.slice(corte + 1)];
 ---
 
 <Pagina
@@ -74,7 +90,9 @@ const SELLO_FECHA = '08 ago 2026';
     <div class="relative inline-block pb-10 md:pb-0">
       {/* Two visual lines; the accessible name reads "Página no encontrada". */}
       <h1 class="font-display text-display-lg text-tinta m-0 uppercase">
-        Página no<br />encontrada
+        {tituloLineas[0]}
+        {tituloLineas[1] !== '' && <br />}
+        {tituloLineas[1]}
       </h1>
       {/* Decorative annotation overlaid on the bottom-right corner (lámina). */}
       <div

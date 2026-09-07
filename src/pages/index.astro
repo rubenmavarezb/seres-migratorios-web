@@ -209,6 +209,23 @@ const HANDLE = '@seresmigratorios';
 const CLASE_BANDA = 'border-t border-linea';
 const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
 const CLASE_H2 = 'font-display text-display-md text-tinta m-0 uppercase';
+
+/** A bracket placeholder is valid content but never a usable link — same helper as apoyar.astro. */
+function esPlaceholder(valor: string): boolean {
+  return /^\[[^\]]+\]$/.test(valor);
+}
+// Mercado Pago link of the "Cómo apoyar" band, read like /apoyar reads its
+// three donation links: a real `PUBLIC_LINK_MERCADOPAGO` renders a link, the
+// `.env.example` placeholder renders as mono text with no `href`.
+const mercadoPagoValor = variablePublica(
+  import.meta.env.PUBLIC_LINK_MERCADOPAGO,
+  '[LINK MERCADO PAGO]'
+);
+const mercadoPago = { valor: mercadoPagoValor, esLink: !esPlaceholder(mercadoPagoValor) };
+const CLASE_LINK_MONO =
+  'font-mono text-etiqueta text-azul-sello inline-flex min-h-11 items-center py-3 font-bold uppercase underline underline-offset-[3px] transition-colors hover:text-azul-marcador focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello';
+const CLASE_PLACEHOLDER_MONO =
+  'font-mono text-etiqueta text-tinta inline-block py-3 font-bold uppercase';
 ---
 
 <Base
@@ -259,7 +276,7 @@ const CLASE_H2 = 'font-display text-display-md text-tinta m-0 uppercase';
           idioma={idioma}
         />
         <div class="absolute -top-8 right-0 md:-top-9 md:-right-10">
-          <Anotacion texto="edición 01" rotacion={-3} />
+          <Anotacion texto={t(idioma, 'home.hero.anotacion')} rotacion={-3} />
         </div>
       </div>
 
@@ -430,17 +447,23 @@ const CLASE_H2 = 'font-display text-display-md text-tinta m-0 uppercase';
           <p class="font-mono text-tinta m-0 leading-relaxed text-pretty">
             {t(idioma, 'home.comoApoyar.aporte.texto')}
           </p>
-          <span class="font-mono text-etiqueta text-tinta inline-block py-3 font-bold uppercase">
-            [LINK MERCADO PAGO]
-          </span>
+          {
+            mercadoPago.esLink ? (
+              <a href={mercadoPago.valor} rel="noopener" class={CLASE_LINK_MONO}>
+                {mercadoPago.valor}
+              </a>
+            ) : (
+              <span class={CLASE_PLACEHOLDER_MONO}>{mercadoPago.valor}</span>
+            )
+          }
         </div>
         <div class="flex flex-col items-start gap-4">
           <CajaNombre texto={t(idioma, 'home.comoApoyar.copiasEnVenta.titulo')} />
           <p class="font-mono text-tinta m-0 leading-relaxed text-pretty">
             {t(idioma, 'home.comoApoyar.copiasEnVenta.texto')}
           </p>
-          <span class="font-mono text-etiqueta text-tinta inline-block py-3 font-bold uppercase">
-            [LINK COPIAS EN VENTA]
+          <span class={CLASE_PLACEHOLDER_MONO}>
+            {t(idioma, 'home.comoApoyar.copiasEnVenta.link')}
           </span>
         </div>
         <div class="flex flex-col items-start gap-4">
