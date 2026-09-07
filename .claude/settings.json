@@ -32,6 +32,9 @@
       "Bash(git checkout -b:*)",
       "Bash(git switch:*)",
       "Bash(git stash:*)",
+      "Bash(git push:*)",
+      "Bash(git merge:*)",
+      "Bash(git cherry-pick:*)",
       "Bash(npm run dev:*)",
       "Bash(npm run build:*)",
       "Bash(npm run preview:*)",
@@ -54,9 +57,6 @@
       "Bash(node -e:*)"
     ],
     "ask": [
-      "Bash(git push:*)",
-      "Bash(git merge:*)",
-      "Bash(git cherry-pick:*)",
       "Bash(git revert:*)",
       "Bash(git tag:*)",
       "Bash(npm install:*)",
@@ -88,9 +88,7 @@
       "Bash(sudo:*)",
       "Bash(eval:*)",
       "Bash(curl:*|*sh)",
-      "Bash(wget:*|*sh)",
-      "Bash(netlify deploy:*)",
-      "Bash(npx netlify deploy:*)"
+      "Bash(wget:*|*sh)"
     ]
   },
   "cleanupPeriodDays": 30
