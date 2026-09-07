@@ -6,3 +6,6 @@ docs/capturas/
 package-lock.json
 playwright-report/
 test-results/
+
+# memoria de agentes (la escriben los agentes en runtime, no se formatea)
+.claude/agent-memory/
