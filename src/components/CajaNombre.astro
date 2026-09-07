@@ -26,12 +26,11 @@ const { texto, href, tamano = 'normal', activa = false } = Astro.props;
 
 // `.caja-nombre` (theme.css) sets no font-size at all, so `text-etiqueta`
 // supplies the 0.875rem/14px of design-system.md §4's "etiqueta" role here.
-// It does NOT end up changing letter-spacing to that role's 0.04em, though:
-// `.caja-nombre` already applies `tracking-wide`, which pins the shared
-// `--tw-tracking` custom property to 0.025em, and Tailwind v4's `text-*`
-// utilities only read `--tw-tracking` as a *fallback* — see the OBSERVACIÓN
-// in this ticket's report. Left as-is: `theme.css` is outside this ticket's
-// Alcance, and the acceptance criteria do not name letter-spacing.
+// The role's 0.04em letter-spacing and the 44px box come from `.caja-nombre`
+// itself (`tracking-(--text-etiqueta--letter-spacing)` and `leading-none`)
+// since the QA visual de Fase 2 (R08): until then the class applied
+// `tracking-wide`, which pinned the shared `--tw-tracking` custom property to
+// 0.025em, and the box measured 49px on the inherited 1.5 line-height.
 const clases = [
   'caja-nombre',
   tamano === 'chica' ? 'px-3.5 py-2 text-xs' : 'text-etiqueta',
