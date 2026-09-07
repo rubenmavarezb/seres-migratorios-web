@@ -22,7 +22,9 @@
     "instagram": "Instagram:",
     "ediciones": "Editions:",
     "rol": "Role:",
-    "musica": "Music"
+    "musica": "Music",
+    "retratoPendienteAlt": "Portrait of {nombre} pending",
+    "firmaAlt": "Signature of {nombre}"
   },
   "roles": {
     "fotea": "Shoots",
