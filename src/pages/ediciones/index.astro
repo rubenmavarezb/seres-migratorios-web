@@ -173,9 +173,11 @@ const aConfirmar = t(idioma, 'estados.aConfirmar');
     </div>
   </section>
 
-  {/* EDICIONES PASADAS — one expediente row per entry (Ediciones.dc.html:57).
+  {
+    /* EDICIONES PASADAS — one expediente row per entry (Ediciones.dc.html:57).
       Rendered only when there is at least one: a heading over an empty list is
-      not a state the approved design has. */}
+      not a state the approved design has. */
+  }
   {
     pasadas.length > 0 && (
       <section class="contenedor seccion flex flex-col gap-8 pb-16 md:gap-12 md:pb-24">

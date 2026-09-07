@@ -180,6 +180,16 @@
     "descripcionSeo": "The archive of Seres Migratorios' editions.",
     "proximaEdicion": "Next edition",
     "proximaLinea": "The next edition is built by whoever applies: photographers, film, music and hands for the crew.",
-    "edicionesPasadas": "Past editions"
+    "edicionesPasadas": "Past editions",
+    "volver": "← Editions",
+    "subtituloExperienciaAlt": "Experiencia fotográfica en apoyo a Venezuela",
+    "comoFunciono": "How it worked",
+    "anotacionFotean": "Fotógrafos",
+    "fotean": "Shooting",
+    "foteanSets": "Shooting · Sets {desde} – {hasta}",
+    "anotacionExponen": "Exponen",
+    "exposicion": "Exhibition · {edicion}",
+    "aliados": "Partners",
+    "laJornada": "The day"
   }
 }

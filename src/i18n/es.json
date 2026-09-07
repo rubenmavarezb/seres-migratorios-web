@@ -180,6 +180,16 @@
     "descripcionSeo": "El archivo de las ediciones de Seres Migratorios.",
     "proximaEdicion": "Próxima edición",
     "proximaLinea": "La próxima edición se arma con quienes se postulan: fotógraf@s, film, música y manos para el equipo.",
-    "edicionesPasadas": "Ediciones pasadas"
+    "edicionesPasadas": "Ediciones pasadas",
+    "volver": "← Ediciones",
+    "subtituloExperienciaAlt": "Experiencia fotográfica en apoyo a Venezuela",
+    "comoFunciono": "Cómo funcionó",
+    "anotacionFotean": "Fotógrafos",
+    "fotean": "Fotean",
+    "foteanSets": "Fotean · Sets {desde} – {hasta}",
+    "anotacionExponen": "Exponen",
+    "exposicion": "Exposición · {edicion}",
+    "aliados": "Aliados",
+    "laJornada": "La jornada"
   }
 }
