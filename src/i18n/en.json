@@ -1,7 +1,8 @@
 {
   "comun": {
     "irAlContenido": "Skip to content",
-    "cargando": "Loading…"
+    "cargando": "Loading…",
+    "cuerpoEnPendiente": "[BODY EN PENDING]"
   },
   "nav": {
     "manifiesto": "Manifesto",
@@ -278,7 +279,8 @@
     },
     "otros": "Other artists",
     "anterior": "← {nombre}",
-    "siguiente": "{nombre} →"
+    "siguiente": "{nombre} →",
+    "traduccion": "Translation"
   },
   "lightbox": {
     "titulo": "Photo viewer",

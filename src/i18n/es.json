@@ -1,7 +1,8 @@
 {
   "comun": {
     "irAlContenido": "Ir al contenido",
-    "cargando": "Cargando…"
+    "cargando": "Cargando…",
+    "cuerpoEnPendiente": "[CUERPO EN PENDIENTE]"
   },
   "nav": {
     "manifiesto": "Manifiesto",
@@ -278,7 +279,8 @@
     },
     "otros": "Otros artistas",
     "anterior": "← {nombre}",
-    "siguiente": "{nombre} →"
+    "siguiente": "{nombre} →",
+    "traduccion": "Traducción"
   },
   "lightbox": {
     "titulo": "Visor de fotos",
