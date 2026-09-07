@@ -23,8 +23,13 @@ obra:
       es: '[DESCRIPCIÓN DE LA IMAGEN 02]'
       en: '[IMAGE 02 DESCRIPTION]'
 frase:
-  es: '[TRANSCRIPCIÓN A CONFIRMAR — NAIA GUANIPA]'
-  en: '[NAIA GUANIPA QUOTE — EN]'
+  es: >-
+    La Raíz es mi contención. La fotografía experimental me permite crear un
+    lugar dónde el tiempo deja de separarnos. En los retratos de doble
+    exposición, un hermano habita en el otro. Las pieles se encuentran, Se
+    mezclan y permanecen. Suponer el tiempo es una manera de seguir juntos.
+    Hacer de la fotografía nuestro refugio.
+  en: '[EN PENDIENTE]'
 fraseManuscrita: ../../assets/manuscritas/naia-guanipa.png
 ediciones:
   - buenos-aires-2026
