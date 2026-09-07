@@ -1,0 +1,235 @@
+---
+/**
+ * Lightbox — internal helper (not a canonical component; `internos/` per
+ * CLAUDE.md) that opens the photos of `internos/Galeria.astro` full screen
+ * (SM-038). One per page, fed the same `fotos` array as the gallery.
+ *
+ * Shape of the approved design (`design/Artista.dc.html`, screen "Lightbox",
+ * and its NOTA PARA DESARROLLO: "papel, FotoPegada sin rotación, 'CERRAR',
+ * '←'/'→' en mono, caption 'NNN Nombre · título'"): a paper-coloured
+ * `<dialog>` filling the viewport, the photo centred with its white print
+ * border, "Cerrar" at the top right, the two arrows at the left and right
+ * edges, and a caption row with the photo's name on the left and the "1 / N"
+ * counter on the right.
+ *
+ * What the `<script>` does, and what it deliberately does NOT do:
+ * - Accessibility comes from `<dialog>` itself, not from JavaScript:
+ *   `showModal()` traps the focus and makes the rest of the page inert, and
+ *   `Esc` closes natively (CLAUDE.md, "Lightbox con `<dialog>`: foco atrapado,
+ *   `Esc` cierra, el foco vuelve al disparador"). The script only adds what the
+ *   platform does not give for free: opening from a thumbnail, the arrow keys,
+ *   and returning the focus to the thumbnail that opened it (on the `close`
+ *   event, so it also covers `Esc` and the button).
+ * - Every caption and counter is rendered at build time inside its own slide,
+ *   so navigating is one `hidden` attribute per slide and no string is ever
+ *   built in the browser — no dictionary text has to be smuggled into the
+ *   script.
+ * - With no JavaScript the dialog is never opened and stays `display: none`
+ *   (UA style for `dialog:not([open])`), while the gallery's thumbnails remain
+ *   plain links to the image files. Nothing is lost.
+ *
+ * OBSERVACIÓN: design-system.md §11.4 asks for a 250ms open/close transition on
+ * this `<dialog>` (`@starting-style` + `transition-behavior: allow-discrete`,
+ * `--duracion-media`). That layer belongs to `theme.css`, which SM-069 owns and
+ * this ticket may not touch, and it carries no such block today, so the viewer
+ * opens without a transition. Nothing here animates, which also satisfies
+ * "prefers-reduced-motion sin transiciones" by construction; the rotations of
+ * the thumbnails are `FotoPegada`'s and are already neutralised by
+ * `theme.css`'s reduced-motion block.
+ */
+import type { ImageMetadata } from 'astro';
+
+import Boton from '../Boton.astro';
+import FotoPegada from '../FotoPegada.astro';
+import { t, type Idioma } from '../../i18n/utils.ts';
+
+/** Same shape as `Galeria.astro`'s own `fotos` (Astro cannot export a type from a component): keep the two in sync. */
+interface FotoDeGaleria {
+  imagen: ImageMetadata;
+  alt: string;
+  titulo?: string;
+}
+
+interface Props {
+  fotos: FotoDeGaleria[];
+  /** Text before each photo's own title in the caption: "001 Herick Frontado". */
+  prefijoPie?: string;
+  idioma?: Idioma;
+}
+
+const { fotos, prefijoPie, idioma } = Astro.props;
+
+const idiomaActual: Idioma = idioma ?? (Astro.currentLocale === 'en' ? 'en' : 'es');
+
+/** Local stand-in for `t()`'s missing interpolation — same helper as `Sello.astro` and `FichaFotografo.astro`. */
+function interpolar(plantilla: string, valores: Record<string, string>): string {
+  return Object.entries(valores).reduce(
+    (acumulado, [clave, valor]) => acumulado.replaceAll(`{${clave}}`, valor),
+    plantilla
+  );
+}
+
+/** Full-screen sizes, capped at the source's natural width (same idiom as `Galeria.astro`). */
+function anchosDe(imagen: ImageMetadata): number[] {
+  const candidatos = [800, 1200, 1600].filter((ancho) => ancho < imagen.width);
+  return [...candidatos, imagen.width];
+}
+
+const SIZES = '(min-width: 768px) 80vw, 92vw';
+
+const diapositivas = fotos.map((foto, indice) => ({
+  ...foto,
+  anchos: anchosDe(foto.imagen),
+  // "001 Herick Frontado · [TÍTULO DE LA FOTO]" — either half may be missing.
+  pie: [prefijoPie, foto.titulo].filter((parte) => parte !== undefined && parte !== '').join(' · '),
+  contador: interpolar(t(idiomaActual, 'lightbox.contador'), {
+    indice: String(indice + 1),
+    total: String(fotos.length),
+  }),
+}));
+
+const CLASE_DIALOGO = [
+  // `open:grid`, never a bare `grid`: an author `display` declaration beats the
+  // UA's own `dialog:not([open]) { display: none }`, so a plain `grid` would
+  // leave the closed dialog laid over the whole page — covering the gallery and
+  // swallowing its clicks — with no JavaScript to ever open it. Under the
+  // variant the closed dialog has no `display` of its own and the UA rule
+  // applies, which is exactly the "el sitio se lee sin JavaScript" requirement.
+  'papel fixed inset-0 z-50 h-full w-full max-h-none max-w-none open:grid',
+  'grid-cols-[44px_minmax(0,1fr)_44px] grid-rows-[72px_minmax(0,1fr)_auto]',
+  'md:grid-cols-[96px_minmax(0,1fr)_96px] md:grid-rows-[96px_minmax(0,1fr)_120px]',
+].join(' ');
+/** Borderless mono arrow of the design, 44px minimum on both axes (CLAUDE.md, "objetivo táctil ≥ 44 px"). */
+const CLASE_FLECHA = [
+  'row-start-2 flex min-h-11 min-w-11 items-center justify-center self-center justify-self-center',
+  'font-mono text-2xl font-bold text-tinta transition-colors hover:text-azul-marcador',
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello',
+].join(' ');
+/** `[&_img]:` reaches the `<img>` inside `FotoPegada` (a descendant selector beats its own `w-full`), which is what bounds the photo to the viewport: the component has no size prop and is not modified here. */
+const CLASE_MARCO =
+  'flex min-h-0 flex-1 items-center justify-center py-4 md:py-6 [&_img]:max-h-[62svh] [&_img]:w-auto [&_img]:max-w-full md:[&_img]:max-h-[68svh]';
+const CLASE_PIE = 'font-mono text-etiqueta font-bold text-tinta uppercase';
+const CLASE_CONTADOR = 'shrink-0 font-mono text-metadatos text-grafito';
+---
+
+<dialog data-lightbox aria-label={t(idiomaActual, 'lightbox.titulo')} class={CLASE_DIALOGO}>
+  {
+    /* `Boton` takes no `data-*` prop (Astro does not spread unknown attributes), so the hook lives on the wrapper and catches the click as it bubbles. */
+  }
+  <div class="col-start-3 row-start-1 self-start justify-self-end p-4 md:p-6" data-lightbox-cerrar>
+    <Boton>{t(idiomaActual, 'botones.cerrar')}</Boton>
+  </div>
+
+  <button
+    type="button"
+    class={`${CLASE_FLECHA} col-start-1`}
+    aria-label={t(idiomaActual, 'lightbox.anterior')}
+    data-lightbox-anterior
+  >
+    <span aria-hidden="true">←</span>
+  </button>
+
+  {
+    diapositivas.map((diapositiva, indice) => (
+      <figure
+        class="col-start-2 row-start-2 row-end-4 flex min-h-0 flex-col"
+        data-lightbox-foto
+        data-indice={String(indice)}
+        hidden={indice !== 0}
+      >
+        <div class={CLASE_MARCO}>
+          <FotoPegada
+            imagen={diapositiva.imagen}
+            alt={diapositiva.alt}
+            widths={diapositiva.anchos}
+            sizes={SIZES}
+          />
+        </div>
+        <figcaption class="flex items-start justify-between gap-6 px-4 pt-2 pb-6 md:px-0">
+          <p class={CLASE_PIE}>{diapositiva.pie}</p>
+          <span class={CLASE_CONTADOR}>{diapositiva.contador}</span>
+        </figcaption>
+      </figure>
+    ))
+  }
+
+  <button
+    type="button"
+    class={`${CLASE_FLECHA} col-start-3`}
+    aria-label={t(idiomaActual, 'lightbox.siguiente')}
+    data-lightbox-siguiente
+  >
+    <span aria-hidden="true">→</span>
+  </button>
+</dialog>
+
+<script>
+  const dialogo = document.querySelector('[data-lightbox]');
+  const miniaturas = Array.from(document.querySelectorAll('[data-galeria-foto]'));
+
+  if (dialogo instanceof HTMLDialogElement && miniaturas.length > 0) {
+    const diapositivas = Array.from(dialogo.querySelectorAll('[data-lightbox-foto]'));
+    const total = diapositivas.length;
+    /** Thumbnail that opened the viewer: the focus goes back to it on close. */
+    let disparador: HTMLElement | null = null;
+
+    /** Cyclic, like the profile's own previous/next navigation. */
+    function mostrar(indice: number) {
+      const objetivo = ((indice % total) + total) % total;
+      diapositivas.forEach((diapositiva, posicion) => {
+        diapositiva.toggleAttribute('hidden', posicion !== objetivo);
+      });
+    }
+
+    function indiceVisible(): number {
+      return diapositivas.findIndex((diapositiva) => !diapositiva.hasAttribute('hidden'));
+    }
+
+    miniaturas.forEach((miniatura, posicion) => {
+      miniatura.addEventListener('click', (evento) => {
+        // Only take over the plain left click: ⌘/ctrl-click, middle click and
+        // "open in new tab" keep going to the image file, and so does everything
+        // if this script never runs.
+        const mouse = evento as MouseEvent;
+        if (
+          mouse.metaKey ||
+          mouse.ctrlKey ||
+          mouse.shiftKey ||
+          mouse.altKey ||
+          mouse.button !== 0
+        ) {
+          return;
+        }
+        evento.preventDefault();
+        disparador = miniatura instanceof HTMLElement ? miniatura : null;
+        mostrar(posicion);
+        dialogo.showModal();
+      });
+    });
+
+    dialogo.querySelector('[data-lightbox-cerrar]')?.addEventListener('click', () => {
+      dialogo.close();
+    });
+    dialogo.querySelector('[data-lightbox-anterior]')?.addEventListener('click', () => {
+      mostrar(indiceVisible() - 1);
+    });
+    dialogo.querySelector('[data-lightbox-siguiente]')?.addEventListener('click', () => {
+      mostrar(indiceVisible() + 1);
+    });
+
+    // `Esc` and the focus trap are the dialog's own; only the arrows are added.
+    dialogo.addEventListener('keydown', (evento) => {
+      if (evento.key === 'ArrowLeft') {
+        evento.preventDefault();
+        mostrar(indiceVisible() - 1);
+      } else if (evento.key === 'ArrowRight') {
+        evento.preventDefault();
+        mostrar(indiceVisible() + 1);
+      }
+    });
+
+    dialogo.addEventListener('close', () => {
+      disparador?.focus();
+    });
+  }
+</script>
