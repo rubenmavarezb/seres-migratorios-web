@@ -28,14 +28,13 @@
  *   back to Gustavo Sánchez, its last entry. So the first has a previous and
  *   the last a next, and neither is an empty box or a broken link.
  *
- * OBSERVACIÓN (content vs. design): `ruben-mavarez.md` declares no `retrato`,
- * so his profile shows the dashed `[RETRATO]` placeholder even though
- * `src/assets/retratos/ruben-mavarez.jpg` exists and the approved screen uses
- * it; and his `obra` lists `01.png` / `02.png`, the two crops of the pieces,
- * while the design's collage uses the eight `web-01…08.jpg` (all of them
- * present in `src/assets/fotos/ruben-mavarez/`). Both are content fixes —
- * adding a field, reordering a list — and content is not this ticket's to
- * change, so the page renders what the collection says.
+ * Content note: `ruben-mavarez.md` originally declared no `retrato` and listed
+ * the two poster crops as `obra` while the approved screen uses the eight
+ * `web-01…08.jpg`; both were fixed on the content branch
+ * `contenido/artistas-ruben-naia` (07.09.2026), so the page now renders what
+ * the design shows. The collage order of the lámina (web-04, 02, 03, 05, 06,
+ * 07, 01, 08) and its descriptive alts were NOT adopted: the collection keeps
+ * 01→08 with placeholder alts until the author confirms them (SM-044).
  */
 import { getCollection, getEntries, render } from 'astro:content';
 import { Image } from 'astro:assets';
