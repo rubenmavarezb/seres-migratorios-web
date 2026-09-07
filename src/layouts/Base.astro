@@ -55,6 +55,12 @@ const tituloCompleto =
 // astro.config.mjs.
 const urlImagenOg = imagenOg === undefined ? undefined : new URL(imagenOg.src, Astro.site).href;
 
+// The `<body>` carries `font-mono text-tinta` (SM-013): without it any text
+// that reaches a page with no font class of its own falls back to Tailwind's
+// default sans stack (ui-sans-serif, system-ui…) — Arial or Roboto in
+// practice, which CLAUDE.md forbids as a visible typeface. Courier Prime is
+// the body face of the design, so it is the right default for the document.
+
 // NOTE: no `theme-color`. Its `content` takes a literal color, and neither a
 // CSS variable nor a Tailwind token can be written into an HTML attribute; the
 // value would have to be the hexadecimal of `--color-papel`, which CLAUDE.md
@@ -75,7 +81,7 @@ const urlImagenOg = imagenOg === undefined ? undefined : new URL(imagenOg.src, A
     <meta property="og:description" content={descripcion} />
     {urlImagenOg !== undefined && <meta property="og:image" content={urlImagenOg} />}
   </head>
-  <body class="papel flex min-h-screen flex-col">
+  <body class="papel font-mono text-tinta flex min-h-screen flex-col">
     <a
       href="#contenido"
       class="absolute -top-16 left-6 z-50 inline-flex min-h-11 items-center border-2 border-tinta bg-papel-puro px-6 py-3 font-mono text-etiqueta font-bold uppercase text-tinta focus:top-2 focus:outline-2 focus:outline-offset-2 focus:outline-azul-sello"

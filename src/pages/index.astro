@@ -1,26 +1,31 @@
 ---
 /**
- * Single test page of Fase 1 (SM-012): it proves `Base.astro` mounts `<html
- * lang>`, the head, the paper background, `Nav` and `Pie`, and that `/` is
- * served as the unprefixed default locale. The real home page, with the eight
- * blocks of sitemap.md §2.1, lands in SM-034 and replaces this file.
+ * Single test page of Fase 1 (SM-012, updated in SM-013): it proves
+ * `Base.astro` mounts `<html lang>`, the head, the paper background, `Nav` and
+ * `Pie`, that `Pagina.astro` adds the header and the 1280 px container on top
+ * of it, and that `/` is served as the unprefixed default locale. The real
+ * home page, with the eight blocks of sitemap.md §2.1 and the `TitularPartido`
+ * hero, lands in SM-034 and replaces this file.
  *
- * `idioma` is not passed to `Base` on purpose: the layout derives it from
+ * `idioma` is not passed to `Pagina` on purpose: `Base` derives it from
  * `Astro.currentLocale`, and this page is the check that it resolves to `es`.
+ * `contenedor={false}` because there is no content under the header yet; a
+ * `.contenedor` with nothing in it would only add an empty element.
  */
-import Base from '../layouts/Base.astro';
+import Pagina from '../layouts/Pagina.astro';
 import { type Idioma, t } from '../i18n/utils.ts';
 
 /** This file only ever renders under the default locale. */
 const idioma: Idioma = 'es';
 ---
 
-<Base
+<Pagina
   titulo={t(idioma, 'seo.tituloSitio')}
   descripcion={t(idioma, 'seo.descripcionPorDefecto')}
   rutaActual={Astro.url.pathname}
->
-  <div class="contenedor py-12 md:py-16">
-    <h1 class="font-display text-display-lg uppercase">{t(idioma, 'seo.tituloSitio')}</h1>
-  </div>
-</Base>
+  encabezado={{
+    titulo: t(idioma, 'seo.tituloSitio'),
+    subtitulo: t(idioma, 'seo.descripcionPorDefecto'),
+  }}
+  contenedor={false}
+/>

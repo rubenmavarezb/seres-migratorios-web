@@ -1,0 +1,42 @@
+/* ==========================================================================
+   SERES MIGRATORIOS — Section classes shared by every page (SM-013)
+
+   The three shapes that repeat across the nine approved screens
+   (design/*.dc.html) and that would otherwise be re-typed on every section.
+   Imported from src/styles/global.css AFTER theme.css, so the `@theme` tokens
+   and the `.contenedor` of theme.css already exist when these rules are read.
+
+   Composition, not replacement: a section of the approved design is the
+   container itself (`max-width:1280px; margin:0 auto; padding:64px 48px;
+   border-top:1px solid linea`), so it is written `<section class="contenedor
+   seccion">` — `.contenedor` gives the 1280 px and the 24/48 px side margins,
+   `.seccion` the rule above and the vertical rhythm. Nothing here sets a
+   color outside the tokens and nothing sets a radius.
+   ========================================================================== */
+
+@layer components {
+  /* Section separated by a 1 px `linea` rule, with the vertical padding of
+     diseno-web-indice.md, "Constantes de layout": 64 px desktop, 48 px mobile
+     (measured in every `.dc.html`: `padding:64px 48px` / `padding:48px 24px`). */
+  .seccion {
+    @apply border-t border-linea py-12 md:py-16;
+  }
+
+  /* Section heading: display 3.5rem desktop / 2rem mobile. `text-display-md`
+     is exactly that (`clamp(2rem, 5vw, 3.5rem)` in theme.css) and already
+     carries `line-height: .85` and `letter-spacing: -0.01em` through its
+     paired `--text-display-md--*` tokens, so no leading/tracking utility is
+     added here. */
+  .seccion-titulo {
+    @apply font-display text-display-md text-tinta uppercase;
+  }
+
+  /* "Title + content" block: one column on mobile, 4fr/8fr from `md` with the
+     24 px gutter of the 12-column grid (design-system.md §5). `minmax(0, …)`
+     instead of a bare `4fr`/`8fr` so a long unbreakable string (a URL, a
+     handle) cannot blow the track wider than its share — same spelling as the
+     approved design. */
+  .grilla-4-8 {
+    @apply grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-6;
+  }
+}

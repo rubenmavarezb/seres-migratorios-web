@@ -1,0 +1,147 @@
+---
+/**
+ * Layout of every inner page (PLAN.md §5, "Layouts"): `Base.astro` plus the
+ * page header of the approved design and the 1280 px container of
+ * diseno-web-indice.md, "Constantes de layout".
+ *
+ * NOTE: the backlog asks for "el TitularPartido de encabezado". The design
+ * approved on 06.09.2026 — later than the backlog — heads its inner pages with
+ * a plain `display-lg` headline plus a mono subtitle (Manifiesto, Ediciones,
+ * Convocatoria, Apoyar, 404) and keeps `TitularPartido` for the Home hero and
+ * the edition page. This layout follows the design; the divergence is reported
+ * as an OBSERVACIÓN of SM-013.
+ *
+ * Three ways to build a header, in order of precedence:
+ *
+ * 1. `encabezado` slot — replaces the WHOLE header, its `<section>` and its
+ *    padding included, so the page can reproduce a layout the prop cannot:
+ *    /artistas (an `Anotacion` as the title, `64px 48px 48px`), /gracias and
+ *    the 404 (`96px 48px 128px`, with a `Sello` above the headline). A page
+ *    filling this slot writes its own `<section class="contenedor …">`.
+ * 2. `encabezado` prop — the default header: `<h1>` in `display-lg` (7.5rem
+ *    desktop / 3rem mobile) over the `64px 48px 80px` (`32px 24px 48px` on
+ *    mobile) of Manifiesto, Convocatoria and Apoyar, with an optional mono
+ *    subtitle in `grafito` under it.
+ * 3. Neither — no header at all; the page owns everything below the `Nav`.
+ *
+ * `anotacion` is a second slot, only read together with the `encabezado` prop:
+ * its content is laid over the bottom-right corner of the `<h1>`, the way
+ * "sumate" sits on /convocatoria and "acá no hay nada" on the 404. Placement
+ * is `inset`-only (never a `transform`) so theme.css's
+ * `prefers-reduced-motion: reduce` block — which forces `transform: none` on
+ * `[data-rotacion]`, the very attribute `Anotacion` carries — flattens the
+ * annotation's rotation without also throwing away its position.
+ *
+ * `contenedor` decides what happens to the default slot. `true` (the default)
+ * wraps it in a single `.contenedor`, for a page that is one flow of content.
+ * `false` leaves it raw, which is what a page that builds its own
+ * `<section class="contenedor seccion">` blocks needs: nesting one
+ * `.contenedor` inside another would add its 24/48 px side padding twice.
+ */
+import type { ImageMetadata } from 'astro';
+
+import Base from './Base.astro';
+import { type Idioma } from '../i18n/utils.ts';
+
+interface Encabezado {
+  /** Full heading text, in its real capitalization (`uppercase` is a visual transform). */
+  titulo: string;
+  /** Optional visual line split of `titulo` ("Convocatoria" / "abierta"), rendered with `<br>`. Its lines joined by a space must read exactly like `titulo`. */
+  lineas?: string[];
+  /** Mono 700 uppercase line under the heading ("Archivo del colectivo", "Toooda ayuda es bienvenida"). */
+  subtitulo?: string;
+}
+
+/**
+ * The first five props are `Base.astro`'s, spelled out instead of derived with
+ * `ComponentProps<typeof Base>`: that helper resolves through a conditional
+ * type, which `interface Props extends …` cannot always extend, and every
+ * component of this repo declares a literal `interface Props`. Base's prop list
+ * is fixed by PLAN.md §5 (SM-033 rewrites its `<head>`, not its props).
+ */
+interface Props {
+  titulo: string;
+  descripcion: string;
+  imagenOg?: ImageMetadata;
+  idioma?: Idioma;
+  rutaActual?: string;
+  /** Header of the page. Ignored when the `encabezado` slot is filled. */
+  encabezado?: Encabezado;
+  /** Wrap the default slot in a `.contenedor`. Defaults to `true`. */
+  contenedor?: boolean;
+}
+
+const {
+  titulo,
+  descripcion,
+  imagenOg,
+  idioma,
+  rutaActual,
+  encabezado,
+  contenedor = true,
+} = Astro.props;
+
+const lineas = encabezado?.lineas;
+
+// Same convention as Anotacion.astro and i18n/utils.ts: a content mistake
+// warns during `astro dev` (`import.meta.env.DEV` is false under `astro
+// build`) instead of breaking the page. A `lineas` that does not spell out
+// `titulo` would ship a heading whose accessible name is not the title.
+if (import.meta.env.DEV && lineas !== undefined && lineas.join(' ') !== encabezado?.titulo) {
+  console.warn(
+    `[Pagina] encabezado.lineas ("${lineas.join(' ')}") no coincide con encabezado.titulo ("${encabezado?.titulo}").`
+  );
+}
+---
+
+<Base
+  titulo={titulo}
+  descripcion={descripcion}
+  imagenOg={imagenOg}
+  idioma={idioma}
+  rutaActual={rutaActual}
+>
+  <slot name="encabezado">
+    {
+      encabezado !== undefined && (
+        <section class="contenedor pt-8 pb-12 md:pt-16 md:pb-20">
+          <div class="flex flex-col items-start gap-4 md:gap-6">
+            <div class="relative inline-block">
+              {/* `text-display-lg` already carries line-height .85 and letter-spacing -0.01em from theme.css. */}
+              <h1 class="font-display text-display-lg text-tinta uppercase">
+                {lineas === undefined
+                  ? encabezado.titulo
+                  : lineas.map((linea, indice) => (
+                      <Fragment>
+                        {indice > 0 && <br />}
+                        {linea}
+                      </Fragment>
+                    ))}
+              </h1>
+              {/* Bottom-right of the heading on mobile (design: `bottom:-24px`), just outside its right edge on desktop (design: `bottom:24px`, ~30 px clear of the text). No class here may contain "anotacion" or "sello": theme.css matches those substrings to cancel transforms under reduced motion.
+                  `whitespace-nowrap` is load-bearing, not cosmetic, and matches the `whiteSpace:nowrap` the design puts on this same wrapper (NoEncontrada.dc.html:40). From `md` up the box has `left` but neither `right` nor `width`, so CSS sizes it as
+                  `min(max(min-content, available), max-content)` with a NEGATIVE available width — which collapses it to min-content, i.e. the longest single word, stacking a multi-word annotation vertically. Under `nowrap`, min-content equals max-content equals the one-line width, so the box keeps its intended shape whatever the available width. `white-space` inherits, and `Anotacion` sets none of its own, so the wrapper is the only place this can live: per diseno-web-indice.md decision 13 the component takes no `class`, and this wrapper is internal to the layout, so no page can reach it from outside. */}
+              <div class="absolute right-0 -bottom-6 whitespace-nowrap md:right-auto md:bottom-6 md:left-full md:ml-8">
+                <slot name="anotacion" />
+              </div>
+            </div>
+            {encabezado.subtitulo !== undefined && (
+              <p class="font-mono text-etiqueta text-grafito m-0 font-bold uppercase">
+                {encabezado.subtitulo}
+              </p>
+            )}
+          </div>
+        </section>
+      )
+    }
+  </slot>
+  {
+    contenedor ? (
+      <div class="contenedor">
+        <slot />
+      </div>
+    ) : (
+      <slot />
+    )
+  }
+</Base>
