@@ -168,7 +168,28 @@
     "edicion01Monto": "Edition 01 · [AMOUNT AND USE TO BE CONFIRMED]"
   },
   "manifiesto": {
-    "comoEmpezo": "How it began"
+    "comoEmpezo": "How it began",
+    "titulo": "Manifesto",
+    "pasos": {
+      "uno": {
+        "caja": "[EN PENDIENTE]",
+        "linea1": "[EN PENDIENTE]",
+        "linea2": "[EN PENDIENTE]"
+      },
+      "dos": {
+        "caja": "[EN PENDIENTE]",
+        "linea1": "[EN PENDIENTE]",
+        "linea2": "[EN PENDIENTE]"
+      },
+      "tres": {
+        "caja": "[EN PENDIENTE]",
+        "linea1": "[EN PENDIENTE]",
+        "linea2": "[EN PENDIENTE]"
+      }
+    },
+    "cierre": {
+      "boton": "[EN PENDIENTE]"
+    }
   },
   "home": {
     "manifiesto": {

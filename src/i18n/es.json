@@ -168,7 +168,28 @@
     "edicion01Monto": "Edición 01 · [MONTO Y DESTINO A CONFIRMAR]"
   },
   "manifiesto": {
-    "comoEmpezo": "Cómo empezó"
+    "comoEmpezo": "Cómo empezó",
+    "titulo": "Manifiesto",
+    "pasos": {
+      "uno": {
+        "caja": "13.07.2026 · el reel",
+        "linea1": "Herick Frontado convoca a fotógraf@s de la diáspora para documentar el exilio.",
+        "linea2": "La idea: juntar fondos para las víctimas de los terremotos en Venezuela."
+      },
+      "dos": {
+        "caja": "31.07.2026 · el post",
+        "linea1": "Se anuncia la edición 01: un recorrido fotográfico por los sets 001 a 007.",
+        "linea2": "Exposición de nueve artistas, música en vivo y café de especialidad."
+      },
+      "tres": {
+        "caja": "08.08.2026 · la edición 01",
+        "linea1": "CONSULADO, Humberto Primo 3032, Buenos Aires.",
+        "linea2": "De 10:00 a 19:00."
+      }
+    },
+    "cierre": {
+      "boton": "Ver la edición 01"
+    }
   },
   "home": {
     "manifiesto": {
