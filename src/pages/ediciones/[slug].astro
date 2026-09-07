@@ -113,6 +113,7 @@ import {
   esPlaceholder,
   etiquetaCortaDeEdicion,
   fechaCorta,
+  fechaHoraIso,
   rangoDeSets,
   retratoTamano,
   urlDeInstagram,
@@ -234,6 +235,97 @@ const itemsMusica = data.musica.map((acto) => {
 });
 
 const rutaEdiciones = rutaLocalizada('/ediciones', idioma);
+
+/* --------------------------------------------------------------------------
+   JSON-LD Event (SM-041)
+
+   OBSERVACIÓN (dónde va): the ticket asks for the `<script>` in the `<head>`.
+   Neither `Pagina.astro` nor `Base.astro` exposes a `head` slot, and both are
+   outside this ticket's Alcance, so it is emitted as the first node of the
+   page's content instead. Google reads structured data from anywhere in the
+   document ("Structured data general guidelines": the markup may be in the
+   `<head>` or the `<body>`), so this stays valid; when a `head` slot lands, the
+   block moves without any change to the object below.
+
+   OBSERVACIÓN (`eventStatus`): schema.org's `EventStatusType` enumerates
+   Scheduled / Cancelled / Postponed / Rescheduled / MovedOnline — there is no
+   value for "already happened". A `pasada` edition therefore keeps
+   `EventScheduled`, which is what it was: the property describes whether the
+   event runs as announced, not whether it is over. `estado` still selects it
+   explicitly so a future `proxima`/cancelled distinction has one place to live.
+
+   Nothing beyond the ticket's list is emitted: no `offers`, no price, no
+   attendance figures.
+   -------------------------------------------------------------------------- */
+
+interface LugarJsonLd {
+  '@type': 'Place';
+  name: string;
+  address: string;
+}
+
+interface PersonaJsonLd {
+  '@type': 'Person';
+  name: string;
+}
+
+interface OrganizacionJsonLd {
+  '@type': 'Organization';
+  name: string;
+  url: string;
+}
+
+interface EventoJsonLd {
+  '@context': 'https://schema.org';
+  '@type': 'Event';
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  eventStatus: string;
+  location: LugarJsonLd;
+  organizer: OrganizacionJsonLd;
+  performer: PersonaJsonLd[];
+  url: string;
+  image?: string;
+}
+
+/** `site` of astro.config.mjs; the page's own origin is only a build-time guard. */
+const base = Astro.site ?? new URL(Astro.url.origin);
+const urlCanonica = new URL(Astro.url.pathname, base).href;
+
+const evento: EventoJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: data.nombre,
+  description: data.claim[idioma],
+  startDate: fechaHoraIso(data.fecha, data.horario.desde),
+  endDate: fechaHoraIso(data.fecha, data.horario.hasta),
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: {
+    '@type': 'Place',
+    name: data.lugar.nombre,
+    address: `${lugar.direccion}, ${data.ciudad}, ${data.pais}`,
+  },
+  organizer: {
+    '@type': 'Organization',
+    name: marca,
+    url: base.href,
+  },
+  performer: [
+    ...fotean.map((artista) => artista.data.nombre),
+    ...data.musica.map((a) => a.nombre),
+  ].map((nombre) => ({ '@type': 'Person', name: nombre }) satisfies PersonaJsonLd),
+  url: urlCanonica,
+  ...(data.imagenOg === undefined ? {} : { image: new URL(data.imagenOg.src, base).href }),
+};
+
+/**
+ * `<` is escaped so no content value can ever close the `<script>` element
+ * early (HTML spec, "restrictions for contents of script elements"); `\u003c`
+ * is still the same string to any JSON parser.
+ */
+const eventoJson = JSON.stringify(evento).replaceAll('<', '\\u003c');
 ---
 
 <Pagina
@@ -243,6 +335,9 @@ const rutaEdiciones = rutaLocalizada('/ediciones', idioma);
   rutaActual={Astro.url.pathname}
   contenedor={false}
 >
+  {/* JSON-LD Event (SM-041) — see the OBSERVACIÓN about placement above. */}
+  <script is:inline type="application/ld+json" set:html={eventoJson} />
+
   {/* FICHA DE LA EDICIÓN (Edicion.dc.html:36) */}
   <section class="contenedor flex flex-col items-start gap-6 pt-6 md:gap-8 md:pt-12">
     <a
