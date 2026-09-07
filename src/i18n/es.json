@@ -170,6 +170,41 @@
   "manifiesto": {
     "comoEmpezo": "Cómo empezó"
   },
+  "home": {
+    "manifiesto": {
+      "titulo": "Manifiesto",
+      "cita": "“En la vorágine de la rutina en el exilio buscamos la manera de ayudar, de agruparnos y compartir esto que sentimos en el pecho, de mirar a los ojos a quienes comparten un dolor que no se puede describir en palabras y que tratamos de codificar en una imagen, un retrato. En momentos como estos entendemos la importancia de la fotografía, y de nuestra labor como fotograf@s”.",
+      "atribucion": "Post del 31.07.2026"
+    },
+    "fotografos": {
+      "anotacionAlt": "FOTÓGRAFOS",
+      "etiqueta": "Fotean · Edición 01"
+    },
+    "exponen": {
+      "anotacionAlt": "EXPONEN",
+      "etiqueta": "Exposición · Edición 01"
+    },
+    "proximaEdicion": {
+      "titulo": "Próxima edición",
+      "textoLinea1": "La próxima edición se arma con quienes se postulan: fotógraf@s, film, música y manos para el equipo.",
+      "textoLinea2": "Si querés fotear, exponer o dar una mano, dejanos tus datos."
+    },
+    "comoApoyar": {
+      "titulo": "Cómo apoyar",
+      "aporte": {
+        "titulo": "Aporte",
+        "texto": "Cada edición recauda fondos para las víctimas de los terremotos en Venezuela."
+      },
+      "copiasEnVenta": {
+        "titulo": "Copias en venta",
+        "texto": "Copias de la obra expuesta en cada edición. Lo recaudado va a la causa."
+      },
+      "voluntariado": {
+        "titulo": "Voluntariado",
+        "texto": "Sumate al equipo de la próxima edición o compartí la convocatoria. Escribinos por Instagram."
+      }
+    }
+  },
   "sello": {
     "alt": "Sello Seres Migratorios, {ciudad}, {fecha}"
   },

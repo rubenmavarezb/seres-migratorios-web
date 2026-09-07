@@ -1,31 +1,462 @@
 ---
 /**
- * Single test page of Fase 1 (SM-012, updated in SM-013): it proves
- * `Base.astro` mounts `<html lang>`, the head, the paper background, `Nav` and
- * `Pie`, that `Pagina.astro` adds the header and the 1280 px container on top
- * of it, and that `/` is served as the unprefixed default locale. The real
- * home page, with the eight blocks of sitemap.md §2.1 and the `TitularPartido`
- * hero, lands in SM-034 and replaces this file.
+ * Home `/` (SM-034) — replaces the Fase 1 test page. Built to match
+ * `design/Home.dc.html` (the approved lámina, which wins over `sitemap.md`
+ * §2.1 wherever they differ — see the OBSERVACIONES in this ticket's report).
  *
- * `idioma` is not passed to `Pagina` on purpose: `Base` derives it from
- * `Astro.currentLocale`, and this page is the check that it resolves to `es`.
- * `contenedor={false}` because there is no content under the header yet; a
- * `.contenedor` with nothing in it would only add an empty element.
+ * The page uses `Base.astro` directly, not `Pagina.astro`: the home hero is
+ * not the standard page header (`display-lg` headline + mono subtitle) that
+ * `Pagina`'s `encabezado` prop/slot produces — it is a full-bleed section with
+ * two absolutely-positioned obra photos, a `BloqueFicha`, the `TitularPartido`
+ * hero and an overlaid `Sello`. Each section owns its own
+ * `max-w-[1280px]`/`.contenedor` box, so `Base` (which adds none) is the right
+ * layout. Placement always lives in a wrapping element, never on a canonical
+ * component (diseno-web-indice.md decision 13).
+ *
+ * BLOCKS, top to bottom, per the lámina:
+ *  1. Hero: obra photos + `BloqueFicha` (edition 01) + `TitularPartido` (the
+ *     single `<h1>`) with the claim `Anotacion` in its slot + `Sello`.
+ *  2. Manifiesto: the official post quote as a `<blockquote>`, attribution,
+ *     and a `Boton` to /manifiesto.
+ *  3. Fotógrafos: four `FichaFotografo` (001–004) + `Boton` to /artistas.
+ *  4. Exponen: the nine `exponen` of edition 01 as an `Aparejo`.
+ *  5. Próxima edición: `BloqueFicha` (próxima edition if any, else the empty
+ *     state of sitemap.md §3.1) + text + `Boton` to /convocatoria.
+ *  6. Cómo apoyar: three `CajaNombre` columns with direct links.
+ *
+ * OBSERVACIONES (lámina vs. brief/sitemap, documented per CLAUDE.md):
+ *  - sitemap.md §2.1 block 1 asks for the PRÓXIMA edition in the hero
+ *    `BloqueFicha` with the empty state on top. The lámina instead shows
+ *    edition 01's real data in the hero (with the "edición 01" annotation) and
+ *    keeps the empty/próxima state for its own separate "Próxima edición"
+ *    section. Followed the lámina.
+ *  - sitemap.md block 3 asks for three `FotoPegada` variante `sangrada`; the
+ *    lámina uses two bare, absolutely-positioned obra photos as a backdrop to
+ *    the title. Followed the lámina (`<Picture priority>` on the LCP one).
+ *  - sitemap.md block 5 asks for a standalone `PalabrasClave` block; the
+ *    lámina's home has none (PalabrasClave appears on /manifiesto and
+ *    /ediciones instead). Omitted here, per the lámina.
+ *  - sitemap.md block 8 asks for a standalone `FranjaAliados`; the lámina's
+ *    home carries the strip only inside the `Pie` (rendered by `Base`), as on
+ *    every page. Not duplicated.
+ *  - The two hero obra photos get real descriptive `alt`s in the lámina, but
+ *    the `artistas` collection stores their `alt` as visible placeholders
+ *    ("[DESCRIPCIÓN DE LA IMAGEN NN]"). Kept the collection's real state as the
+ *    single source of truth (CLAUDE.md, "No inventar datos") rather than baking
+ *    the lámina's copy into the page; they render as the placeholder, non-empty
+ *    so accessibility still has an `alt`.
  */
-import Pagina from '../layouts/Pagina.astro';
-import { type Idioma, t } from '../i18n/utils.ts';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Picture } from 'astro:assets';
 
-/** This file only ever renders under the default locale. */
+import Anotacion from '../components/Anotacion.astro';
+import BloqueFicha from '../components/BloqueFicha.astro';
+import Boton from '../components/Boton.astro';
+import CajaNombre from '../components/CajaNombre.astro';
+import FichaFotografo from '../components/FichaFotografo.astro';
+import Sello from '../components/Sello.astro';
+import TitularPartido from '../components/TitularPartido.astro';
+import Aparejo from '../components/internos/Aparejo.astro';
+import claimRefugio from '../assets/manuscritas/marca/claim-refugio.png';
+import fotografosManuscrita from '../assets/manuscritas/marca/fotografos.png';
+import exponenManuscrita from '../assets/manuscritas/marca/exponen.png';
+import selloImagen from '../assets/marca/sello.png';
+import Base from '../layouts/Base.astro';
+import { type Idioma, rutaLocalizada, t } from '../i18n/utils.ts';
+
+/** The default locale carries no URL prefix; `/` only renders in Spanish. */
 const idioma: Idioma = 'es';
+
+const ediciones = await getCollection('ediciones');
+const artistas = await getCollection('artistas');
+const artistasPorId = new Map(artistas.map((entrada) => [entrada.id, entrada]));
+
+/**
+ * The "vigente" edition drives the hero `BloqueFicha` and `Sello`: the próxima
+ * one if there is one, otherwise the most recent past edition. There is a
+ * single `proxima` at a time (content.config.ts), and today none — so this is
+ * edition 01 (buenos-aires-2026).
+ */
+const proxima = ediciones.find((entrada) => entrada.data.estado === 'proxima');
+const pasadasPorFecha = ediciones
+  .filter((entrada) => entrada.data.estado === 'pasada')
+  .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const ultimaPasada = pasadasPorFecha[0];
+const edicionVigente = proxima ?? ultimaPasada;
+
+// Every specimen of this page is built from seed content; a missing edition is
+// a repo error, not a runtime state to render around (same stance as /kit).
+if (edicionVigente === undefined) {
+  throw new Error('La home necesita al menos una edición en la colección.');
+}
+
+/**
+ * `08.08.2026`, the format the lámina prints inside `BloqueFicha`. UTC getters:
+ * `z.coerce.date()` parses `2026-08-08` as UTC midnight and a local getter
+ * would render the 7th west of Greenwich, Buenos Aires included. Same helper
+ * as /kit.
+ */
+function formatearFecha(fecha: Date): string {
+  const dia = String(fecha.getUTCDate()).padStart(2, '0');
+  const mes = String(fecha.getUTCMonth() + 1).padStart(2, '0');
+  return `${dia}.${mes}.${fecha.getUTCFullYear()}`;
+}
+
+/**
+ * `BloqueFicha` wants the venue as three lines while the schema stores one
+ * string ("Humberto Primo 3032, Buenos Aires, ARG"); the first comma splits it
+ * into the two lines the lámina shows. Same helper as /kit.
+ */
+function lugarDeEdicion(edicion: CollectionEntry<'ediciones'>) {
+  const [primera, ...resto] = edicion.data.lugar.direccion.split(', ');
+  return {
+    nombre: edicion.data.lugar.nombre,
+    direccion: primera,
+    ciudad: resto.length > 0 ? resto.join(', ') : edicion.data.ciudad,
+  };
+}
+
+const fechaVigente = formatearFecha(edicionVigente.data.fecha);
+const lugarVigente = lugarDeEdicion(edicionVigente);
+
+/**
+ * Próxima-edition section (sitemap.md §3.1). With a `proxima` edition its real
+ * data shows; without one — today's state — the `BloqueFicha` renders the
+ * visible "[PRÓXIMA EDICIÓN A CONFIRMAR]" / "[A CONFIRMAR]" placeholders, never
+ * invented data. The `estado` field alone flips this: set a future edition to
+ * `estado: proxima` and the block fills in.
+ */
+const hayProxima = proxima !== undefined;
+const fichaProxima = hayProxima
+  ? {
+      fecha: formatearFecha(proxima.data.fecha),
+      horario: proxima.data.horario.etiqueta,
+      lugar: lugarDeEdicion(proxima),
+    }
+  : {
+      fecha: t(idioma, 'estados.proximaEdicionAConfirmar'),
+      horario: t(idioma, 'estados.aConfirmar'),
+      lugar: {
+        nombre: t(idioma, 'estados.aConfirmar'),
+        direccion: t(idioma, 'estados.aConfirmar'),
+        ciudad: t(idioma, 'estados.aConfirmar'),
+      },
+    };
+
+/** Hero backdrop photos, straight from the `artistas` collection (lámina: herick 01 left, sofia 02 right). */
+const herick = artistasPorId.get('herick-frontado');
+const sofia = artistasPorId.get('sofia-martin');
+if (
+  herick === undefined ||
+  sofia === undefined ||
+  herick.data.obra.length < 2 ||
+  sofia.data.obra.length < 2
+) {
+  throw new Error('La home necesita la obra semilla de herick-frontado y sofia-martin.');
+}
+const heroObra1 = herick.data.obra[0]; // herick-frontado/01.png — the LCP
+const heroObra2 = sofia.data.obra[1]; // sofia-martin/02.png
+
+/**
+ * The four `FichaFotografo` of the "Fotean · Edición 01" block, in the lámina's
+ * order (001–004). `obraIndice` picks the obra the lámina uses (herick 02, the
+ * rest 01); `retratoTamano` is the square [72, 72] only for Pati Caro. Naia has
+ * no `retrato`, so the component falls back to the dashed placeholder.
+ */
+const fichasFotografos = [
+  { id: 'herick-frontado', obraIndice: 1 },
+  { id: 'naia-guanipa', obraIndice: 0 },
+  { id: 'angela-perez', obraIndice: 0 },
+  { id: 'pati-caro', obraIndice: 0, retratoTamano: [72, 72] as [number, number] },
+]
+  .map((config) => {
+    const entrada = artistasPorId.get(config.id);
+    if (entrada === undefined || entrada.data.obra.length <= config.obraIndice) return undefined;
+    return {
+      entrada,
+      obra: entrada.data.obra[config.obraIndice],
+      retratoTamano: config.retratoTamano,
+    };
+  })
+  .filter((ficha): ficha is NonNullable<typeof ficha> => ficha !== undefined);
+
+/** The nine `exponen` of edition 01, in the edition's own order (same mapping as /kit). */
+const exponen = edicionVigente.data.exponen
+  .map((referencia) => artistasPorId.get(referencia.id))
+  .filter((entrada): entrada is CollectionEntry<'artistas'> => entrada !== undefined)
+  .map((entrada) => ({
+    texto: entrada.data.nombre,
+    href: rutaLocalizada(`/artistas/${entrada.data.slug}`, idioma),
+  }));
+
+// Route to the vigente edition for the empty-state "ver la última edición"
+// button (only used with no próxima edition; see sitemap.md §3.1).
+const rutaEdicionVigente = rutaLocalizada(`/ediciones/${edicionVigente.data.slug}`, idioma);
+
+/** Instagram of the collective, read like `Pie.astro` does (real value in .env.example). */
+function variablePublica(valor: unknown, respaldo: string): string {
+  return typeof valor === 'string' && valor !== '' ? valor : respaldo;
+}
+const instagramUrl = variablePublica(
+  import.meta.env.PUBLIC_INSTAGRAM_URL,
+  'https://www.instagram.com/seresmigratorios/'
+);
+const HANDLE = '@seresmigratorios';
+
+// Shared section chrome. A section is a full-bleed band with a 1px top rule and
+// a centered 1280px inner container (diseno-web-indice.md, "Constantes de
+// layout"). Kept in constants so Tailwind's scanner reads the literal classes.
+const CLASE_BANDA = 'border-t border-linea';
+const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
+const CLASE_H2 = 'font-display text-display-md text-tinta m-0 uppercase';
 ---
 
-<Pagina
+<Base
   titulo={t(idioma, 'seo.tituloSitio')}
   descripcion={t(idioma, 'seo.descripcionPorDefecto')}
+  idioma={idioma}
   rutaActual={Astro.url.pathname}
-  encabezado={{
-    titulo: t(idioma, 'seo.tituloSitio'),
-    subtitulo: t(idioma, 'seo.descripcionPorDefecto'),
-  }}
-  contenedor={false}
-/>
+>
+  {/* ============ 1 · HERO ============ */}
+  <section class="relative overflow-hidden py-8 pb-16 md:py-12 md:pb-24">
+    {
+      /* Backdrop obra photos: absolute, hidden below md (the lámina shows a single full-width photo on mobile instead — see below). `aria-hidden` because they are a decorative backdrop and their collection alt is a placeholder. */
+    }
+    <div
+      class="pointer-events-none absolute top-52 left-0 hidden h-[420px] w-[300px] md:block"
+      aria-hidden="true"
+    >
+      <Picture
+        src={heroObra1.image}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[300, 600]}
+        sizes="300px"
+        priority
+        class="block h-full w-full object-cover"
+      />
+    </div>
+    <div
+      class="pointer-events-none absolute right-0 bottom-0 hidden h-[400px] w-[260px] md:block"
+      aria-hidden="true"
+    >
+      <Picture
+        src={heroObra2.image}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[260, 520]}
+        sizes="260px"
+        class="block h-full w-full object-cover object-[50%_100%]"
+      />
+    </div>
+
+    <div class={`relative ${CLASE_CONTENEDOR}`}>
+      <div class="relative mx-auto max-w-[760px]">
+        <BloqueFicha
+          fecha={fechaVigente}
+          horario={edicionVigente.data.horario.etiqueta}
+          lugar={lugarVigente}
+          idioma={idioma}
+        />
+        <div class="absolute -top-8 right-0 md:-top-9 md:-right-10">
+          <Anotacion texto="edición 01" rotacion={-3} />
+        </div>
+      </div>
+
+      <div class="relative mt-16">
+        <TitularPartido arriba="Seres" abajo="Migratorios">
+          <Anotacion
+            imagen={claimRefugio}
+            alt={edicionVigente.data.claim[idioma]}
+            ancho={560}
+            rotacion={0}
+          />
+        </TitularPartido>
+        <div class="absolute top-5 right-4 md:right-10">
+          <Sello
+            imagen={selloImagen}
+            ciudad={edicionVigente.data.sello.ciudad}
+            fecha={edicionVigente.data.sello.fechaCorta}
+            tamano={200}
+            rotacion={-14}
+            idioma={idioma}
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* Mobile-only hero photo (lámina: herick 01 full-width under the title). */}
+    <div class="mt-8 md:hidden" aria-hidden="true">
+      <Picture
+        src={heroObra1.image}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[390, 780]}
+        sizes="100vw"
+        class="block h-60 w-full object-cover"
+      />
+    </div>
+  </section>
+
+  {/* ============ 2 · MANIFIESTO ============ */}
+  <section class={CLASE_BANDA}>
+    <div
+      class={`${CLASE_CONTENEDOR} grid grid-cols-1 items-start gap-6 py-12 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:py-16`}
+    >
+      <h2 class={CLASE_H2}>{t(idioma, 'home.manifiesto.titulo')}</h2>
+      <div class="flex flex-col items-start gap-6 md:gap-8">
+        <blockquote
+          class="font-mono text-tinta m-0 max-w-[60ch] text-[18px] leading-relaxed text-pretty"
+        >
+          {t(idioma, 'home.manifiesto.cita')}
+        </blockquote>
+        <p class="font-mono text-metadatos text-grafito m-0">
+          {t(idioma, 'home.manifiesto.atribucion')}
+        </p>
+        <Boton href={rutaLocalizada('/manifiesto', idioma)} anchoCompletoMobile>
+          {t(idioma, 'botones.leerElManifiesto')}
+        </Boton>
+      </div>
+    </div>
+  </section>
+
+  {/* ============ 3 · FOTÓGRAFOS ============ */}
+  <section class={CLASE_BANDA}>
+    <div class={`${CLASE_CONTENEDOR} flex flex-col gap-8 py-12 md:gap-12 md:py-16`}>
+      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-6">
+        <Anotacion
+          imagen={fotografosManuscrita}
+          alt={t(idioma, 'home.fotografos.anotacionAlt')}
+          ancho={420}
+          rotacion={-2}
+        />
+        <span class="font-mono text-etiqueta text-grafito font-bold uppercase">
+          {t(idioma, 'home.fotografos.etiqueta')}
+        </span>
+      </div>
+      <div class="grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-8">
+        {
+          fichasFotografos.map((ficha) => (
+            <FichaFotografo
+              numero={ficha.entrada.data.numero}
+              nombre={ficha.entrada.data.nombre}
+              obraPrincipal={ficha.obra.image}
+              obraAlt={ficha.obra.alt[idioma]}
+              retrato={ficha.entrada.data.retrato}
+              retratoAlt={ficha.entrada.data.retratoAlt[idioma]}
+              retratoTamano={ficha.retratoTamano}
+              instagram={ficha.entrada.data.instagram}
+              href={rutaLocalizada(`/artistas/${ficha.entrada.data.slug}`, idioma)}
+              idioma={idioma}
+            />
+          ))
+        }
+      </div>
+      <div>
+        <Boton href={rutaLocalizada('/artistas', idioma)} anchoCompletoMobile>
+          {t(idioma, 'botones.verTodosLosArtistas')}
+        </Boton>
+      </div>
+    </div>
+  </section>
+
+  {/* ============ 4 · EXPONEN ============ */}
+  <section class={CLASE_BANDA}>
+    <div class={`${CLASE_CONTENEDOR} flex flex-col items-center gap-8 py-12 md:gap-12 md:py-16`}>
+      <div class="flex flex-col items-center gap-3">
+        <Anotacion
+          imagen={exponenManuscrita}
+          alt={t(idioma, 'home.exponen.anotacionAlt')}
+          ancho={320}
+          rotacion={-2}
+        />
+        <span class="font-mono text-etiqueta text-grafito font-bold uppercase">
+          {t(idioma, 'home.exponen.etiqueta')}
+        </span>
+      </div>
+      <div class="w-full">
+        <Aparejo items={exponen} filas={[3, 3, 3]} />
+      </div>
+    </div>
+  </section>
+
+  {/* ============ 5 · PRÓXIMA EDICIÓN ============ */}
+  <section class={CLASE_BANDA}>
+    <div
+      class={`${CLASE_CONTENEDOR} grid grid-cols-1 items-start gap-6 py-12 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:py-16`}
+    >
+      <h2 class={CLASE_H2}>{t(idioma, 'home.proximaEdicion.titulo')}</h2>
+      <div class="flex flex-col items-start gap-6 md:gap-8">
+        <div class="w-full">
+          <BloqueFicha
+            fecha={fichaProxima.fecha}
+            horario={fichaProxima.horario}
+            lugar={fichaProxima.lugar}
+            idioma={idioma}
+          />
+        </div>
+        <p class="font-mono text-tinta m-0 max-w-[65ch] leading-relaxed text-pretty">
+          {t(idioma, 'home.proximaEdicion.textoLinea1')}<br />{
+            t(idioma, 'home.proximaEdicion.textoLinea2')
+          }
+        </p>
+        {
+          hayProxima ? (
+            <Boton href={rutaLocalizada('/convocatoria', idioma)} anchoCompletoMobile>
+              {t(idioma, 'botones.postulate')}
+            </Boton>
+          ) : (
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
+              <Boton href={rutaEdicionVigente} anchoCompletoMobile>
+                {t(idioma, 'botones.verLaUltimaEdicion')}
+              </Boton>
+              <Boton href={instagramUrl} variante="sello" externo anchoCompletoMobile>
+                {t(idioma, 'botones.seguinosEnInstagram')}
+              </Boton>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* ============ 6 · CÓMO APOYAR ============ */}
+  <section class={CLASE_BANDA}>
+    <div class={`${CLASE_CONTENEDOR} flex flex-col gap-8 py-12 pb-16 md:gap-12 md:py-16 md:pb-24`}>
+      <h2 class={CLASE_H2}>{t(idioma, 'home.comoApoyar.titulo')}</h2>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6">
+        <div class="flex flex-col items-start gap-4">
+          <CajaNombre texto={t(idioma, 'home.comoApoyar.aporte.titulo')} />
+          <p class="font-mono text-tinta m-0 leading-relaxed text-pretty">
+            {t(idioma, 'home.comoApoyar.aporte.texto')}
+          </p>
+          <span class="font-mono text-etiqueta text-tinta inline-block py-3 font-bold uppercase">
+            [LINK MERCADO PAGO]
+          </span>
+        </div>
+        <div class="flex flex-col items-start gap-4">
+          <CajaNombre texto={t(idioma, 'home.comoApoyar.copiasEnVenta.titulo')} />
+          <p class="font-mono text-tinta m-0 leading-relaxed text-pretty">
+            {t(idioma, 'home.comoApoyar.copiasEnVenta.texto')}
+          </p>
+          <span class="font-mono text-etiqueta text-tinta inline-block py-3 font-bold uppercase">
+            [LINK COPIAS EN VENTA]
+          </span>
+        </div>
+        <div class="flex flex-col items-start gap-4">
+          <CajaNombre texto={t(idioma, 'home.comoApoyar.voluntariado.titulo')} />
+          <p class="font-mono text-tinta m-0 leading-relaxed text-pretty">
+            {t(idioma, 'home.comoApoyar.voluntariado.texto')}
+          </p>
+          <a
+            href={instagramUrl}
+            rel="noopener"
+            class="font-mono text-etiqueta text-azul-sello inline-flex min-h-11 items-center py-3 font-bold uppercase underline underline-offset-[3px] transition-colors hover:text-azul-marcador focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+          >
+            {HANDLE}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

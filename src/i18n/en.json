@@ -170,6 +170,41 @@
   "manifiesto": {
     "comoEmpezo": "How it began"
   },
+  "home": {
+    "manifiesto": {
+      "titulo": "Manifesto",
+      "cita": "[EN PENDIENTE]",
+      "atribucion": "[EN PENDIENTE]"
+    },
+    "fotografos": {
+      "anotacionAlt": "FOTÓGRAFOS",
+      "etiqueta": "[EN PENDIENTE]"
+    },
+    "exponen": {
+      "anotacionAlt": "EXPONEN",
+      "etiqueta": "[EN PENDIENTE]"
+    },
+    "proximaEdicion": {
+      "titulo": "Next edition",
+      "textoLinea1": "[EN PENDIENTE]",
+      "textoLinea2": "[EN PENDIENTE]"
+    },
+    "comoApoyar": {
+      "titulo": "How to support",
+      "aporte": {
+        "titulo": "Contribution",
+        "texto": "[EN PENDIENTE]"
+      },
+      "copiasEnVenta": {
+        "titulo": "Prints for sale",
+        "texto": "[EN PENDIENTE]"
+      },
+      "voluntariado": {
+        "titulo": "Volunteer",
+        "texto": "[EN PENDIENTE]"
+      }
+    }
+  },
   "sello": {
     "alt": "Seres Migratorios seal, {ciudad}, {fecha}"
   },
