@@ -10,9 +10,10 @@
  * needs a metadata tag adds it to `Seo.astro`, never to this head, so that
  * "única fuente de metadatos" keeps holding.
  *
- * Two other pieces PLAN.md §5 attributes to this layout are deliberately absent
- * here: the `hreflang` pair (SM-049 / SM-050) and the Cloudflare Web Analytics
- * beacon of PLAN.md §4.3, which lands with its token in SM-065.
+ * The `hreflang` pair PLAN.md §5 attributes to this layout lives in `Seo.astro`
+ * too (SM-050), for the same "única fuente" reason. One piece is still
+ * deliberately absent here: the Cloudflare Web Analytics beacon of PLAN.md
+ * §4.3, which lands with its token in SM-065.
  */
 import type { ImageMetadata } from 'astro';
 
