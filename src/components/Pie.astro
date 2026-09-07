@@ -104,8 +104,9 @@ interface Props {
   /**
    * Partner strip override, in render order. Defaults to the whole `aliados`
    * collection ordered as the approved design shows it (see `ordenarAliados`).
-   * Kept as a prop — PLAN.md §5 gives `Pie` this exact prop — so `/kit`
-   * (SM-029) can render the strip with a subset without a second component.
+   * Part of this component's prop contract in PLAN.md §5 and kept for a caller
+   * that needs to narrow or reorder the strip; no page passes it today, since
+   * the footer is identical site-wide (diseno-web-indice.md, decision 2).
    */
   aliados?: CollectionEntry<'aliados'>[];
 }

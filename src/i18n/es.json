@@ -143,6 +143,13 @@
     "aguante": "¡Aguante la fotografía!",
     "aliados": "[ALIADOS]"
   },
+  "kit": {
+    "titulo": "Kit de componentes",
+    "subtitulo": "Página interna · los 16 componentes canónicos",
+    "descripcion": "Página interna: los 16 componentes canónicos del design system con todas sus variantes.",
+    "notaNav": "El Nav de esta página, arriba, es la instancia del kit: lleva ids propios y un script, así que una segunda copia rompería el menú. La variante mobile es la misma barra a 390 px de ancho.",
+    "notaPie": "El Pie que cierra esta página es la instancia del kit: es único en todo el sitio y no tiene variantes."
+  },
   "seo": {
     "tituloSitio": "Seres Migratorios",
     "separador": "·",

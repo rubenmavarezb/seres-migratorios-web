@@ -143,6 +143,13 @@
     "aguante": "¡Aguante la fotografía!",
     "aliados": "[PARTNERS]"
   },
+  "kit": {
+    "titulo": "Component kit",
+    "subtitulo": "Internal page · the 16 canonical components",
+    "descripcion": "Internal page: the 16 canonical components of the design system with all their variants.",
+    "notaNav": "The Nav at the top of this page is the kit's instance: it carries its own ids and a script, so a second copy would break the menu. The mobile variant is the same bar at 390 px wide.",
+    "notaPie": "The Pie closing this page is the kit's instance: it is the same on every page and has no variants."
+  },
   "seo": {
     "tituloSitio": "Seres Migratorios",
     "separador": "·",

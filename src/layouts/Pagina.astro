@@ -65,6 +65,8 @@ interface Props {
   imagenOg?: ImageMetadata;
   idioma?: Idioma;
   rutaActual?: string;
+  /** Forwarded to `Base.astro`: `<meta name="robots" content="noindex">` for an internal page such as `/kit`. See Base's own prop doc. */
+  noindex?: boolean;
   /** Header of the page. Ignored when the `encabezado` slot is filled. */
   encabezado?: Encabezado;
   /** Wrap the default slot in a `.contenedor`. Defaults to `true`. */
@@ -77,6 +79,7 @@ const {
   imagenOg,
   idioma,
   rutaActual,
+  noindex,
   encabezado,
   contenedor = true,
 } = Astro.props;
@@ -100,6 +103,7 @@ if (import.meta.env.DEV && lineas !== undefined && lineas.join(' ') !== encabeza
   imagenOg={imagenOg}
   idioma={idioma}
   rutaActual={rutaActual}
+  noindex={noindex}
 >
   <slot name="encabezado">
     {
