@@ -240,5 +240,37 @@
     "lectura": "{desde} AM a {hasta} PM · {fechaCorta}",
     "am": "AM",
     "pm": "PM"
+  },
+  "artistas": {
+    "titulo": "Artistas",
+    "anotacion": "artistas",
+    "descripcion": "Quiénes fotean el recorrido y quiénes exponen en cada edición de Seres Migratorios.",
+    "fotean": {
+      "titulo": "Fotean",
+      "detalle": "Recorrido · sets {primero} a {ultimo}",
+      "detalleUno": "Recorrido · set {primero}"
+    },
+    "exponen": {
+      "titulo": "Exponen",
+      "detalle": "Exposición · {cantidad} artistas",
+      "detalleUno": "Exposición · un artista"
+    },
+    "rolConSet": "{rol} · Set {numero}",
+    "volver": "← Artistas",
+    "cajaEdicion": "{edicion} {anio}",
+    "handlePendiente": "[HANDLE]",
+    "manuscritaPendiente": "Frase y firma manuscritas: [PENDIENTES]",
+    "obra": {
+      "titulo": "Obra",
+      "grupoSet": "Set {numero}",
+      "grupoExposicion": "Exposición",
+      "detalle": "{grupo} · {cantidad} fotos",
+      "detalleUna": "{grupo} · una foto",
+      "vacia": "[OBRA]",
+      "vaciaLinea": "Las fotos se cargan cuando la persona las entrega."
+    },
+    "otros": "Otros artistas",
+    "anterior": "← {nombre}",
+    "siguiente": "{nombre} →"
   }
 }
