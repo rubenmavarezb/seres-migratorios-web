@@ -68,6 +68,10 @@ interface Props {
   widths?: number[];
   sizes?: string;
   prioridad?: boolean;
+  /** Fixed width of the whole print (border included), as a CSS length. Optional: without it the print is as wide as its wrapper. */
+  ancho?: string;
+  /** Fixed height of the whole print (border included), as a CSS length: the photo is cropped to it with `object-fit: cover`, the way FotoPegada.jsx and the Manifiesto lámina ("Cómo empezó": 420×300 on desktop, 240×180 on mobile) size a print. Optional: without it the photo keeps its natural aspect ratio (QA visual de Fase 2, R22). A `clamp()` covers both breakpoints from one prop. */
+  alto?: string;
 }
 
 const {
@@ -79,7 +83,17 @@ const {
   widths,
   sizes,
   prioridad = false,
+  ancho,
+  alto,
 } = Astro.props;
+
+// Dynamic geometry goes inline, as the rotation below; the wrapper's
+// `box-sizing: border-box` (Tailwind preflight) makes `alto` include the
+// white border, so the `<img>` at `h-full` fills exactly the content box.
+const estiloTamano = [ancho ? `width: ${ancho};` : '', alto ? `height: ${alto};` : '']
+  .filter(Boolean)
+  .join(' ');
+const claseImagen = alto ? 'block h-full w-full object-cover' : 'block h-auto w-full';
 
 // design-system.md §7, item 7: "-2° a 2°" — a value copy-pasted from a wider
 // range (e.g. Anotacion's -3° a 2°) gets clamped instead of silently
@@ -103,7 +117,7 @@ const clasesEnvoltorio =
   class={clasesEnvoltorio}
   data-entrada
   data-rotacion
-  style={`transform: rotate(${rotacionClamp}deg)`}
+  style={`transform: rotate(${rotacionClamp}deg); ${estiloTamano}`}
 >
   <Image
     src={imagen}
@@ -112,6 +126,6 @@ const clasesEnvoltorio =
     sizes={sizes}
     loading={prioridad ? undefined : 'lazy'}
     priority={prioridad || undefined}
-    class="block h-auto w-full"
+    class={claseImagen}
   />
 </div>
