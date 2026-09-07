@@ -173,5 +173,37 @@
     "lectura": "{desde} AM to {hasta} PM · {fechaCorta}",
     "am": "AM",
     "pm": "PM"
+  },
+  "artistas": {
+    "titulo": "Artists",
+    "anotacion": "artists",
+    "descripcion": "Who shoots the itinerary and who exhibits in every Seres Migratorios edition.",
+    "fotean": {
+      "titulo": "Shoots",
+      "detalle": "Itinerary · sets {primero} to {ultimo}",
+      "detalleUno": "Itinerary · set {primero}"
+    },
+    "exponen": {
+      "titulo": "Exhibits",
+      "detalle": "Exhibition · {cantidad} artists",
+      "detalleUno": "Exhibition · one artist"
+    },
+    "rolConSet": "{rol} · Set {numero}",
+    "volver": "← Artists",
+    "cajaEdicion": "{edicion} {anio}",
+    "handlePendiente": "[HANDLE]",
+    "manuscritaPendiente": "Handwritten quote and signature: [PENDING]",
+    "obra": {
+      "titulo": "Work",
+      "grupoSet": "Set {numero}",
+      "grupoExposicion": "Exhibition",
+      "detalle": "{grupo} · {cantidad} photos",
+      "detalleUna": "{grupo} · one photo",
+      "vacia": "[WORK]",
+      "vaciaLinea": "Photos go up here once the artist hands them in."
+    },
+    "otros": "Other artists",
+    "anterior": "← {nombre}",
+    "siguiente": "{nombre} →"
   }
 }
