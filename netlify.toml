@@ -34,3 +34,12 @@
   to = "https://seresmigratorios.com/:splat"
   status = 301
   force = true
+
+# 404 en inglés (SM-048). Netlify sirve dist/404.html para cualquier ruta que no
+# existe; esta regla, sin `force`, solo se aplica cuando /en/* no existe en el
+# deploy y devuelve la 404 en inglés (Astro emite src/pages/en/404.astro como
+# dist/en/404/index.html, no como dist/en/404.html).
+[[redirects]]
+  from = "/en/*"
+  to = "/en/404/index.html"
+  status = 404

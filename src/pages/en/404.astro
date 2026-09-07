@@ -1,0 +1,18 @@
+---
+/**
+ * `/en/404` — English twin of `/404` (SM-043, SM-048). Shared body in
+ * `internos/paginas/NoEncontrada.astro`; this file only fixes the locale.
+ *
+ * Astro only treats the root `/404` as a status page (`dist/404.html`); this one
+ * is a regular page and lands at `dist/en/404/index.html`, so `netlify.toml`
+ * carries a `/en/*` → `/en/404/index.html` rule with status 404 to serve it for
+ * an unknown route under `/en/`.
+ */
+import NoEncontrada from '../../components/internos/paginas/NoEncontrada.astro';
+import type { Idioma } from '../../i18n/utils.ts';
+
+/** This file only ever renders under the `/en/` locale. */
+const idioma: Idioma = 'en';
+---
+
+<NoEncontrada idioma={idioma} />
