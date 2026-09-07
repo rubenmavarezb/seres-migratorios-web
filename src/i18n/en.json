@@ -165,7 +165,11 @@
     "escribinosPorInstagram": "Message us on Instagram.",
     "aDondeVaLaPlata": "Where the money goes",
     "textoTransparencia": "[TRANSPARENCY TEXT: what each edition's funds go to]",
-    "edicion01Monto": "Edition 01 · [AMOUNT AND USE TO BE CONFIRMED]"
+    "edicion01Monto": "Edition 01 · [AMOUNT AND USE TO BE CONFIRMED]",
+    "aporteLinea1": "[EN PENDIENTE]",
+    "aporteLinea2": "[EN PENDIENTE]",
+    "copiasLinea1": "[EN PENDIENTE]",
+    "voluntariadoLinea1": "[EN PENDIENTE]"
   },
   "manifiesto": {
     "comoEmpezo": "How it began",
