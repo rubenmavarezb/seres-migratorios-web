@@ -1,0 +1,201 @@
+---
+/**
+ * Apoyar — shared body of `/apoyar` and `/en/support` (SM-042, SM-048). Both
+ * routes are thin wrappers that only fix `idioma`; everything below —
+ * frontmatter and markup — is the page as SM-042 built it.
+ *
+ * Internal helper, not a canonical component of design-system.md §7, hence
+ * `components/internos/` (CLAUDE.md, "los helpers ajenos al design system van
+ * en internos/"). It takes `idioma` as a prop instead of reading
+ * `Astro.currentLocale` so a route is the single place that decides its
+ * language, and every `t()` call and `rutaLocalizada()` here follows from it.
+ *
+ * Built to match `design/Apoyar.dc.html`.
+ *
+ * Uses `Pagina.astro` with the `encabezado` PROP: `<h1>` "Cómo apoyar" plus the
+ * mono `grafito` subtitle "Toooda ayuda es bienvenida" (`apoyar.anotacion`),
+ * exactly the header the lámina shows. `contenedor={false}` because the page
+ * builds its own `<section>` blocks (three-column band + the transparency box).
+ *
+ * BLOCKS (lámina):
+ *  1. Header (`Pagina` `encabezado`): `<h1>` + mono subtitle.
+ *  2. Tres columnas (subgrid: `CajaNombre` / texto / acciones):
+ *     - Aporte: two lines + three donation links (Mercado Pago / PayPal /
+ *       Cafecito) read from `PUBLIC_LINK_*` like `Pie.astro` reads its env; when
+ *       the value is still a bracket placeholder, the label renders as mono text
+ *       WITHOUT an `href` (a placeholder is never a link — CLAUDE.md).
+ *     - Copias en venta: two lines + a sample `FotoPegada` with a
+ *       "[TÍTULO] · [PRECIO]" caption + the "[LINK COPIAS EN VENTA]" placeholder
+ *       (mono, no `href`).
+ *     - Voluntariado y difusión: two lines + a `Boton` to /convocatoria + the
+ *       @seresmigratorios link.
+ *  3. "A dónde va la plata": an `<h2>` inside a box on `azul-tinta-agua`
+ *     (#E4EAF8 = the `bg-azul-tinta-agua` token) with a 2px `tinta` border, the
+ *     transparency text and the "Edición 01 · [MONTO Y DESTINO A CONFIRMAR]"
+ *     placeholder. No figures.
+ *
+ * OBSERVACIONES:
+ *  - `FotoPegada.astro` has no `pie` prop; the sample caption goes in a
+ *    `<figcaption>` on the wrapper (same as /manifiesto).
+ *  - Donation links and "copias en venta" link are placeholders in
+ *    `.env.example`/the lámina, so they render as mono text with no `href` until
+ *    real values land in the Netlify env. The `PUBLIC_LINK_*` values are the
+ *    same in both languages: there is no per-locale donation link.
+ *  - `apoyar.edicion01Monto` is shown as the visible placeholder it is; no
+ *    recaudation figure anywhere (this ticket's hard rule).
+ *  - `apoyar.anotacion`, `.aporteLinea1`, `.aporteLinea2`, `.copiasLinea1` and
+ *    `.voluntariadoLinea1` are still `[EN PENDIENTE]` in `en.json`, so
+ *    `/en/support` shows those placeholders. That is the real state of the
+ *    content (SM-051 is Ruben's); translating them here is out of scope.
+ *  - `/en/support` links to `/en/open-call`, which does not exist until Fase 4
+ *    (same as `/apoyar` → `/convocatoria` today).
+ */
+import Boton from '../../Boton.astro';
+import CajaNombre from '../../CajaNombre.astro';
+import FotoPegada from '../../FotoPegada.astro';
+import muestraCopia from '../../../assets/fotos/ruben-mavarez/web-01.jpg';
+import Pagina from '../../../layouts/Pagina.astro';
+import { type Idioma, rutaLocalizada, t } from '../../../i18n/utils.ts';
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+
+/** A `PUBLIC_*` env value as a string, falling back to the `.env.example` placeholder. Same shape as `Pie.astro`. */
+function variablePublica(valor: unknown, respaldo: string): string {
+  return typeof valor === 'string' && valor !== '' ? valor : respaldo;
+}
+
+/** A bracket placeholder ("[LINK PAYPAL]") is valid content but never a usable link. Same helper as the canonical components. */
+function esPlaceholder(valor: string): boolean {
+  return /^\[[^\]]+\]$/.test(valor);
+}
+
+const instagramUrl = variablePublica(
+  import.meta.env.PUBLIC_INSTAGRAM_URL,
+  'https://www.instagram.com/seresmigratorios/'
+);
+const HANDLE = '@seresmigratorios';
+
+/**
+ * The three donation channels, in the lámina's order. Each reads its
+ * `PUBLIC_LINK_*` variable; a placeholder value renders as plain mono text (no
+ * `href`). The visible label is the bracket text itself when unset, matching
+ * the lámina.
+ */
+const donaciones = [
+  { valor: variablePublica(import.meta.env.PUBLIC_LINK_MERCADOPAGO, '[LINK MERCADO PAGO]') },
+  { valor: variablePublica(import.meta.env.PUBLIC_LINK_PAYPAL, '[LINK PAYPAL]') },
+  { valor: variablePublica(import.meta.env.PUBLIC_LINK_CAFECITO, '[LINK CAFECITO]') },
+].map((d) => ({ valor: d.valor, esLink: !esPlaceholder(d.valor) }));
+
+const rutaConvocatoria = rutaLocalizada('/convocatoria', idioma);
+
+const CLASE_BANDA = 'border-t border-linea';
+const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
+const CLASE_LINEA_MONO = 'font-mono text-tinta m-0 leading-relaxed text-pretty';
+const CLASE_LINK_MONO =
+  'font-mono text-etiqueta text-azul-sello inline-flex min-h-11 items-center py-3 font-bold uppercase underline underline-offset-[3px] transition-colors hover:text-azul-marcador focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello';
+const CLASE_PLACEHOLDER_MONO =
+  'font-mono text-etiqueta text-tinta inline-block py-3 font-bold uppercase';
+---
+
+<Pagina
+  titulo={t(idioma, 'apoyar.titulo')}
+  descripcion={t(idioma, 'seo.descripcionPorDefecto')}
+  idioma={idioma}
+  rutaActual={Astro.url.pathname}
+  contenedor={false}
+  encabezado={{ titulo: t(idioma, 'apoyar.titulo'), subtitulo: t(idioma, 'apoyar.anotacion') }}
+>
+  {/* ============ 2 · TRES COLUMNAS ============ */}
+  <section class={CLASE_BANDA}>
+    <div
+      class={`${CLASE_CONTENEDOR} grid grid-cols-1 gap-x-8 gap-y-10 py-12 md:grid-cols-3 md:py-16`}
+    >
+      {/* Col 1 · Aporte */}
+      <div class="flex flex-col items-start gap-6">
+        <CajaNombre texto={t(idioma, 'apoyar.aporte')} />
+        <div class="flex flex-col gap-2">
+          <p class={CLASE_LINEA_MONO}>{t(idioma, 'apoyar.aporteLinea1')}</p>
+          <p class={CLASE_LINEA_MONO}>{t(idioma, 'apoyar.aporteLinea2')}</p>
+        </div>
+        <div class="flex flex-col items-start gap-1">
+          {
+            donaciones.map((d) =>
+              d.esLink ? (
+                <a href={d.valor} rel="noopener" class={CLASE_LINK_MONO}>
+                  {d.valor}
+                </a>
+              ) : (
+                <span class={CLASE_PLACEHOLDER_MONO}>{d.valor}</span>
+              )
+            )
+          }
+        </div>
+      </div>
+
+      {/* Col 2 · Copias en venta */}
+      <div class="flex flex-col items-start gap-6">
+        <CajaNombre texto={t(idioma, 'apoyar.copiasEnVenta')} />
+        <div class="flex flex-col gap-2">
+          <p class={CLASE_LINEA_MONO}>{t(idioma, 'apoyar.copiasLinea1')}</p>
+          <p class={CLASE_LINEA_MONO}>{t(idioma, 'apoyar.loRecaudadoVaALaCausa')}</p>
+        </div>
+        <div class="flex flex-col items-start gap-6">
+          <figure class="m-0 flex max-w-[280px] flex-col gap-2 pl-2">
+            <FotoPegada
+              imagen={muestraCopia}
+              alt={t(idioma, 'apoyar.muestraCopiaAlt')}
+              rotacion={-2}
+              widths={[280, 560]}
+              sizes="(min-width: 768px) 280px, 100vw"
+            />
+            <figcaption class="font-mono text-metadatos text-grafito">
+              {t(idioma, 'apoyar.muestraCopiaPie')}
+            </figcaption>
+          </figure>
+          <span class={CLASE_PLACEHOLDER_MONO}>{t(idioma, 'apoyar.linkCopias')}</span>
+        </div>
+      </div>
+
+      {/* Col 3 · Voluntariado y difusión */}
+      <div class="flex flex-col items-start gap-6">
+        <CajaNombre texto={t(idioma, 'apoyar.voluntariadoYDifusion')} />
+        <div class="flex flex-col gap-2">
+          <p class={CLASE_LINEA_MONO}>{t(idioma, 'apoyar.voluntariadoLinea1')}</p>
+          <p class={CLASE_LINEA_MONO}>{t(idioma, 'apoyar.escribinosPorInstagram')}</p>
+        </div>
+        <div class="flex w-full flex-col items-start gap-4">
+          <Boton href={rutaConvocatoria} anchoCompletoMobile>
+            {t(idioma, 'botones.postulate')}
+          </Boton>
+          <a href={instagramUrl} rel="noopener" class={CLASE_LINK_MONO}>{HANDLE}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ============ 3 · A DÓNDE VA LA PLATA ============ */}
+  <section class={CLASE_BANDA}>
+    <div class={`${CLASE_CONTENEDOR} py-12 pb-16 md:py-16 md:pb-24`}>
+      <div
+        class="bg-azul-tinta-agua border-tinta flex flex-col gap-6 border-2 p-6 md:gap-8 md:p-12"
+      >
+        <h2 class="font-display text-display-md text-tinta m-0 uppercase">
+          {t(idioma, 'apoyar.aDondeVaLaPlata')}
+        </h2>
+        <p class="font-mono text-tinta m-0 max-w-[65ch] leading-relaxed text-pretty">
+          {t(idioma, 'apoyar.textoTransparencia')}
+        </p>
+        <p
+          class="border-linea font-mono text-etiqueta text-tinta m-0 border-t pt-6 font-bold uppercase"
+        >
+          {t(idioma, 'apoyar.edicion01Monto')}
+        </p>
+      </div>
+    </div>
+  </section>
+</Pagina>
