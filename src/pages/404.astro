@@ -20,13 +20,13 @@
  * name equal to the full title "Página no encontrada".
  *
  * OBSERVACIONES:
- *  - The lámina sets the annotation at 4rem and rotated -6°. `Anotacion.astro`
- *    exposes no size prop (its text renders at the fixed `text-manuscrita`
- *    token, max 3rem) and clamps rotation to [-3, 2]. So the annotation renders
- *    at the token size and at -3° instead of -6°. Not fixed here: adding a size
- *    prop or widening the clamp on a canonical component is outside this
- *    ticket's scope (CLAUDE.md: a design mismatch is documented, not corrected
- *    unilaterally).
+ *  - The lámina sets the annotation at 4rem (desktop, 1440) / 1.5rem (mobile,
+ *    390) and rotated -6°. The size goes through `Anotacion`'s `tamano` prop as
+ *    a `clamp()` whose linear term hits exactly 1.5rem at 390px and 4rem at
+ *    1440px. `Anotacion.astro` still clamps rotation to [-3, 2], so it renders
+ *    at -3° instead of -6°: widening the clamp on a canonical component is
+ *    outside this ticket's scope (CLAUDE.md: a design mismatch is documented,
+ *    not corrected unilaterally).
  *  - The large `Sello` uses `marca/sello.png` at 320px desktop / 200px mobile,
  *    rotated -12° (within `Sello`'s [-15, 15] range). Sizing lives on the
  *    wrapper (the component takes a single `tamano`), so it is generated at
@@ -99,7 +99,11 @@ const tituloLineas =
         class="absolute right-0 -bottom-2 whitespace-nowrap md:-right-4 md:bottom-6"
         aria-hidden="true"
       >
-        <Anotacion texto={t(idioma, 'noEncontrada.anotacion')} rotacion={-3} />
+        <Anotacion
+          texto={t(idioma, 'noEncontrada.anotacion')}
+          rotacion={-3}
+          tamano="clamp(1.5rem, 0.571rem + 3.81vw, 4rem)"
+        />
       </div>
     </div>
 
