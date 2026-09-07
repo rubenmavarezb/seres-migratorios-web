@@ -3,12 +3,12 @@
  * Root layout of every page (PLAN.md §5, "Layouts"): `<html lang>`, the
  * `<head>`, the paper background with its grain and specks, `Nav` and `Pie`.
  *
- * NOTE: the metadata below is temporary ownership. SM-033 adds
- * `internos/Seo.astro` as the single source of every metadata tag of the site
- * (title, description, canonical, Open Graph and Twitter Card); when it lands,
- * this head renders `<Seo … />` instead of writing the tags itself. The
- * `robots` tag of the `noindex` prop (SM-029) travels with them: the prop stays
- * on this layout, the tag moves into `Seo.astro`.
+ * Metadata is NOT written here: `internos/Seo.astro` (SM-033) owns every
+ * metadata tag of the site — `<title>`, description, canonical, Open Graph and
+ * Twitter Card, plus the `robots` tag of the `noindex` prop — and this layout
+ * only resolves what to feed it (`idioma`, the current route). A page that
+ * needs a metadata tag adds it to `Seo.astro`, never to this head, so that
+ * "única fuente de metadatos" keeps holding.
  *
  * Two other pieces PLAN.md §5 attributes to this layout are deliberately absent
  * here: the `hreflang` pair (SM-049 / SM-050) and the Cloudflare Web Analytics
@@ -18,14 +18,16 @@ import type { ImageMetadata } from 'astro';
 
 import Nav from '../components/Nav.astro';
 import Pie from '../components/Pie.astro';
+import Seo from '../components/internos/Seo.astro';
 import { IDIOMAS, IDIOMA_POR_DEFECTO, type Idioma, t } from '../i18n/utils.ts';
 import '../styles/global.css';
 
-// [OG DE MARCA PENDIENTE — SM-062] There is no brand Open Graph image yet:
-// `src/assets/marca/` does not exist. Until SM-062 exports the 1200×630 of
-// PLAN.md §10, a page without `imagenOg` emits no `og:image` at all rather than
-// pointing at a file that is not there. When it exists, uncomment the import
-// and make it the fallback of `imagenOg`:
+// [OG DE MARCA PENDIENTE — SM-062] There is no brand Open Graph image yet.
+// Until SM-062 exports the 1200×630 of PLAN.md §10, a page without `imagenOg`
+// emits no `og:image` and no `twitter:image` at all (`Seo.astro` handles that)
+// rather than pointing at a file that is not there. When it exists, uncomment
+// the import and make it the fallback passed to `Seo`
+// (`imagenOg={imagenOg ?? ogDeMarca}`):
 // import ogDeMarca from '../assets/marca/og-seres-migratorios.png';
 
 interface Props {
@@ -65,28 +67,18 @@ function esIdioma(valor: string | undefined): valor is Idioma {
 const localeActual = Astro.currentLocale;
 const idioma: Idioma = idiomaProp ?? (esIdioma(localeActual) ? localeActual : IDIOMA_POR_DEFECTO);
 
-const tituloSitio = t(idioma, 'seo.tituloSitio');
-// `titulo` + separator + site title, except when the page title already is the
-// site title: the home would otherwise read "Seres Migratorios · Seres
-// Migratorios".
-const tituloCompleto =
-  titulo === tituloSitio ? tituloSitio : `${titulo} ${t(idioma, 'seo.separador')} ${tituloSitio}`;
-
-// Open Graph needs an absolute URL; `Astro.site` is the `site` of
-// astro.config.mjs.
-const urlImagenOg = imagenOg === undefined ? undefined : new URL(imagenOg.src, Astro.site).href;
+// Every metadata tag lives in `internos/Seo.astro` (SM-033); this layout only
+// decides what to feed it. `rutaActual` doubles as the canonical path and as
+// the route the `Nav` matches its active link against, so it falls back to
+// `Astro.url.pathname` here instead of inside `Seo`, keeping a single
+// definition of "the current route" per render.
+const ruta = rutaActual ?? Astro.url.pathname;
 
 // The `<body>` carries `font-mono text-tinta` (SM-013): without it any text
 // that reaches a page with no font class of its own falls back to Tailwind's
 // default sans stack (ui-sans-serif, system-ui…) — Arial or Roboto in
 // practice, which CLAUDE.md forbids as a visible typeface. Courier Prime is
 // the body face of the design, so it is the right default for the document.
-
-// NOTE: no `theme-color`. Its `content` takes a literal color, and neither a
-// CSS variable nor a Tailwind token can be written into an HTML attribute; the
-// value would have to be the hexadecimal of `--color-papel`, which CLAUDE.md
-// forbids outside the `@theme` of src/styles/theme.css. Left out on purpose
-// until SM-033 decides how `Seo.astro` sources it.
 ---
 
 <html lang={idioma}>
@@ -95,13 +87,14 @@ const urlImagenOg = imagenOg === undefined ? undefined : new URL(imagenOg.src, A
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <title>{tituloCompleto}</title>
-    <meta name="description" content={descripcion} />
-    {noindex && <meta name="robots" content="noindex" />}
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={tituloCompleto} />
-    <meta property="og:description" content={descripcion} />
-    {urlImagenOg !== undefined && <meta property="og:image" content={urlImagenOg} />}
+    <Seo
+      titulo={titulo}
+      descripcion={descripcion}
+      imagenOg={imagenOg}
+      idioma={idioma}
+      rutaActual={ruta}
+      noindex={noindex}
+    />
   </head>
   <body class="papel font-mono text-tinta flex min-h-screen flex-col">
     <a
