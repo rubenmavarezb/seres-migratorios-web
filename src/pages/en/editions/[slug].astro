@@ -1,15 +1,14 @@
 ---
 /**
- * `/ediciones/[slug]` — the page that reproduces the edition poster on the web
- * (SM-040, SM-041). Its body lives in `internos/paginas/Edicion.astro`, shared
- * with the English twin `/en/editions/[slug]` (SM-048); this file only resolves
- * the entry and fixes the locale.
+ * `/en/editions/[slug]` — English twin of `/ediciones/[slug]` (SM-040, SM-041,
+ * SM-048). Its body lives in `internos/paginas/Edicion.astro`, shared with the
+ * Spanish route; this file only resolves the entry and fixes the locale.
  */
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 
-import Edicion from '../../components/internos/paginas/Edicion.astro';
-import type { Idioma } from '../../i18n/utils.ts';
+import Edicion from '../../../components/internos/paginas/Edicion.astro';
+import type { Idioma } from '../../../i18n/utils.ts';
 
 /** One page per entry of the collection (sitemap.md §2.6). */
 export async function getStaticPaths() {
@@ -24,8 +23,8 @@ interface Props {
   edicion: CollectionEntry<'ediciones'>;
 }
 
-/** This file only ever renders under the default (unprefixed) locale. */
-const idioma: Idioma = 'es';
+/** This file only ever renders under the `/en/` locale. */
+const idioma: Idioma = 'en';
 const { edicion } = Astro.props;
 ---
 

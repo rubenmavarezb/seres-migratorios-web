@@ -1,0 +1,25 @@
+---
+/**
+ * CuerpoEnPendiente — stand-in for the entry's markdown body on an English
+ * route (SM-048).
+ *
+ * The `ediciones` collection has no English version of that body (see the
+ * OBSERVACIÓN in `Edicion.astro`), so the English page shows the visible
+ * placeholder `comun.cuerpoEnPendiente` ("[BODY EN PENDING]") where `<Content />`
+ * goes in Spanish. It is a component rather than a conditional inside the page
+ * because both branches have to be interchangeable as a single dynamic tag
+ * (`<Cuerpo />`): that keeps the Spanish markup — and therefore the Spanish
+ * HTML, whitespace included — exactly as it was before the two routes started
+ * sharing a body.
+ *
+ * It takes no props on purpose: it only ever renders on the `/en/` route, so
+ * the locale is fixed here instead of being threaded through a dynamic tag
+ * whose other branch (`Content`) accepts no locale.
+ */
+import { t, type Idioma } from '../../../i18n/utils.ts';
+
+/** This component only ever renders inside an English page. */
+const idioma: Idioma = 'en';
+---
+
+<p class="m-0">{t(idioma, 'comun.cuerpoEnPendiente')}</p>
