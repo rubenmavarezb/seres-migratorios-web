@@ -1,0 +1,13 @@
+---
+/**
+ * `/en/manifesto` — English twin of `/manifiesto` (SM-035, SM-048). Shared body
+ * in `internos/paginas/Manifiesto.astro`; this file only fixes the locale.
+ */
+import Manifiesto from '../../components/internos/paginas/Manifiesto.astro';
+import type { Idioma } from '../../i18n/utils.ts';
+
+/** This file only ever renders under the `/en/` locale. */
+const idioma: Idioma = 'en';
+---
+
+<Manifiesto idioma={idioma} />
