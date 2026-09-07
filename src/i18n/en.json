@@ -173,5 +173,13 @@
     "lectura": "{desde} AM to {hasta} PM · {fechaCorta}",
     "am": "AM",
     "pm": "PM"
+  },
+  "ediciones": {
+    "titulo": "Editions",
+    "subtitulo": "The collective's archive",
+    "descripcionSeo": "The archive of Seres Migratorios' editions.",
+    "proximaEdicion": "Next edition",
+    "proximaLinea": "The next edition is built by whoever applies: photographers, film, music and hands for the crew.",
+    "edicionesPasadas": "Past editions"
   }
 }
