@@ -1,0 +1,314 @@
+---
+/**
+ * Campo — canonical form field of the design system (design-system.md §7,
+ * item 14; canvas spec at design/ds/canvas/Componentes.dc.html, block
+ * "04 · CAMPO"; reference implementation at
+ * design/ds/components/formularios/Campo.jsx, translated here to Tailwind
+ * tokens and native HTML, never copied as React).
+ *
+ * Paper stationery, not an app input: mono 700 uppercase label on top, mono
+ * 400 control with no border except a 2 px bottom rule, transparent
+ * background, 10 px vertical padding and a 44 px floor. Focus paints the
+ * label azul-sello, tints the field azul-tinta-agua and draws the system's
+ * 2 px outline; error paints the bottom rule and the label in the system red
+ * (`error`) and writes a mono message below the field — never colour alone
+ * (design-system.md §12, "Formularios").
+ *
+ * Two independent error paths, by design (PLAN.md §8, diseno-web-indice.md
+ * decision 8):
+ * - the `error` prop, rendered by the server: the approved "Formulario ·
+ *   error" screen and the component kit. It is the only path that can set
+ *   `aria-invalid` and point `aria-describedby` at the message, so it is the
+ *   one the acceptance criterion names.
+ * - `:user-invalid`, native and JavaScript-free: after the person has
+ *   interacted with the field, the browser's own validity state paints the
+ *   same red and reveals the generic message of the dictionary. The
+ *   per-field messages of the design ("Falta el email.") need the Constraint
+ *   Validation API and land with the page's own script in SM-070.
+ *
+ * The message slot is always rendered (with its height reserved on every
+ * type but the checkbox) so revealing an error never makes the field jump —
+ * design/ds/canvas/Componentes.dc.html, block 04: "el espacio del mensaje se
+ * reserva siempre para que el campo no salte".
+ *
+ * The textarea takes its value through `set:text` rather than as a child:
+ * Prettier reflows a templated child onto its own line, and every space of
+ * that indentation would become part of the field's value (the HTML parser
+ * only drops the first newline after the start tag).
+ *
+ * Placement is the caller's job (diseno-web-indice.md decision 13): this
+ * component accepts no position classes and no `class` prop, and never sets
+ * its own width beyond filling its wrapper. The two full-width rows of the
+ * approved form (MENSAJE CORTO and the consent checkbox) get their
+ * `grid-column` from a wrapping `<div>` in the page.
+ */
+import { t, type Idioma } from '../i18n/utils.ts';
+
+/**
+ * Values `inputmode` accepts, mirrored from Astro's own HTML attribute types
+ * (`astro/astro-jsx.d.ts`). Narrower than the `string` of the ticket brief on
+ * purpose: a plain `string` does not type-check against that union under
+ * `astro/tsconfigs/strict`, and CLAUDE.md forbids silencing the mismatch.
+ */
+type ModoDeEntrada = 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
+
+interface Props {
+  /** `name` of the control and the stem of every id it needs. */
+  nombre: string;
+  /** Visible label, written with its real capitalization; CSS applies uppercase. */
+  etiqueta: string;
+  tipo?: 'text' | 'email' | 'url' | 'tel' | 'number' | 'textarea' | 'select' | 'checkbox';
+  /** Adds `required` plus the visual " *" (aria-hidden: `required` already announces it). */
+  requerido?: boolean;
+  /** Never used as a label (PLAN.md §8): only a hint, e.g. "@usuario". On a select it becomes the empty first `<option>`. */
+  placeholder?: string;
+  /** Options of a `select`, in the order the design lists them. */
+  opciones?: { valor: string; etiqueta: string }[];
+  /** Server-rendered error message. Turns on `aria-invalid` and `aria-describedby`. */
+  error?: string;
+  /** Help text below the field, in grafito. Hidden while the field is `:user-invalid`. */
+  ayuda?: string;
+  valor?: string;
+  autocomplete?: string;
+  inputmode?: ModoDeEntrada;
+  /** Rows of a `textarea`. The approved form uses 4. */
+  filas?: number;
+  /** `pattern` of an `<input>`. */
+  patron?: string;
+  idioma?: Idioma;
+}
+
+const {
+  nombre,
+  etiqueta,
+  tipo = 'text',
+  requerido = false,
+  placeholder,
+  opciones = [],
+  error,
+  ayuda,
+  valor,
+  autocomplete,
+  inputmode,
+  filas = 4,
+  patron,
+  idioma,
+} = Astro.props;
+
+// Falls back to Astro.currentLocale (typed 'string | undefined' by Astro
+// itself), narrowed to the two locales this site supports — same shape as
+// BloqueFicha.astro.
+const idiomaActual: Idioma = idioma ?? (Astro.currentLocale === 'en' ? 'en' : 'es');
+
+const id = nombre;
+const idError = `${id}-error`;
+const idAyuda = `${id}-ayuda`;
+
+const hayError = error !== undefined && error !== '';
+const hayAyuda = ayuda !== undefined && ayuda !== '';
+
+// One message at a time, so the reserved slot never has to hold two: the
+// error wins over the help text, exactly as in Campo.jsx.
+const descritoPor = hayError ? idError : hayAyuda ? idAyuda : undefined;
+
+/** Generic message of the JavaScript-free path; the specific ones land in SM-070. */
+const mensajeGenerico = t(idiomaActual, 'formulario.errores.revisaEsteCampo');
+
+// The wrapper is a NAMED group (`group/campo`). An unnamed `group` would be
+// matched by ANY ancestor carrying that class, so the moment a page wraps a row
+// of fields in its own `.group` (decision 13 says callers wrap these), a single
+// invalid field would redden every label and reveal every generic message.
+//
+// `text-etiqueta` carries its own 0.04em (theme.css: --text-etiqueta--letter-spacing),
+// so no `tracking-*` utility is applied here: one would pin --tw-tracking and
+// override it (see the OBSERVACIÓN in the SM-024 report).
+const clasesEtiqueta = [
+  'block font-mono text-etiqueta font-bold uppercase transition-colors',
+  hayError
+    ? 'text-error'
+    : 'text-tinta group-focus-within/campo:text-azul-sello group-has-[:user-invalid]/campo:text-error',
+].join(' ');
+
+/**
+ * Shared control styling. Focus splits by role on purpose: the outline goes on
+ * `focus-visible` (same contract as `.boton:focus-visible` in theme.css, so a
+ * mouse click does not draw a ring), while the border, the azul-tinta-agua
+ * tint and the label colour go on plain `focus`/`focus-within` — a select or a
+ * checkbox clicked with the mouse does not match `:focus-visible` in Chrome,
+ * and the approved canvas shows that tint for every field that has focus.
+ */
+const clasesControl = [
+  'w-full appearance-none rounded-none bg-transparent',
+  'font-mono text-base leading-[1.4] text-tinta placeholder:text-grafito',
+  'border-0 border-b-2 px-0 py-2.5 transition-colors',
+  hayError ? 'border-error' : 'border-tinta focus:border-azul-sello',
+  // `focus:` lands after `user-invalid:` in the generated sheet and they share
+  // specificity, so the stacked variant is what keeps the error red winning over
+  // the focus blue on a field that is both — the precedence of Campo.jsx, and the
+  // one that agrees with the label, whose `group-has-` rule already wins there.
+  'user-invalid:border-error focus:user-invalid:border-error',
+  'focus:bg-azul-tinta-agua',
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello',
+  tipo === 'textarea' ? 'resize-y' : 'min-h-11',
+].join(' ');
+
+/**
+ * The 20 px square of Campo.jsx. Checked state is painted with
+ * `background-clip: content-box` over a 3 px padding instead of the
+ * reference's `inset box-shadow`: identical pixels inside the white form the
+ * design uses it in, and it keeps `shadow-foto` the single shadow of the
+ * system (CLAUDE.md, "Sombra única"). See the OBSERVACIÓN in this ticket's
+ * report.
+ */
+const clasesCasilla = [
+  'mt-0.5 h-5 w-5 shrink-0 appearance-none rounded-none border-2 p-[3px] transition-colors',
+  'bg-papel-puro checked:bg-tinta checked:bg-clip-content',
+  hayError ? 'border-error' : 'border-tinta focus:border-azul-sello',
+  'user-invalid:border-error focus:user-invalid:border-error',
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello',
+].join(' ');
+
+// The slot keeps its own font-size so `min-h-[1.4em]` resolves against the
+// message's 0.8125rem. Height is reserved on every type but the checkbox,
+// whose row the approved design sizes at exactly 44 px.
+const clasesMensajes = [
+  'font-mono text-metadatos leading-[1.4]',
+  tipo === 'checkbox' ? '' : 'min-h-[1.4em]',
+]
+  .filter(Boolean)
+  .join(' ');
+
+const valorSeleccionado = valor ?? '';
+---
+
+{
+  tipo === 'checkbox' ? (
+    <div class="group/campo">
+      {/* `for` on a label that also wraps its control is valid HTML and keeps the
+          criterion's "<label for> real" literal. The message stays outside the
+          label: any text inside it would be pulled into the accessible name. */}
+      <label
+        for={id}
+        class="flex min-h-11 cursor-pointer items-start gap-3 py-3 font-mono text-metadatos leading-normal text-tinta"
+      >
+        <input
+          type="checkbox"
+          id={id}
+          name={nombre}
+          required={requerido || undefined}
+          aria-invalid={hayError ? 'true' : undefined}
+          aria-describedby={descritoPor}
+          class={clasesCasilla}
+        />
+        <span>
+          {etiqueta}
+          {requerido && <span aria-hidden="true"> *</span>}
+        </span>
+      </label>
+      <div class={clasesMensajes}>
+        {hayError && (
+          <span id={idError} class="text-error">
+            {error}
+          </span>
+        )}
+        {!hayError && hayAyuda && (
+          <span id={idAyuda} class="text-grafito group-has-[:user-invalid]/campo:hidden">
+            {ayuda}
+          </span>
+        )}
+        {!hayError && (
+          <span class="hidden text-error group-has-[:user-invalid]/campo:block">
+            {mensajeGenerico}
+          </span>
+        )}
+      </div>
+    </div>
+  ) : (
+    <div class="group/campo flex flex-col gap-1">
+      <label for={id} class={clasesEtiqueta}>
+        {etiqueta}
+        {requerido && <span aria-hidden="true"> *</span>}
+      </label>
+
+      {tipo === 'textarea' && (
+        <textarea
+          id={id}
+          name={nombre}
+          rows={filas}
+          placeholder={placeholder}
+          required={requerido || undefined}
+          autocomplete={autocomplete}
+          inputmode={inputmode}
+          aria-invalid={hayError ? 'true' : undefined}
+          aria-describedby={descritoPor}
+          class={clasesControl}
+          set:text={valor ?? ''}
+        />
+      )}
+
+      {tipo === 'select' && (
+        <div class="relative">
+          <select
+            id={id}
+            name={nombre}
+            required={requerido || undefined}
+            autocomplete={autocomplete}
+            aria-invalid={hayError ? 'true' : undefined}
+            aria-describedby={descritoPor}
+            class={`${clasesControl} cursor-pointer pr-7`}
+          >
+            {placeholder && <option value="">{placeholder}</option>}
+            {opciones.map((opcion) => (
+              <option value={opcion.valor} selected={opcion.valor === valorSeleccionado}>
+                {opcion.etiqueta}
+              </option>
+            ))}
+          </select>
+          {/* Mono "v" instead of an icon (CLAUDE.md: "sin emojis ni íconos
+              dibujados"), centred with flex so no `transform` is involved. */}
+          <span
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center font-mono font-bold text-tinta"
+          >
+            v
+          </span>
+        </div>
+      )}
+
+      {tipo !== 'textarea' && tipo !== 'select' && (
+        <input
+          type={tipo}
+          id={id}
+          name={nombre}
+          value={valor}
+          placeholder={placeholder}
+          required={requerido || undefined}
+          pattern={patron}
+          autocomplete={autocomplete}
+          inputmode={inputmode}
+          aria-invalid={hayError ? 'true' : undefined}
+          aria-describedby={descritoPor}
+          class={clasesControl}
+        />
+      )}
+
+      <div class={clasesMensajes}>
+        {hayError && (
+          <span id={idError} class="text-error">
+            {error}
+          </span>
+        )}
+        {!hayError && hayAyuda && (
+          <span id={idAyuda} class="text-grafito group-has-[:user-invalid]/campo:hidden">
+            {ayuda}
+          </span>
+        )}
+        {!hayError && (
+          <span class="hidden text-error group-has-[:user-invalid]/campo:block">
+            {mensajeGenerico}
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}

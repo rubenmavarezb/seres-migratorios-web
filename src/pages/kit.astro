@@ -1,0 +1,821 @@
+---
+/**
+ * `/kit` — internal page (SM-029): the 16 canonical components of
+ * design-system.md §7, each under its canonical name, with every variant the
+ * component actually implements. Reference for the overall shape:
+ * design/ds/canvas/Componentes.dc.html and design/ds/canvas/Elementos.dc.html,
+ * whose blocks are titled with the component name in mono 700 (`.nombre-comp`,
+ * 18px) followed by a 2px `tinta` rule and a two-digit index in `.etiqueta`
+ * grafito 12px, with each specimen labelled in mono 12px uppercase.
+ *
+ * Not a public page: Spanish only (no `/en/` twin — the brief scopes it as
+ * internal), `noindex` through `Pagina`/`Base`'s new prop, and already listed
+ * in `RUTAS_FUERA_DEL_SITEMAP` in astro.config.mjs.
+ *
+ * Every specimen's data comes from the seed content (`src/content/**`) and
+ * `src/assets/**`; nothing is invented. The bracket placeholders that show up
+ * in the specimens ("[DESCRIPCIÓN DE LA IMAGEN 01]", "[EMAIL DEL COLECTIVO]",
+ * "[TRANSCRIPCIÓN A CONFIRMAR — NAIA GUANIPA]"…) are the real state of the
+ * content, not filler typed here.
+ *
+ * DECISION (`Nav` and `Pie`, sections 15 and 16): both are rendered by
+ * `Base.astro` on this very page — the bar above and the footer below — and
+ * that instance IS the specimen. `Nav` cannot be rendered a second time: it
+ * owns four ids (`nav-marca`, `menu-abrir`, `menu`, `menu-cerrar`), a
+ * `<dialog>` and a `<script>` that binds them, so a copy would produce
+ * duplicate ids and two scripts fighting over the same menu. `Pie` could be
+ * duplicated safely, but doing it for one and not the other would be
+ * inconsistent and would print the same footer twice on one page, so both
+ * sections name the component, keep its heading, and point at the live
+ * instance. Reported as an OBSERVACIÓN.
+ *
+ * DECISION (headings): `Pagina`'s `encabezado` prop owns the page's single
+ * `<h1>` (CLAUDE.md, "Un solo `<h1>` por página"), so every section title
+ * here is an `<h2>` and the two `TitularPartido` specimens pass `nivel={2}`.
+ * `FichaFotografo` renders its own `<h3>` under them, which keeps the outline
+ * free of jumps.
+ *
+ * Section chrome lives in the `CLASE_*` constants below rather than in
+ * `src/styles/`: it is internal-page furniture, not a shape of the approved
+ * design, and Tailwind's scanner reads the literal class text inside a string
+ * constant just as it does inside an attribute.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+import Anotacion from '../components/Anotacion.astro';
+import BloqueFicha from '../components/BloqueFicha.astro';
+import Boton from '../components/Boton.astro';
+import CajaNombre from '../components/CajaNombre.astro';
+import Campo from '../components/Campo.astro';
+import Escudo from '../components/Escudo.astro';
+import FichaFotografo from '../components/FichaFotografo.astro';
+import FotoPegada from '../components/FotoPegada.astro';
+import FranjaAliados from '../components/FranjaAliados.astro';
+import HiloTricolor from '../components/HiloTricolor.astro';
+import PalabrasClave from '../components/PalabrasClave.astro';
+import Sello from '../components/Sello.astro';
+import SelloHorario from '../components/SelloHorario.astro';
+import TitularPartido from '../components/TitularPartido.astro';
+import Aparejo from '../components/internos/Aparejo.astro';
+import escudoImagen from '../assets/marca/escudo.png';
+import fechaCortaImagen from '../assets/marca/fecha-corta-8-8-26.png';
+import palabrasClaveImagen from '../assets/marca/palabras-clave.png';
+import selloImagen from '../assets/marca/sello.png';
+import selloCompactoImagen from '../assets/marca/sello-compacto.png';
+import selloHorarioImagen from '../assets/marca/sello-horario.png';
+import exponenManuscrita from '../assets/manuscritas/marca/exponen.png';
+import Pagina from '../layouts/Pagina.astro';
+import { type Idioma, rutaLocalizada, t } from '../i18n/utils.ts';
+
+/** Internal page, Spanish only: no `Astro.currentLocale` narrowing needed. */
+const idioma: Idioma = 'es';
+
+const ediciones = await getCollection('ediciones');
+const artistas = await getCollection('artistas');
+const aliados = await getCollection('aliados');
+
+const edicion = ediciones.find((entrada) => entrada.id === 'buenos-aires-2026');
+const artistasPorId = new Map(artistas.map((entrada) => [entrada.id, entrada]));
+const aliadosPorId = new Map(aliados.map((entrada) => [entrada.id, entrada]));
+const herick = artistasPorId.get('herick-frontado');
+const naia = artistasPorId.get('naia-guanipa');
+
+// Every specimen below is built from these three entries, all of them part of
+// the repo's seed content. A missing one is a repo error, not a runtime state
+// to render around: failing the build loudly beats shipping a kit with holes
+// (and beats inventing stand-in data, which CLAUDE.md forbids outright).
+if (edicion === undefined || herick === undefined || naia === undefined) {
+  throw new Error(
+    '/kit necesita las entradas semilla buenos-aires-2026, herick-frontado y naia-guanipa.'
+  );
+}
+if (herick.data.obra.length === 0 || naia.data.obra.length === 0) {
+  throw new Error('/kit necesita al menos una obra de herick-frontado y de naia-guanipa.');
+}
+
+const obraHerick = herick.data.obra[0];
+const obraNaia = naia.data.obra[0];
+
+/**
+ * `08.08.2026`, the format the láminas print inside `BloqueFicha`
+ * (`Home.dc.html`'s `renderVals()`). UTC getters on purpose: `z.coerce.date()`
+ * parses the frontmatter's `2026-08-08` as UTC midnight, and the local getters
+ * would render the 7th anywhere west of Greenwich, Buenos Aires included.
+ */
+function formatearFecha(fecha: Date): string {
+  const dia = String(fecha.getUTCDate()).padStart(2, '0');
+  const mes = String(fecha.getUTCMonth() + 1).padStart(2, '0');
+  return `${dia}.${mes}.${fecha.getUTCFullYear()}`;
+}
+
+/**
+ * `BloqueFicha` wants the venue as three lines (`nombre` / `direccion` /
+ * `ciudad`) while the `ediciones` schema stores one string
+ * ("Humberto Primo 3032, Buenos Aires, ARG"), so the first comma splits it
+ * into the same two lines the láminas show (`lugar: ["Consulado", "Humberto
+ * Primo 3032", "Buenos Aires, ARG"]`). Splitting existing content is not
+ * inventing it; noted as an OBSERVACIÓN for the content model all the same.
+ */
+const [primeraLinea, ...restoDireccion] = edicion.data.lugar.direccion.split(', ');
+const lugarFicha = {
+  nombre: edicion.data.lugar.nombre,
+  direccion: primeraLinea,
+  ciudad: restoDireccion.length > 0 ? restoDireccion.join(', ') : edicion.data.ciudad,
+};
+
+/** The nine `exponen` of edition 01, in the order the edition lists them. */
+const exponen = edicion.data.exponen
+  .map((referencia) => artistasPorId.get(referencia.id))
+  .filter((entrada): entrada is CollectionEntry<'artistas'> => entrada !== undefined)
+  .map((entrada) => ({
+    texto: entrada.data.nombre,
+    href: rutaLocalizada(`/artistas/${entrada.data.slug}`, idioma),
+  }));
+
+/** The four partners of edition 01, in its own order (same as `Pie.astro`). */
+const aliadosEdicion = edicion.data.aliados
+  .map((referencia) => aliadosPorId.get(referencia.id))
+  .filter((entrada): entrada is CollectionEntry<'aliados'> => entrada !== undefined);
+
+const opcionesDisciplina = [
+  { valor: 'fotografia', etiqueta: t(idioma, 'formulario.opciones.fotografia') },
+  { valor: 'film', etiqueta: t(idioma, 'formulario.opciones.film') },
+  { valor: 'musica', etiqueta: t(idioma, 'formulario.opciones.musica') },
+  { valor: 'otro', etiqueta: t(idioma, 'formulario.opciones.otro') },
+];
+
+/**
+ * Literal transcription of `manuscritas/marca/exponen.png`, which is written
+ * in capitals by hand. Kept as a constant rather than a dictionary key because
+ * a handwritten phrase is never translated (CLAUDE.md, "No se traducen"), the
+ * same reason `Pie.astro` keeps `@seresmigratorios` local.
+ */
+const ALT_EXPONEN = 'EXPONEN';
+
+const CLASE_SECCION = 'contenedor seccion flex flex-col gap-8';
+const CLASE_ENCABEZADO = 'flex items-center gap-4';
+const CLASE_TITULO = 'font-mono m-0 text-lg font-bold tracking-[0.02em] text-tinta uppercase';
+const CLASE_REGLA = 'h-0.5 flex-1 bg-tinta';
+const CLASE_INDICE = 'font-mono text-xs font-bold tracking-[0.06em] text-grafito';
+const CLASE_EJEMPLOS = 'flex flex-col gap-10';
+const CLASE_EJEMPLO = 'flex flex-col items-start gap-3';
+const CLASE_RUBRO = 'font-mono m-0 text-xs font-bold tracking-[0.06em] text-grafito uppercase';
+const CLASE_NOTA = 'font-mono m-0 max-w-[88ch] text-metadatos text-tinta-suave';
+---
+
+<Pagina
+  titulo={t(idioma, 'kit.titulo')}
+  descripcion={t(idioma, 'kit.descripcion')}
+  idioma={idioma}
+  rutaActual={Astro.url.pathname}
+  noindex
+  contenedor={false}
+  encabezado={{ titulo: t(idioma, 'kit.titulo'), subtitulo: t(idioma, 'kit.subtitulo') }}
+>
+  <!-- 01 · BloqueFicha -->
+  <section id="bloqueficha" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>BloqueFicha</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>01</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>variante="papel" (por defecto)</p>
+        <div class="w-full">
+          <BloqueFicha
+            fecha={formatearFecha(edicion.data.fecha)}
+            horario={edicion.data.horario.etiqueta}
+            lugar={lugarFicha}
+            idioma={idioma}
+          />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>variante="caja"</p>
+        <div class="w-full">
+          <BloqueFicha
+            fecha={formatearFecha(edicion.data.fecha)}
+            horario={edicion.data.horario.etiqueta}
+            lugar={lugarFicha}
+            variante="caja"
+            idioma={idioma}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 · TitularPartido -->
+  <section id="titularpartido" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>TitularPartido</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>02</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>{'tamano="xl" · nivel={2} · slot con Escudo'}</p>
+        <div class="w-full">
+          <TitularPartido arriba="Seres" abajo="Migratorios" nivel={2}>
+            <Escudo imagen={escudoImagen} ancho={259} decorativo />
+          </TitularPartido>
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>{'tamano="lg" · nivel={2} · slot con Anotacion'}</p>
+        <div class="w-full">
+          <TitularPartido arriba="Seres" abajo="Migratorios" tamano="lg" nivel={2}>
+            <Anotacion texto={edicion.data.claim[idioma]} rotacion={-2} />
+          </TitularPartido>
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>{'tamano="lg" · nivel={2} · slot vacío'}</p>
+        <div class="w-full">
+          <TitularPartido arriba="Seres" abajo="Migratorios" tamano="lg" nivel={2} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · CajaNombre (con internos/Aparejo) -->
+  <section id="cajanombre" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>CajaNombre</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>03</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>tamano="normal" (por defecto) · sin href · con href · activa</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <CajaNombre texto={herick.data.nombre} />
+          <CajaNombre
+            texto={naia.data.nombre}
+            href={rutaLocalizada(`/artistas/${naia.data.slug}`, idioma)}
+          />
+          <CajaNombre texto={t(idioma, 'convocatoria.cerrada.caja')} activa />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>tamano="chica" · activa · con href (el selector ES / EN del Nav)</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <CajaNombre texto="ES" tamano="chica" activa />
+          <CajaNombre texto="EN" tamano="chica" href={rutaLocalizada('/', 'en')} />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>internos/Aparejo · filas 3/2 (por defecto), 2/1 en mobile</p>
+        <div class="w-full">
+          <Aparejo items={exponen} />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>{'internos/Aparejo · filas={[3, 3, 3]} (la edición)'}</p>
+        <div class="w-full">
+          <Aparejo items={exponen} filas={[3, 3, 3]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · Sello -->
+  <section id="sello" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>Sello</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>04</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>SVG · tamano 200, rotacion -12 (por defecto)</p>
+        <Sello
+          ciudad={edicion.data.sello.ciudad}
+          fecha={edicion.data.sello.fechaCorta}
+          idioma={idioma}
+        />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>SVG · tamano 120, rotacion 0, decorativo</p>
+        <Sello
+          ciudad={edicion.data.sello.ciudad}
+          fecha={edicion.data.sello.fechaCorta}
+          tamano={120}
+          rotacion={0}
+          decorativo
+          idioma={idioma}
+        />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>imagen sello.png · tamano 200</p>
+        <Sello
+          imagen={selloImagen}
+          ciudad={edicion.data.sello.ciudad}
+          fecha={edicion.data.sello.fechaCorta}
+          idioma={idioma}
+        />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>imagen sello-compacto.png · tamano 120, rotacion -8 (el Pie)</p>
+        <Sello
+          imagen={selloCompactoImagen}
+          ciudad={edicion.data.sello.ciudad}
+          fecha={edicion.data.sello.fechaCorta}
+          tamano={120}
+          rotacion={-8}
+          idioma={idioma}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 · Escudo -->
+  <section id="escudo" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>Escudo</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>05</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>ancho 259 (la edición en desktop) · alt del diccionario</p>
+        <Escudo imagen={escudoImagen} ancho={259} />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>ancho 146 (mobile) · decorativo</p>
+        <Escudo imagen={escudoImagen} ancho={146} decorativo />
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 · Anotacion -->
+  <section id="anotacion" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>Anotacion</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>06</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>texto · rotacion -3 (por defecto)</p>
+        <Anotacion texto={t(idioma, 'convocatoria.abierta.anotacion')} />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>texto · rotacion 2</p>
+        <Anotacion texto={t(idioma, 'pie.aguante')} rotacion={2} />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>imagen (escaneo real) · ancho 220 · rotacion -3</p>
+        <Anotacion imagen={exponenManuscrita} alt={ALT_EXPONEN} ancho={220} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 · FotoPegada -->
+  <section id="fotopegada" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>FotoPegada</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>07</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>variante="pegada" (por defecto) · bordePx 8 · rotacion 0</p>
+        <div class="w-full max-w-80">
+          <FotoPegada
+            imagen={obraHerick.image}
+            alt={obraHerick.alt[idioma]}
+            widths={[320, 640]}
+            sizes="(min-width: 768px) 320px, 100vw"
+          />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>variante="pegada" · bordePx 6 · rotacion -2</p>
+        <div class="w-full max-w-80">
+          <FotoPegada
+            imagen={obraHerick.image}
+            alt={obraHerick.alt[idioma]}
+            bordePx={6}
+            rotacion={-2}
+            widths={[320, 640]}
+            sizes="(min-width: 768px) 320px, 100vw"
+          />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>variante="pegada" · bordePx 10 · rotacion 2</p>
+        <div class="w-full max-w-80">
+          <FotoPegada
+            imagen={obraHerick.image}
+            alt={obraHerick.alt[idioma]}
+            bordePx={10}
+            rotacion={2}
+            widths={[320, 640]}
+            sizes="(min-width: 768px) 320px, 100vw"
+          />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>variante="recortada" (sin borde ni sombra)</p>
+        <div class="w-full max-w-80">
+          <FotoPegada
+            imagen={obraNaia.image}
+            alt={obraNaia.alt[idioma]}
+            variante="recortada"
+            widths={[320, 640]}
+            sizes="(min-width: 768px) 320px, 100vw"
+          />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>
+          variante="sangrada" · el recorte al borde del lienzo lo hace el envoltorio
+        </p>
+        <div class="relative h-60 w-full overflow-hidden border border-linea">
+          <div class="absolute -right-10 bottom-0 w-72">
+            <FotoPegada
+              imagen={obraNaia.image}
+              alt={obraNaia.alt[idioma]}
+              variante="sangrada"
+              widths={[288, 576]}
+              sizes="288px"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 · FichaFotografo -->
+  <section id="fichafotografo" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>FichaFotografo</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>08</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>completa · numero, retrato, frase manuscrita, firma e instagram</p>
+        <div class="w-full max-w-96">
+          <FichaFotografo
+            numero={herick.data.numero}
+            nombre={herick.data.nombre}
+            obraPrincipal={obraHerick.image}
+            obraAlt={obraHerick.alt[idioma]}
+            retrato={herick.data.retrato}
+            retratoAlt={herick.data.retratoAlt[idioma]}
+            frase={herick.data.frase[idioma]}
+            fraseManuscrita={herick.data.fraseManuscrita}
+            firma={herick.data.firma}
+            instagram={herick.data.instagram}
+            href={rutaLocalizada(`/artistas/${herick.data.slug}`, idioma)}
+            idioma={idioma}
+          />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>
+          sin retrato (cae al placeholder-retrato.svg) y sin firma · retratoTamano [72, 72]
+        </p>
+        <div class="w-full max-w-96">
+          <FichaFotografo
+            numero={naia.data.numero}
+            nombre={naia.data.nombre}
+            obraPrincipal={obraNaia.image}
+            obraAlt={obraNaia.alt[idioma]}
+            retratoAlt={naia.data.retratoAlt[idioma]}
+            retratoTamano={[72, 72]}
+            frase={naia.data.frase[idioma]}
+            fraseManuscrita={naia.data.fraseManuscrita}
+            instagram={naia.data.instagram}
+            href={rutaLocalizada(`/artistas/${naia.data.slug}`, idioma)}
+            idioma={idioma}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 · SelloHorario -->
+  <section id="sellohorario" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>SelloHorario</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>09</span>
+    </div>
+    {
+      edicion.data.selloHorario === undefined ? (
+        <p class={CLASE_NOTA}>{t(idioma, 'estados.aConfirmar')}</p>
+      ) : (
+        <div class={CLASE_EJEMPLOS}>
+          <div class={CLASE_EJEMPLO}>
+            <p class={CLASE_RUBRO}>apilado (por defecto) · tamano 64</p>
+            <SelloHorario
+              desde={edicion.data.selloHorario.desde}
+              hasta={edicion.data.selloHorario.hasta}
+              fechaCorta={edicion.data.selloHorario.fechaCorta}
+              idioma={idioma}
+            />
+          </div>
+          <div class={CLASE_EJEMPLO}>
+            <p class={CLASE_RUBRO}>{'apilado={false} · tamano 48'}</p>
+            <SelloHorario
+              desde={edicion.data.selloHorario.desde}
+              hasta={edicion.data.selloHorario.hasta}
+              fechaCorta={edicion.data.selloHorario.fechaCorta}
+              tamano={48}
+              apilado={false}
+              idioma={idioma}
+            />
+          </div>
+          <div class={CLASE_EJEMPLO}>
+            <p class={CLASE_RUBRO}>imagen sello-horario.png + imagenFecha fecha-corta-8-8-26.png</p>
+            <SelloHorario
+              desde={edicion.data.selloHorario.desde}
+              hasta={edicion.data.selloHorario.hasta}
+              fechaCorta={edicion.data.selloHorario.fechaCorta}
+              imagen={selloHorarioImagen}
+              imagenFecha={fechaCortaImagen}
+              idioma={idioma}
+            />
+          </div>
+        </div>
+      )
+    }
+  </section>
+
+  <!-- 10 · PalabrasClave -->
+  <section id="palabrasclave" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>PalabrasClave</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>10</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>texto · orientacion="horizontal" (por defecto)</p>
+        <PalabrasClave />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>texto · orientacion="vertical" · tamano 2rem</p>
+        <PalabrasClave orientacion="vertical" tamano="2rem" />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>imagen palabras-clave.png · horizontal · alinear="izquierda"</p>
+        <PalabrasClave imagen={palabrasClaveImagen} alinear="izquierda" />
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>imagen palabras-clave.png · vertical</p>
+        <PalabrasClave imagen={palabrasClaveImagen} orientacion="vertical" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · FranjaAliados -->
+  <section id="franjaaliados" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>FranjaAliados</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>11</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>
+          por defecto (el Pie) · alto 36/28, separacion 40/24, justificar="centro"
+        </p>
+        <div class="w-full">
+          <FranjaAliados aliados={aliadosEdicion} idioma={idioma} />
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>
+          la sección "Aliados" de la edición · alto 48 uniforme, separacion 48, justificar="inicio"
+        </p>
+        <div class="w-full">
+          <FranjaAliados
+            aliados={aliadosEdicion}
+            altoLogo={48}
+            altoLogoMobile={48}
+            separacion={48}
+            separacionMobile={48}
+            justificar="inicio"
+            idioma={idioma}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · HiloTricolor -->
+  <section id="hilotricolor" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>HiloTricolor</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>12</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>ancho 100% (por defecto, el Pie)</p>
+        <div class="w-full"><HiloTricolor /></div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>ancho="180px" (badge de edición)</p>
+        <HiloTricolor ancho="180px" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · Boton -->
+  <section id="boton" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>Boton</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>13</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>
+          variante="base" (por defecto) · con href (&lt;a&gt;) y sin href (&lt;button&gt;)
+        </p>
+        <div class="flex flex-wrap items-center gap-4">
+          <Boton href={rutaLocalizada('/manifiesto', idioma)}>
+            {t(idioma, 'botones.leerElManifiesto')}
+          </Boton>
+          <Boton>{t(idioma, 'botones.verTodosLosArtistas')}</Boton>
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>variante="sello" · con href y sin href</p>
+        <div class="flex flex-wrap items-center gap-4">
+          <Boton href={rutaLocalizada('/convocatoria', idioma)} variante="sello">
+            {t(idioma, 'botones.postulate')}
+          </Boton>
+          <Boton variante="sello">{t(idioma, 'botones.comoApoyar')}</Boton>
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>deshabilitado · base y sello</p>
+        <div class="flex flex-wrap items-center gap-4">
+          <Boton deshabilitado>{t(idioma, 'botones.enviarPostulacion')}</Boton>
+          <Boton variante="sello" deshabilitado>{t(idioma, 'botones.postulate')}</Boton>
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>chico (alto 36 px: ver la OBSERVACIÓN de SM-025)</p>
+        <Boton chico>{t(idioma, 'botones.verLaEdicion')}</Boton>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>externo (rel="noopener") · a Instagram</p>
+        <Boton href="https://www.instagram.com/seresmigratorios/" variante="sello" externo>
+          {t(idioma, 'botones.seguinosEnInstagram')}
+        </Boton>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>anchoCompleto</p>
+        <div class="w-full">
+          <Boton anchoCompleto>{t(idioma, 'botones.aportar')}</Boton>
+        </div>
+      </div>
+      <div class={CLASE_EJEMPLO}>
+        <p class={CLASE_RUBRO}>anchoCompletoMobile (completo hasta md, contenido desde md)</p>
+        <div class="w-full">
+          <Boton anchoCompletoMobile>{t(idioma, 'botones.comoParticipar')}</Boton>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · Campo -->
+  <section id="campo" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>Campo</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>14</span>
+    </div>
+    <div class={CLASE_EJEMPLOS}>
+      <div class="grid w-full grid-cols-1 gap-10 md:grid-cols-2">
+        <div class={CLASE_EJEMPLO}>
+          <p class={CLASE_RUBRO}>tipo="text" · requerido</p>
+          <div class="w-full">
+            <Campo
+              nombre="kit-nombre"
+              etiqueta={t(idioma, 'formulario.etiquetas.nombre')}
+              requerido
+              autocomplete="name"
+              idioma={idioma}
+            />
+          </div>
+        </div>
+        <div class={CLASE_EJEMPLO}>
+          <p class={CLASE_RUBRO}>tipo="email" · requerido · con error</p>
+          <div class="w-full">
+            <Campo
+              nombre="kit-email"
+              etiqueta={t(idioma, 'formulario.etiquetas.email')}
+              tipo="email"
+              requerido
+              error={t(idioma, 'formulario.errores.faltaEmail')}
+              idioma={idioma}
+            />
+          </div>
+        </div>
+        <div class={CLASE_EJEMPLO}>
+          <p class={CLASE_RUBRO}>tipo="text" · placeholder · patron · con ayuda</p>
+          <div class="w-full">
+            <Campo
+              nombre="kit-instagram"
+              etiqueta={t(idioma, 'formulario.etiquetas.instagram')}
+              placeholder={t(idioma, 'formulario.placeholders.instagram')}
+              patron="^@[\w.]+$"
+              ayuda={t(idioma, 'formulario.errores.instagramInvalido')}
+              idioma={idioma}
+            />
+          </div>
+        </div>
+        <div class={CLASE_EJEMPLO}>
+          <p class={CLASE_RUBRO}>tipo="url"</p>
+          <div class="w-full">
+            <Campo
+              nombre="kit-portfolio"
+              etiqueta={t(idioma, 'formulario.etiquetas.portfolio')}
+              tipo="url"
+              inputmode="url"
+              idioma={idioma}
+            />
+          </div>
+        </div>
+        <div class={CLASE_EJEMPLO}>
+          <p class={CLASE_RUBRO}>tipo="select" · requerido · placeholder como primera opción</p>
+          <div class="w-full">
+            <Campo
+              nombre="kit-disciplina"
+              etiqueta={t(idioma, 'formulario.etiquetas.disciplina')}
+              tipo="select"
+              requerido
+              placeholder={t(idioma, 'formulario.placeholders.disciplina')}
+              opciones={opcionesDisciplina}
+              idioma={idioma}
+            />
+          </div>
+        </div>
+        <div class={CLASE_EJEMPLO}>
+          <p class={CLASE_RUBRO}>tipo="text" · valor precargado</p>
+          <div class="w-full">
+            <Campo
+              nombre="kit-edicion"
+              etiqueta={t(idioma, 'formulario.etiquetas.edicion')}
+              valor={t(idioma, 'formulario.placeholders.edicion')}
+              idioma={idioma}
+            />
+          </div>
+        </div>
+        <div class={CLASE_EJEMPLO}>
+          <p class={CLASE_RUBRO}>tipo="textarea" · filas 4</p>
+          <div class="w-full">
+            <Campo
+              nombre="kit-mensaje"
+              etiqueta={t(idioma, 'formulario.etiquetas.mensaje')}
+              tipo="textarea"
+              filas={4}
+              idioma={idioma}
+            />
+          </div>
+        </div>
+        <div class={CLASE_EJEMPLO}>
+          <p class={CLASE_RUBRO}>tipo="checkbox" · requerido</p>
+          <div class="w-full">
+            <Campo
+              nombre="kit-consentimiento"
+              etiqueta={t(idioma, 'formulario.etiquetas.consentimiento')}
+              tipo="checkbox"
+              requerido
+              idioma={idioma}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 · Nav -->
+  <section id="nav" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>Nav</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>15</span>
+    </div>
+    <p class={CLASE_NOTA}>{t(idioma, 'kit.notaNav')}</p>
+  </section>
+
+  <!-- 16 · Pie -->
+  <section id="pie" class={CLASE_SECCION}>
+    <div class={CLASE_ENCABEZADO}>
+      <h2 class={CLASE_TITULO}>Pie</h2>
+      <span class={CLASE_REGLA}></span>
+      <span class={CLASE_INDICE}>16</span>
+    </div>
+    <p class={CLASE_NOTA}>{t(idioma, 'kit.notaPie')}</p>
+  </section>
+</Pagina>

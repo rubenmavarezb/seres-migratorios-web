@@ -23,6 +23,8 @@ jobs:
 
       - run: npm run lint
 
+      - run: npm run test:unit
+
       - run: npx prettier --check .
 
       - run: npm run build

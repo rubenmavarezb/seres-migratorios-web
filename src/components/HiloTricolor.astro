@@ -1,0 +1,55 @@
+---
+/**
+ * HiloTricolor (design-system.md §7.12, item 12; design/ds/canvas/Elementos.dc.html
+ * block "HILOTRICOLOR"): a 3px line in three equal solid thirds — yellow /
+ * blue / red, the only place in the whole UI where the Venezuelan tricolor
+ * appears in full (design-system.md §3.3, "tricolor solo en HiloTricolor...
+ * nunca como fondo, botón o acento de UI"). Detail of `Pie` (SM-028) or of a
+ * future edition badge, never a generic section divider.
+ *
+ * The three colors are fixed and carry no props (backlog SM-024, "sin props
+ * de color"; PLAN.md §5, "el tricolor es fijo"): the `.hilo-tricolor` class
+ * in theme.css supplies the 3px height and the hard-stopped gradient that
+ * renders as three solid blocks. `ancho` (PLAN.md §5) is the only prop, for
+ * a narrower badge use case; it is applied as an inline style because
+ * Tailwind's `w-*` utilities need a literal class string at build time and
+ * cannot take an arbitrary value from a runtime prop.
+ *
+ * Purely decorative — it carries no information of its own — so it is
+ * `aria-hidden`.
+ *
+ * `entrada` turns on the left-to-right `clip-path` sweep of design-system.md
+ * §11.4 by emitting `data-entrada="hilo"`, whose keyframes and two mandatory
+ * guards live in theme.css. It is a prop, not a default, because §11.4 scopes
+ * the sweep to the `Pie` — "Solo en el `Pie` (una vez por página)" — while a
+ * future edition badge uses the same component and must stay static. `Pie.astro`
+ * is the only caller that passes it. Sweeping with `clip-path` (never
+ * `transform`) is §11.6's rule 3, and the line is fully painted from the first
+ * frame on a browser without scroll-driven animations or under reduced motion,
+ * since nothing here starts clipped outside that block.
+ *
+ * OBSERVACIÓN: §11.4 marks this sweep as "sujeto a prueba en dispositivo: si se
+ * lee como barra de carga, queda estático". That test is Ruben's, on a real
+ * phone; if it reads as a progress bar, the fix is dropping `entrada` from the
+ * single `<HiloTricolor>` in `Pie.astro` — no CSS change needed.
+ *
+ * No position classes are accepted here (diseno-web-indice.md, decision 13):
+ * a caller that needs to place this within a layout wraps it instead.
+ */
+interface Props {
+  /** CSS width value. Defaults to 100%, the `Pie` use case. */
+  ancho?: string;
+  /** Turns on the `clip-path` sweep of design-system.md §11.4 (`data-entrada="hilo"`). Only the `Pie`'s single instance passes it. Defaults to `false`. */
+  entrada?: boolean;
+}
+
+const { ancho = '100%', entrada = false } = Astro.props;
+---
+
+<div
+  class="hilo-tricolor"
+  aria-hidden="true"
+  data-entrada={entrada ? 'hilo' : undefined}
+  style={`width: ${ancho};`}
+>
+</div>

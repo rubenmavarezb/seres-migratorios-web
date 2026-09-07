@@ -225,8 +225,23 @@
         clip-path: inset(0 0 0 0);
       }
     }
+    /* Longhands, never the `animation` shorthand. Lightning CSS (el minificador
+       de Tailwind v4) fusiona `animation: entrada-papel auto ease-out backwards`
+       + `animation-timeline: view()` en un solo shorthand
+       `animation: ease-out backwards entrada-papel view()`, que Chromium
+       descarta entero: el timeline no es válido dentro del shorthand y `auto`
+       (la duración) se pierde. Resultado verificado en el CSS de dist antes de
+       este cambio: animation-name none, animation-duration 0s,
+       animation-timeline auto — es decir, ninguna entrada corría. Escrito con
+       longhands el minificador no tiene shorthand que armar. OBSERVACIÓN: la
+       misma regla con shorthand está en design-system.md §11.6, en
+       design/ds/docs/tokens.css y en design/ds/docs/tailwind-theme.css, que no
+       se tocan (son solo lectura); hay que corregirla ahí también. */
     [data-entrada] {
-      animation: entrada-papel auto ease-out backwards;
+      animation-name: entrada-papel;
+      animation-duration: auto;
+      animation-timing-function: ease-out;
+      animation-fill-mode: backwards;
       animation-timeline: view();
       animation-range: entry 0% entry 60%;
     }

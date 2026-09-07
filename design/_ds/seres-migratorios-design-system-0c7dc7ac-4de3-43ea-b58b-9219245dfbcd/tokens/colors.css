@@ -1,0 +1,37 @@
+:root {
+  /* Base — papel y tinta */
+  --papel: #FBFAF7;
+  --papel-puro: #FFFFFF;
+  --tinta: #0B0B0B;
+  --tinta-suave: #3A3A3A;
+  --grafito: #6B6B6B;
+  --linea: #D9D6CF;
+  /* Azules de sello */
+  --azul-sello: #1B4BAF;
+  --azul-marcador: #0B2FCD;
+  --azul-profundo: #0A2A78;
+  --azul-tinta-agua: #E4EAF8;
+  /* Tricolor — SOLO HiloTricolor y logo tricolor de manos. Nunca UI. */
+  --tricolor-amarillo: #F2C230;
+  --tricolor-azul: #0033A0;
+  --tricolor-rojo: #E0393E;
+  /* Semántico */
+  --color-error: #B3261E;
+
+  /* Alias semánticos */
+  --fondo-pagina: var(--papel);
+  --superficie-tarjeta: var(--papel-puro);
+  --superficie-suave: var(--azul-tinta-agua);
+  --texto-principal: var(--tinta);
+  --texto-secundario: var(--tinta-suave);
+  --texto-metadatos: var(--grafito);
+  --texto-manuscrito: var(--azul-marcador);
+  --texto-sello: var(--azul-sello);
+  --texto-error: var(--color-error);
+  --borde-caja: var(--tinta);
+  --borde-divisor: var(--linea);
+  --enlace: var(--azul-sello);
+  --enlace-hover: var(--azul-marcador);
+  --enlace-pressed: var(--azul-profundo);
+  --foco: var(--azul-sello);
+}

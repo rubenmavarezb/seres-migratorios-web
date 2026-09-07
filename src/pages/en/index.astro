@@ -1,14 +1,27 @@
 ---
-// SM-005 i18n smoke test for the `/en/` locale. No dictionaries exist yet in
-// Fase 0, so this page carries the bare minimum of markup needed to prove that
-// `/en/` renders `<html lang="en">` and that `Astro.currentLocale` resolves to
-// `en`; it is replaced by the real EN home page in a later phase (SM-012
-// onward). "Seres Migratorios" is a proper name and is never translated.
-import Base from '../../layouts/Base.astro';
+/**
+ * English counterpart of the Fase 1 test page (SM-012, updated in SM-013):
+ * same layout, same dictionary keys, `en.json` instead of `es.json`. Replaced
+ * by the real home page in SM-034.
+ *
+ * `idioma` is not passed to `Pagina` on purpose: `Base` derives it from
+ * `Astro.currentLocale`, and this page is the check that it resolves to `en`.
+ * "Seres Migratorios" is a proper name and is never translated.
+ */
+import Pagina from '../../layouts/Pagina.astro';
+import { type Idioma, t } from '../../i18n/utils.ts';
+
+/** This file only ever renders under the `/en/` locale. */
+const idioma: Idioma = 'en';
 ---
 
-<Base titulo="Seres Migratorios" idioma="en">
-  <main data-locale={Astro.currentLocale}>
-    <h1 class="font-display text-display-xl uppercase">Seres Migratorios</h1>
-  </main>
-</Base>
+<Pagina
+  titulo={t(idioma, 'seo.tituloSitio')}
+  descripcion={t(idioma, 'seo.descripcionPorDefecto')}
+  rutaActual={Astro.url.pathname}
+  encabezado={{
+    titulo: t(idioma, 'seo.tituloSitio'),
+    subtitulo: t(idioma, 'seo.descripcionPorDefecto'),
+  }}
+  contenedor={false}
+/>

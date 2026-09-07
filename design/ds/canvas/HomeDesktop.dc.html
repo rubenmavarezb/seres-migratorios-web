@@ -1,0 +1,337 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<!-- ===== BASE COMPARTIDA DEL CANVAS — pegar ESTE bloque completo dentro de <helmet> ... </helmet> de CADA artboard, sin modificarlo. Agregá tus estilos propios DESPUÉS, en otro <style>. ===== -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gochi+Hand&display=swap">
+<style>
+  :root {
+    --papel: #FBFAF7; --papel-puro: #FFFFFF; --tinta: #0B0B0B; --tinta-suave: #3A3A3A; --grafito: #6B6B6B; --linea: #D9D6CF;
+    --azul-sello: #1B4BAF; --azul-marcador: #0B2FCD; --azul-profundo: #0A2A78; --azul-tinta-agua: #E4EAF8;
+    --tricolor-amarillo: #F2C230; --tricolor-azul: #0033A0; --tricolor-rojo: #E0393E;
+    --display: "Anton", Impact, "Arial Narrow Bold", sans-serif;
+    --mono: "Courier Prime", "Courier New", Courier, monospace;
+    --manuscrita: "Gochi Hand", "Comic Sans MS", cursive;
+  }
+  body { margin: 0; background: var(--papel); color: var(--tinta); font-family: var(--mono); -webkit-font-smoothing: antialiased; }
+  a { color: var(--azul-sello); text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { color: var(--azul-marcador); }
+  /* Papel con grano + motas: aplicar la clase al elemento raíz del artboard (necesita position:relative). */
+  .papel { position: relative; background: var(--papel); isolation: isolate; }
+  .papel::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .07; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>"); }
+  .papel::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><g fill='%230B0B0B'><circle cx='23' cy='41' r='1.1'/><circle cx='131' cy='17' r='.8'/><circle cx='202' cy='96' r='1.3'/><circle cx='377' cy='58' r='.9'/><circle cx='88' cy='188' r='1'/><circle cx='301' cy='161' r='.7'/><circle cx='159' cy='266' r='1.2'/><circle cx='352' cy='289' r='.8'/><circle cx='47' cy='343' r='.9'/><circle cx='238' cy='372' r='1.1'/><circle cx='399' cy='401' r='.7'/><circle cx='118' cy='402' r='.9'/><circle cx='279' cy='238' r='.6'/><circle cx='11' cy='229' r='.8'/></g></svg>"); }
+  .papel > * { position: relative; z-index: 1; }
+  /* Tinta de sello: textura "mal entintada" para sellos, escudo, palabras clave. Aplicar sobre elementos azules. */
+  .sello-grano { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>"); -webkit-mask-size: 200px 200px; mask-size: 200px 200px; }
+  /* Tipos */
+  .display { font-family: var(--display); font-weight: 400; text-transform: uppercase; line-height: .85; letter-spacing: -.01em; }
+  .mono { font-family: var(--mono); }
+  .etiqueta { font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  .manuscrita { font-family: var(--manuscrita); color: var(--azul-marcador); line-height: 1.05; }
+  /* Foto pegada */
+  .foto-pegada { background: var(--papel-puro); padding: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 6px 14px rgba(0,0,0,.10); display: inline-block; }
+  .foto-pegada img { display: block; width: 100%; height: auto; }
+  /* Caja de nombre / botón */
+  .caja-nombre { font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; border: 2px solid var(--tinta); background: var(--papel-puro); padding: 12px 24px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; box-sizing: border-box; }
+  .hilo-tricolor { height: 3px; width: 100%; background: linear-gradient(90deg, var(--tricolor-amarillo) 0 33.34%, var(--tricolor-azul) 33.34% 66.67%, var(--tricolor-rojo) 66.67% 100%); }
+</style>
+<!-- ===== FIN BASE COMPARTIDA ===== -->
+<style>
+  .boton { font-family: var(--mono); font-weight: 700; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; height: 52px; padding: 0 32px; border: 2px solid var(--tinta); background: var(--papel-puro); color: var(--tinta); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; text-decoration: none; }
+  .link-nav { font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--tinta); text-decoration: none; }
+  .titulo-seccion { font-family: var(--display); font-weight: 400; text-transform: uppercase; line-height: .85; letter-spacing: -.01em; font-size: 56px; color: var(--tinta); }
+  .cuerpo { font-family: var(--mono); font-weight: 400; font-size: 16px; line-height: 1.7; color: var(--tinta-suave); }
+  .ventana { overflow: hidden; position: relative; }
+</style>
+</helmet>
+
+<div class="papel" style="width: 1440px; min-height: 3820px; padding: 64px; box-sizing: border-box; display: flex; flex-direction: column; gap: 136px;">
+
+  <div style="display: flex; flex-direction: column; gap: 28px;">
+
+    <!-- ENCABEZADO DE SISTEMA -->
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px;">
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">SERES MIGRATORIOS — SISTEMA DE DISEÑO V1</span>
+        <span class="etiqueta" style="font-size: 12px; color: var(--tinta);">LÁMINA 07 · HOME DESKTOP</span>
+      </div>
+      <div style="height: 1px; background: var(--linea);"></div>
+    </div>
+
+    <!-- NAV -->
+    <div style="border-bottom: 1px solid var(--linea); padding-bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+      <span class="display" style="font-size: 36px; color: var(--tinta);">SERES MIGRATORIOS</span>
+      <div style="display: flex; align-items: center; gap: 28px;">
+        <a href="#" class="link-nav">MANIFIESTO</a>
+        <a href="#" class="link-nav">FOTÓGRAFOS</a>
+        <a href="#" class="link-nav">EDICIONES</a>
+        <a href="#" class="link-nav">CONVOCATORIA</a>
+        <a href="#" class="link-nav">APOYAR</a>
+        <span style="display: inline-flex; border: 2px solid var(--tinta); background: var(--papel-puro);">
+          <span class="etiqueta" style="font-size: 12px; padding: 8px 12px; background: var(--tinta); color: var(--papel);">ES</span>
+          <span class="etiqueta" style="font-size: 12px; padding: 8px 12px; color: var(--tinta);">EN</span>
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HERO -->
+  <div style="display: flex; flex-direction: column; gap: 72px;">
+
+    <!-- FotoPegada sangrada izquierda -->
+    <div class="foto-pegada" style="position: absolute; left: -64px; top: 150px; width: 226px; box-sizing: border-box; transform: rotate(-2deg); z-index: 2;">
+      <div class="ventana" style="width: 210px; height: 300px;">
+        <img src="ref-poster-refugio.jpg" alt="Dos mujeres de negro mirando el río desde una baranda." style="position: absolute; width: 1164px; height: auto; left: 0; top: -155px;">
+      </div>
+    </div>
+
+    <!-- FotoPegada sangrada derecha -->
+    <div class="foto-pegada" style="position: absolute; right: -64px; top: 300px; width: 256px; box-sizing: border-box; transform: rotate(1.5deg); z-index: 2;">
+      <div class="ventana" style="width: 240px; height: 260px;">
+        <img src="ref-collage.jpg" alt="Dos personas frente al lago, con un faro de fondo." style="position: absolute; width: 960px; height: auto; left: -645px; top: -128px;">
+      </div>
+    </div>
+
+    <!-- Sello de la edición -->
+    <svg width="164" height="164" viewBox="0 0 132 132" class="sello-grano" style="position: absolute; right: 30px; top: -8px; transform: rotate(-14deg); z-index: 4;" aria-hidden="true">
+      <defs>
+        <path id="arco-sello-hero" d="M 20 66 A 46 46 0 0 1 112 66" fill="none"></path>
+      </defs>
+      <circle cx="66" cy="66" r="61" fill="none" stroke="#1B4BAF" stroke-width="3"></circle>
+      <circle cx="66" cy="66" r="54" fill="none" stroke="#1B4BAF" stroke-width="1.5"></circle>
+      <text style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; letter-spacing: 2.4px; fill: #1B4BAF;">
+        <textPath href="#arco-sello-hero" startOffset="50%" text-anchor="middle">SERES MIGRATORIOS</textPath>
+      </text>
+      <text x="66" y="63" text-anchor="middle" style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; fill: #1B4BAF;">BUENOS AIRES</text>
+      <text x="66" y="79" text-anchor="middle" style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; fill: #1B4BAF;">08 AGO 2026</text>
+      <g fill="#1B4BAF">
+        <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(50 96)"></path>
+        <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(66 99)"></path>
+        <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(82 96)"></path>
+      </g>
+    </svg>
+
+    <!-- BloqueFicha de la edición 1 -->
+    <div style="position: relative; padding: 0 380px 0 0;">
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span class="etiqueta" style="font-size: 14px; color: var(--tinta);">FECHA:</span>
+          <span class="mono" style="font-size: 15px; color: var(--tinta);">08.08.2026</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span class="etiqueta" style="font-size: 14px; color: var(--tinta);">HORARIOS:</span>
+          <span class="mono" style="font-size: 15px; color: var(--tinta);">10:00 AM – 19:00</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span class="etiqueta" style="font-size: 14px; color: var(--tinta);">LUGAR:</span>
+          <span class="mono" style="font-size: 15px; color: var(--tinta); line-height: 1.5;">CONSULADO<br>HUMBERTO PRIMO 3032<br>BUENOS AIRES, ARG</span>
+        </div>
+      </div>
+      <span class="manuscrita" style="position: absolute; right: 190px; top: 74px; font-size: 40px; transform: rotate(-6deg); white-space: nowrap;">edición 01</span>
+    </div>
+
+    <!-- TitularPartido -->
+    <div style="display: flex; flex-direction: column; gap: 0;">
+      <span class="display" style="font-size: 220px; color: var(--tinta); text-align: center; display: block;">SERES</span>
+      <div style="position: relative; height: 250px;">
+        <span class="manuscrita" style="position: absolute; left: 50%; top: 50%; width: 820px; font-size: 54px; line-height: 1.4; letter-spacing: .1em; text-align: center; transform: translate(-50%, -50%) rotate(-2deg); display: block; z-index: 3;">LA FOTOGRAFÍA COMO REFUGIO EN EL EXILIO</span>
+      </div>
+      <span class="display" style="font-size: 220px; color: var(--tinta); text-align: center; display: block;">MIGRATORIOS</span>
+    </div>
+
+  </div>
+
+  <!-- MANIFIESTO -->
+  <div style="display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 80px; align-items: start;">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">01 · QUIÉNES SOMOS</span>
+      <h2 class="titulo-seccion" style="margin: 0;">Manifiesto</h2>
+      <div class="hilo-tricolor" style="width: 180px;"></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 32px; max-width: 700px;">
+      <blockquote class="mono" style="margin: 0; font-size: 19px; line-height: 1.85; color: var(--tinta); border-left: 2px solid var(--azul-sello); padding-left: 32px;">“En la vorágine de la rutina en el exilio buscamos la manera de ayudar, de agruparnos y compartir esto que sentimos en el pecho, de mirar a los ojos a quienes comparten un dolor que no se puede describir en palabras y que tratamos de codificar en una imagen, un retrato. En momentos como estos entendemos la importancia de la fotografía, y de nuestra labor como fotograf@s”.</blockquote>
+      <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">CITA TEXTUAL DEL POST OFICIAL · 31.07.2026</span>
+      <a href="#" class="boton">LEER EL MANIFIESTO</a>
+    </div>
+  </div>
+
+  <!-- FOTÓGRAFOS -->
+  <div style="display: flex; flex-direction: column; gap: 36px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+      <span class="manuscrita" style="font-size: 68px; letter-spacing: .12em; transform: rotate(-2deg); display: inline-block;">Fotógrafos</span>
+      <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">02 · SETS 001 A 007 DE LA EDICIÓN BUENOS AIRES 2026</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;">
+
+      <div style="border: 2px solid var(--tinta); background: var(--papel-puro); padding: 24px; display: flex; flex-direction: column; gap: 12px; min-height: 210px; box-sizing: border-box;">
+        <span class="etiqueta" style="font-size: 32px; color: var(--azul-sello);">001</span>
+        <span class="etiqueta" style="font-size: 17px; color: var(--tinta);">HERICK FRONTADO</span>
+        <span class="mono" style="font-size: 13px; color: var(--grafito);">@herickfrontado</span>
+      </div>
+
+      <div style="border: 2px solid var(--tinta); background: var(--papel-puro); padding: 24px; display: flex; flex-direction: column; gap: 12px; min-height: 210px; box-sizing: border-box;">
+        <span class="etiqueta" style="font-size: 32px; color: var(--azul-sello);">002</span>
+        <span class="etiqueta" style="font-size: 17px; color: var(--tinta);">NAIA GUANIPA</span>
+        <span class="mono" style="font-size: 13px; color: var(--grafito);">@naianaianaia</span>
+      </div>
+
+      <div style="border: 2px solid var(--tinta); background: var(--papel-puro); padding: 24px; display: flex; flex-direction: column; gap: 12px; min-height: 210px; box-sizing: border-box;">
+        <span class="etiqueta" style="font-size: 32px; color: var(--azul-sello);">003</span>
+        <span class="etiqueta" style="font-size: 17px; color: var(--tinta);">ANGELA PÉREZ</span>
+        <span class="mono" style="font-size: 13px; color: var(--grafito);">@angelaluisap</span>
+      </div>
+
+      <div style="border: 2px solid var(--tinta); background: var(--papel-puro); padding: 24px; display: flex; flex-direction: column; gap: 12px; min-height: 210px; box-sizing: border-box;">
+        <span class="etiqueta" style="font-size: 32px; color: var(--azul-sello);">004</span>
+        <span class="etiqueta" style="font-size: 17px; color: var(--tinta);">PATI CARO</span>
+        <span class="mono" style="font-size: 13px; color: var(--grafito);">@huella.solar [A CONFIRMAR]</span>
+      </div>
+
+    </div>
+    <div style="display: flex; align-items: center; gap: 24px;">
+      <a href="#" class="boton">VER TODOS</a>
+      <span class="mono" style="font-size: 14px; color: var(--grafito);">7 fotógraf@s fotean el recorrido y 9 artistas exponen.</span>
+    </div>
+  </div>
+
+  <!-- PRÓXIMA EDICIÓN / CONVOCATORIA -->
+  <div style="border-top: 2px solid var(--tinta); padding-top: 40px; display: grid; grid-template-columns: minmax(0, 1fr) 560px; gap: 80px; align-items: start;">
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">03 · PRÓXIMA EDICIÓN</span>
+      <h2 class="titulo-seccion" style="margin: 0;">Convocatoria abierta</h2>
+      <p class="cuerpo" style="margin: 0; max-width: 56ch;">Buscamos fotógraf@s, film, música y manos para el equipo. Contanos quién sos, qué querés mostrar y en qué te gustaría sumar. Leemos todo.</p>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <a href="#" class="boton">POSTULATE</a>
+        <span class="manuscrita" style="font-size: 30px; transform: rotate(-4deg); display: inline-block; white-space: nowrap;">sumate</span>
+      </div>
+    </div>
+    <div style="border: 2px solid var(--tinta); background: var(--papel-puro); padding: 40px; display: flex; flex-direction: column; gap: 32px;">
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">FECHA:</span>
+          <span class="mono" style="font-size: 14px; color: var(--grafito);">[FECHA PRÓXIMA EDICIÓN]</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">HORARIOS:</span>
+          <span class="mono" style="font-size: 14px; color: var(--grafito);">[HORARIOS]</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span class="etiqueta" style="font-size: 13px; color: var(--tinta);">LUGAR:</span>
+          <span class="mono" style="font-size: 14px; color: var(--grafito);">[LUGAR]</span>
+        </div>
+      </div>
+      <div style="height: 1px; background: var(--linea);"></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+        <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">CIERRE DE POSTULACIONES</span>
+        <span class="etiqueta" style="font-size: 13px; color: var(--azul-sello);">[FECHA DE CIERRE]</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- APOYAR -->
+  <div style="display: flex; flex-direction: column; gap: 36px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+      <h2 class="titulo-seccion" style="margin: 0;">Cómo apoyar</h2>
+      <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">04 · TOOODA AYUDA ES BIENVENIDA</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px;">
+
+      <div style="border-top: 2px solid var(--tinta); padding-top: 24px; display: flex; flex-direction: column; gap: 16px; min-height: 240px; box-sizing: border-box;">
+        <span class="etiqueta" style="font-size: 18px; color: var(--tinta);">APORTE</span>
+        <p class="cuerpo" style="margin: 0; font-size: 15px;">Un aporte solidario, del tamaño que puedas, va directo a la causa de la edición.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <a href="#" class="mono" style="font-size: 13px;">[LINK MERCADO PAGO]</a>
+          <a href="#" class="mono" style="font-size: 13px;">[LINK PAYPAL]</a>
+          <a href="#" class="mono" style="font-size: 13px;">[LINK CAFECITO]</a>
+        </div>
+      </div>
+
+      <div style="border-top: 2px solid var(--tinta); padding-top: 24px; display: flex; flex-direction: column; gap: 16px; min-height: 240px; box-sizing: border-box;">
+        <span class="etiqueta" style="font-size: 18px; color: var(--tinta);">COPIAS EN VENTA</span>
+        <p class="cuerpo" style="margin: 0; font-size: 15px;">Comprás una copia impresa de la exposición y te llevás una pieza de la muestra a casa.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <a href="#" class="mono" style="font-size: 13px;">[LINK COPIAS EN VENTA]</a>
+        </div>
+      </div>
+
+      <div style="border-top: 2px solid var(--tinta); padding-top: 24px; display: flex; flex-direction: column; gap: 16px; min-height: 240px; box-sizing: border-box;">
+        <span class="etiqueta" style="font-size: 18px; color: var(--tinta);">VOLUNTARIADO</span>
+        <p class="cuerpo" style="margin: 0; font-size: 15px;">Manos para el montaje, la producción y el día del recorrido. También difundir suma.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <a href="#" class="mono" style="font-size: 13px;">/convocatoria</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PIE -->
+  <div style="border-top: 2px solid var(--tinta); padding-top: 48px; display: flex; flex-direction: column; gap: 40px;">
+
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <img src="logos-aliados.jpg" alt="Aliados: CONSULADO Custom &amp; Craft, logo tricolor de manos, infiltrado™ y CCC." style="display: block; height: 40px; width: auto;">
+    </div>
+
+    <div class="hilo-tricolor"></div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 48px;">
+
+      <div style="display: flex; align-items: center; gap: 28px;">
+        <svg width="118" height="118" viewBox="0 0 132 132" class="sello-grano" style="display: block; flex: none; transform: rotate(-12deg);" aria-hidden="true">
+          <defs>
+            <path id="arco-sello-pie" d="M 20 66 A 46 46 0 0 1 112 66" fill="none"></path>
+          </defs>
+          <circle cx="66" cy="66" r="61" fill="none" stroke="#1B4BAF" stroke-width="3"></circle>
+          <circle cx="66" cy="66" r="54" fill="none" stroke="#1B4BAF" stroke-width="1.5"></circle>
+          <text style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; letter-spacing: 2.4px; fill: #1B4BAF;">
+            <textPath href="#arco-sello-pie" startOffset="50%" text-anchor="middle">SERES MIGRATORIOS</textPath>
+          </text>
+          <text x="66" y="63" text-anchor="middle" style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; fill: #1B4BAF;">BUENOS AIRES</text>
+          <text x="66" y="79" text-anchor="middle" style="font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 11px; fill: #1B4BAF;">08 AGO 2026</text>
+          <g fill="#1B4BAF">
+            <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(50 96)"></path>
+            <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(66 99)"></path>
+            <path d="M 0 -5 L 1.5 -1.6 L 5 -1.6 L 2.2 .7 L 3.2 4.4 L 0 2.2 L -3.2 4.4 L -2.2 .7 L -5 -1.6 L -1.5 -1.6 Z" transform="translate(82 96)"></path>
+          </g>
+        </svg>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <span class="etiqueta" style="font-size: 12px; color: var(--grafito);">CONTACTO</span>
+          <span class="mono" style="font-size: 15px; color: var(--tinta);">[EMAIL]</span>
+          <a href="#" class="mono" style="font-size: 15px;">[@CUENTA]</a>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="#" class="link-nav">MANIFIESTO</a>
+        <a href="#" class="link-nav">FOTÓGRAFOS</a>
+        <a href="#" class="link-nav">EDICIONES</a>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="#" class="link-nav">CONVOCATORIA</a>
+        <a href="#" class="link-nav">APOYAR</a>
+        <a href="#" class="link-nav">EN</a>
+      </div>
+
+      <span class="manuscrita" style="font-size: 46px; transform: rotate(-3deg); display: inline-block; white-space: nowrap;">¡Aguante la fotografía!</span>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; border-top: 1px solid var(--linea); padding-top: 20px;">
+      <span class="mono" style="font-size: 12px; color: var(--grafito);">Seres Migratorios · Diáspora venezolana en Buenos Aires · [DOMINIO]</span>
+      <span class="mono" style="font-size: 12px; color: var(--grafito);">Unidos por la reconstrucción</span>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

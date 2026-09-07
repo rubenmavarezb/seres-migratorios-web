@@ -1,0 +1,311 @@
+---
+/**
+ * FichaFotografo — the most personal card of the design system (design-
+ * system.md §7, item 8 "Ficha de fotógrafo (`FichaFotografo`)"; canvas spec at
+ * design/ds/canvas/FichaFotografo.dc.html; reference implementation at
+ * design/ds/components/fotos/FichaFotografo.jsx — read for exact styles,
+ * props and states, translated here to Tailwind tokens and astro:assets,
+ * never copied as React). Number + name, the main photo, a small portrait
+ * overlapping its bottom-left corner, an optional handwritten quote and
+ * signature, and an optional Instagram link.
+ *
+ * Real web usage (Home.dc.html "FOTÓGRAFOS" section, Edicion.dc.html "Fotean"
+ * section, both via `x-import ... FichaFotografo`) never passes `frase` or
+ * `firma`: that block only appears on the future artist-profile page. This
+ * component therefore renders the quote/signature block only when the caller
+ * supplies `frase` and/or `fraseManuscrita` — never as a permanent hole.
+ *
+ * OBSERVACIÓN (lamina vs. web design; diseno-web-indice.md decision:
+ * "donde una lámina del design system y una página web difieren, gana la
+ * página web"): design/ds/canvas/FichaFotografo.dc.html's "COMPONENTE" render
+ * (lines 85-96) wraps the main photo in `.foto-pegada` (white 8px border +
+ * `shadow-foto` + rotation) and gives the portrait a white frame, shadow and
+ * a much larger 120×150 size. Both FichaFotografo.jsx (the reference this
+ * ticket's tech lead named) and the actual `x-import` usage in Home.dc.html /
+ * Edicion.dc.html render the main photo as a bare `object-fit: cover` image
+ * with no border/shadow/rotation, and the portrait at 72×90 (`retratoChico`)
+ * or 72×72 (`retratoCuadrado`, Pati Caro) with no frame either. This
+ * component follows the web usage on both counts: no `FotoPegada` wrapper
+ * anywhere in here, per this ticket's own instructions ("la foto principal
+ * del diseño no lleva borde de FotoPegada... seguí el diseño web").
+ *
+ * OBSERVACIÓN: FichaFotografo.jsx's text-fallback branch sets the quote at a
+ * literal `1.375rem`, but the canonical `Anotacion.astro` (built in a prior
+ * ticket, out of this ticket's Alcance) exposes no size-override prop — its
+ * text branch always renders at the `text-manuscrita` utility, i.e.
+ * `font-size: var(--text-manuscrita)` (theme.css: `clamp(1.5rem, 4vw, 3rem)`,
+ * verified against the compiled CSS). Rather than widening Anotacion's API or
+ * accepting the clamp's much larger size (48px at a 1440 viewport — over 2×
+ * the spec), this component scopes `--text-manuscrita: 1.375rem` on the
+ * wrapper `<div>` around the quote/signature block: `Anotacion`'s utility
+ * class reads the custom property through `var()`, and CSS custom properties
+ * inherit down to it unchanged. Same "dynamic geometry goes inline" idiom
+ * `FranjaAliados.astro` already uses for its own responsive custom
+ * properties — no edit to `Anotacion.astro`, no theme change, and the exact
+ * rem value the tech lead asked for.
+ *
+ * Link to the profile ("link al perfil que cubra el nombre (o toda la
+ * ficha)"): implemented as a "stretched link" — the visible `<a>` wraps
+ * `numero` + `nombre` as one node (see the `prefijoNumero` OBSERVACIÓN
+ * below), and its `::after` (`absolute inset-0`) stretches over the whole
+ * `<article>` (which is `relative`), so the entire card is one click/tap
+ * target without nesting a second interactive element. `after:z-10` is
+ * required, not cosmetic: the photo/portrait wrapper below is itself
+ * `relative` (for the portrait's own `absolute` position), and per CSS's
+ * stacking rules a `position:relative` sibling with `z-index:auto` paints
+ * over an earlier sibling's `z-index:auto` positioned pseudo-element
+ * regardless of DOM order — verified empirically (`document.elementFromPoint`
+ * over the photo returned the `<img>`, not the overlay, before this z-index
+ * was added). The Instagram link (`z-20`) stays independently clickable atop
+ * that same overlay for the same reason.
+ *
+ * `data-entrada` on the `<article>` (SM-069, design-system.md §11.4:
+ * "FichaFotografo — Igual que FotoPegada; cada ficha entra cuando aparece en
+ * el viewport", with no artificial stagger — the attribute alone, no per-index
+ * CSS). Keyframes and the two mandatory guards live in theme.css, so nothing
+ * starts hidden without scroll-driven animation support or under reduced
+ * motion, and only `opacity`/`translate` move — never `transform`, which the
+ * rotations inside this card rely on.
+ *
+ * Placement (grid position, container width, wrapper rotation) is the
+ * caller's job — this component accepts no position classes, per
+ * diseno-web-indice.md decision 13.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import Anotacion from './Anotacion.astro';
+import placeholderRetrato from '../assets/marca/placeholder-retrato.svg';
+import { t, type Idioma } from '../i18n/utils.ts';
+
+interface Props {
+  /** Three-digit set number (e.g. "001"). Whoever only exhibits or plays has none — the `<h3>` then starts directly at `nombre`, with no leading space or empty slot. That depends on the whole `<h3>` staying on one source line (see the `prefijoNumero` OBSERVACIÓN below): reformatting it across lines reintroduces the leading/trailing space. */
+  numero?: string;
+  nombre: string;
+  obraPrincipal: ImageMetadata;
+  obraAlt: string;
+  /** The real portrait. Missing (Naia Guanipa today) falls back to `placeholder-retrato.svg`. */
+  retrato?: ImageMetadata;
+  /** Required regardless of `retrato`: only read when `retrato` is present — the placeholder branch generates its own dictionary alt instead (see below). */
+  retratoAlt: string;
+  /** [width, height] in px. Defaults to `retratoChico` (Home.dc.html / Edicion.dc.html renderVals: `[72, 90]`); Pati Caro's square portrait passes `[72, 72]`. */
+  retratoTamano?: [number, number];
+  /** The author's own quote, real case. Renders as the `Anotacion` text fallback when `fraseManuscrita` is absent. Omitted entirely (with `fraseManuscrita`) on Home/Edicion — the quote/signature block only shows up on the profile page. */
+  frase?: string;
+  /** Scan of the real handwriting. When present, `frase` becomes its `alt` (CLAUDE.md: "en una frase manuscrita el alt es la transcripción literal"). */
+  fraseManuscrita?: ImageMetadata;
+  firma?: ImageMetadata;
+  /** With the at sign (e.g. "@herickfrontado"). A bracket placeholder (or no value) renders no link at all — CLAUDE.md, "un placeholder es correcto [...] un dato inventado es un error grave": a fabricated `instagram.com` link would be worse than no link. */
+  instagram?: string;
+  /** Profile URL (e.g. "/artistas/herick-frontado"). Made a "stretched link" over the whole `<article>` (see below), not just the visible underline on `numero` + `nombre`. */
+  href: string;
+  /** Main photo height in px, desktop and up (`md:`). Default 200 — Home.dc.html / Edicion.dc.html desktop `renderVals()`. */
+  altoFoto?: number;
+  /** Main photo height in px, below the desktop breakpoint. Default 220 — both pages' mobile `renderVals()`. Independent of `altoFoto`, same convention as `FranjaAliados.astro`'s `altoLogoMobile`. */
+  altoFotoMobile?: number;
+  idioma?: Idioma;
+}
+
+const {
+  numero,
+  nombre,
+  obraPrincipal,
+  obraAlt,
+  retrato,
+  retratoAlt,
+  retratoTamano = [72, 90],
+  frase,
+  fraseManuscrita,
+  firma,
+  instagram,
+  href,
+  altoFoto = 200,
+  altoFotoMobile = 220,
+  idioma,
+} = Astro.props;
+
+const idiomaActual: Idioma = idioma ?? (Astro.currentLocale === 'en' ? 'en' : 'es');
+
+/** Local stand-in for `t()`'s missing interpolation — same helper as Sello.astro. */
+function interpolar(plantilla: string, valores: Record<string, string>): string {
+  return Object.entries(valores).reduce(
+    (acumulado, [clave, valor]) => acumulado.replaceAll(`{${clave}}`, valor),
+    plantilla
+  );
+}
+
+/**
+ * A bracket placeholder like "[HANDLE]" (content.config.ts's `oPlaceholder`
+ * schema union) is valid content but never a usable link; `undefined` counts
+ * too. Same helper as `FranjaAliados.astro`.
+ */
+function esPlaceholder(valor: string | undefined): boolean {
+  return valor === undefined || /^\[[^\]]+\]$/.test(valor);
+}
+
+const [retratoAncho, retratoAlto] = retratoTamano;
+
+// `placeholderRetrato`'s ambient type is `SvgComponent & ImageMetadata`
+// (astro/client.d.ts's `declare module '*.svg'`), so it satisfies
+// `ImageMetadata` directly — no branch needed between the real portrait and
+// the placeholder, both go through the same <Image>. Its own natural size
+// (viewBox 0 0 72 90) already matches the default `retratoTamano`, so the
+// common case introduces no crop at all.
+const imagenRetrato: ImageMetadata = retrato ?? placeholderRetrato;
+
+// design-system.md §7 item 8 / this ticket: without a real portrait, the
+// component names the placeholder itself ("Retrato de {nombre} pendiente")
+// instead of trusting the caller's `retratoAlt` — which describes the
+// *eventual* real portrait (e.g. content/artistas/naia-guanipa.md's
+// retratoAlt.es is "Retrato de Naia Guanipa", with no "pendiente") and would
+// misdescribe the dashed placeholder box if used here.
+const altRetratoResuelto = retrato
+  ? retratoAlt
+  : interpolar(t(idiomaActual, 'ficha.retratoPendienteAlt'), { nombre });
+
+const altFirmaResuelto = firma
+  ? interpolar(t(idiomaActual, 'ficha.firmaAlt'), { nombre })
+  : undefined;
+
+// The quote/signature block is optional as a whole (Home/Edicion omit it
+// entirely); `frase` and `fraseManuscrita` are independently optional props
+// (the tech lead's literal interface, not a discriminated union like
+// Anotacion's own Props), so a caller could in principle pass the scan
+// without its transcription. That would ship an empty `alt` on a real
+// handwriting image — flagged here, not silently accepted.
+const mostrarFrase = frase !== undefined || fraseManuscrita !== undefined;
+
+if (fraseManuscrita !== undefined && frase === undefined && import.meta.env.DEV) {
+  console.warn(
+    `[FichaFotografo] "${nombre}" tiene fraseManuscrita sin "frase": el alt de la transcripción quedará vacío.`
+  );
+}
+
+const instagramValido = esPlaceholder(instagram) ? undefined : instagram;
+
+// Main photo: the box is fluid-width and switches height at the `md:`
+// breakpoint (200 -> 220px, CSS custom properties + Tailwind's `h-(--var)`
+// arbitrary-value syntax, same technique as FranjaAliados.astro's own
+// responsive sizes), so no single width/height pair describes its final
+// rendered box. `width`/`height` passed to <Image> only need to describe a
+// *sensible generated file* — computed here at the source's own aspect ratio
+// so Astro 7's crop-on-resize (default `fit: 'cover'` whenever both are
+// given, docs.astro.build "Cropping by default") is a no-op, never a
+// distortion. `widths` then covers 0.5x/1x/2x of that, capped at the
+// source's natural width (same idiom as Anotacion.astro's own `widths`
+// computation) — CLAUDE.md's "widths y sizes explícitos" for anything but
+// the hero.
+const aspectoFoto = obraPrincipal.width / obraPrincipal.height;
+const anchoObjetivoFoto = Math.min(Math.round(altoFoto * aspectoFoto), obraPrincipal.width);
+const widthsFoto = [
+  ...new Set([
+    Math.round(anchoObjetivoFoto / 2),
+    anchoObjetivoFoto,
+    Math.min(anchoObjetivoFoto * 2, obraPrincipal.width),
+  ]),
+]
+  .filter((ancho) => ancho > 0)
+  .sort((a, b) => a - b);
+
+// 272px: the exact desktop column width at the site's own constants (a 1280px
+// .contenedor, 48px side padding, 4 columns, 32px gaps — (1280 - 96 - 96) /
+// 4 = 272), so a wide viewport never over-fetches past the real column.
+const sizesFoto = '(min-width: 1280px) 272px, (min-width: 768px) 25vw, 100vw';
+
+// design-system.md §7 item 8 / FichaFotografo.jsx: the portrait sits absolute
+// at the photo box's bottom-left corner, overlapping it — the wrapper reserves
+// that overlap as padding (35% of the portrait's width, 45% of its height)
+// rather than the photo and portrait merely touching at the edge. Always
+// applied, not just when `retrato` is set: the placeholder occupies the exact
+// same slot (design-system.md, diseno-web-indice.md decision 4 — "una obra
+// nunca hace de retrato", the slot is never simply empty).
+const estiloEnvoltorioFoto = `--ff-alto-mobile: ${altoFotoMobile}px; --ff-alto-desktop: ${altoFoto}px; padding-left: ${retratoAncho * 0.35}px; padding-bottom: ${retratoAlto * 0.45}px;`;
+
+// OBSERVACIÓN: with `compressHTML: true` (Astro 5-style "lossless"
+// compression, docs/notas-astro-7.md), ANY newline + indentation between a
+// tag's own `>` and its content — or between content and the matching close
+// tag — still renders as one literal space, even with a single child and no
+// sibling to collapse against. Verified empirically at every step: the jsx
+// reference's two-adjacent-nodes shape (`{numero ? … : ""}{href ? <a>…</a> :
+// …}`) produced " 001 Herick Frontado "; folding `numero` into the `<a>`'s
+// own single expression child (`{prefijoNumero + nombre}`) *still* produced
+// the same leading/trailing space, because prettier itself puts `<h3>`'s
+// opening tag, its child, and `</h3>` on three separate lines whenever the
+// line doesn't fit `printWidth` — and, unlike its handling of the inline
+// `<a>` a level down, it does not offer a hugging form for `<h3>` that a
+// human can coax it into keeping (tried by hand; `prettier --write`
+// canonicalizes it right back to three lines every time, since prettier
+// recomputes formatting from the parsed AST rather than preserving how a
+// human wrote it). `<!-- prettier-ignore -->` is not a way around this
+// either — it corrupted the tag outright when tried. The only working fix is
+// removing prettier's *reason* to wrap: both `class` attributes are pulled
+// into short frontmatter constants (`claseH3`, `claseLinkNombre`) so the
+// whole `<h3>` fits on one line under `printWidth: 100`, which prettier then
+// leaves alone. `numero` also lives inside the `<a>` now rather than beside
+// it (the jsx reference keeps it outside) — a deliberate, acceptable
+// divergence: `href` is a required prop here (unlike the jsx reference's
+// optional one), so there is no unlinked-numero branch to preserve, and the
+// AC only asks that the number and name render together with no leading
+// space, not that the number stays outside the anchor.
+const prefijoNumero = numero ? `${numero} ` : '';
+const claseH3 = 'font-mono text-etiqueta font-bold text-tinta uppercase';
+const claseLinkNombre =
+  "after:absolute after:inset-0 after:z-10 after:content-[''] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello";
+---
+
+<article class="relative flex flex-col gap-3" data-entrada>
+  <h3 class={claseH3}><a href={href} class={claseLinkNombre}>{prefijoNumero + nombre}</a></h3>
+
+  <div class="relative" style={estiloEnvoltorioFoto}>
+    <Image
+      src={obraPrincipal}
+      alt={obraAlt}
+      width={anchoObjetivoFoto}
+      height={altoFoto}
+      widths={widthsFoto}
+      sizes={sizesFoto}
+      loading="lazy"
+      class="block h-(--ff-alto-mobile) w-full object-cover md:h-(--ff-alto-desktop)"
+    />
+    <Image
+      src={imagenRetrato}
+      alt={altRetratoResuelto}
+      width={retratoAncho}
+      height={retratoAlto}
+      loading="lazy"
+      class="absolute bottom-0 left-0 block object-cover"
+    />
+  </div>
+
+  {
+    mostrarFrase && (
+      <div class="flex flex-col gap-2" style="--text-manuscrita: 1.375rem;">
+        {fraseManuscrita ? (
+          <Anotacion imagen={fraseManuscrita} alt={frase ?? ''} rotacion={-1} />
+        ) : (
+          <Anotacion texto={frase ?? ''} rotacion={-1} />
+        )}
+        {firma && (
+          <Image
+            src={firma}
+            alt={altFirmaResuelto ?? ''}
+            height={40}
+            loading="lazy"
+            class="block h-10 w-auto self-end"
+          />
+        )}
+      </div>
+    )
+  }
+
+  {
+    instagramValido && (
+      <a
+        href={`https://www.instagram.com/${instagramValido.slice(1)}/`}
+        class="relative z-20 font-mono text-metadatos font-bold text-azul-sello transition-colors duration-150 hover:text-azul-marcador focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+      >
+        {instagramValido}
+      </a>
+    )
+  }
+</article>

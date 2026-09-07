@@ -1,25 +1,109 @@
 ---
-// Minimal root layout. SM-012 (Fase 1) will complete it with SEO, hreflang,
-// the analytics beacon, Nav and Pie — see PLAN.md §5 "Layouts".
+/**
+ * Root layout of every page (PLAN.md §5, "Layouts"): `<html lang>`, the
+ * `<head>`, the paper background with its grain and specks, `Nav` and `Pie`.
+ *
+ * Metadata is NOT written here: `internos/Seo.astro` (SM-033) owns every
+ * metadata tag of the site — `<title>`, description, canonical, Open Graph and
+ * Twitter Card, plus the `robots` tag of the `noindex` prop — and this layout
+ * only resolves what to feed it (`idioma`, the current route). A page that
+ * needs a metadata tag adds it to `Seo.astro`, never to this head, so that
+ * "única fuente de metadatos" keeps holding.
+ *
+ * Two other pieces PLAN.md §5 attributes to this layout are deliberately absent
+ * here: the `hreflang` pair (SM-049 / SM-050) and the Cloudflare Web Analytics
+ * beacon of PLAN.md §4.3, which lands with its token in SM-065.
+ */
+import type { ImageMetadata } from 'astro';
+
+import Nav from '../components/Nav.astro';
+import Pie from '../components/Pie.astro';
+import Seo from '../components/internos/Seo.astro';
+import { IDIOMAS, IDIOMA_POR_DEFECTO, type Idioma, t } from '../i18n/utils.ts';
 import '../styles/global.css';
+
+// [OG DE MARCA PENDIENTE — SM-062] There is no brand Open Graph image yet.
+// Until SM-062 exports the 1200×630 of PLAN.md §10, a page without `imagenOg`
+// emits no `og:image` and no `twitter:image` at all (`Seo.astro` handles that)
+// rather than pointing at a file that is not there. When it exists, uncomment
+// the import and make it the fallback passed to `Seo`
+// (`imagenOg={imagenOg ?? ogDeMarca}`):
+// import ogDeMarca from '../assets/marca/og-seres-migratorios.png';
 
 interface Props {
   titulo: string;
-  idioma?: 'es' | 'en';
+  descripcion: string;
+  imagenOg?: ImageMetadata;
+  idioma?: Idioma;
+  rutaActual?: string;
+  /**
+   * Keeps the page out of search results with `<meta name="robots"
+   * content="noindex">`. For the internal pages of the site — `/kit` (SM-029)
+   * today — which are also excluded from the sitemap by
+   * `RUTAS_FUERA_DEL_SITEMAP` in astro.config.mjs: the two mechanisms are
+   * independent (the sitemap governs what is *offered* to a crawler, `noindex`
+   * what it does with a page it reaches anyway, e.g. through a link) and an
+   * internal page needs both. Defaults to `false`, so every public page keeps
+   * emitting no `robots` tag at all rather than an explicit `index, follow`,
+   * which is the default behaviour anyway.
+   */
+  noindex?: boolean;
 }
 
-const { titulo, idioma } = Astro.props;
+const {
+  titulo,
+  descripcion,
+  imagenOg,
+  idioma: idiomaProp,
+  rutaActual,
+  noindex = false,
+} = Astro.props;
+
+/** Narrows `Astro.currentLocale`, typed `string | undefined`, to `Idioma`. */
+function esIdioma(valor: string | undefined): valor is Idioma {
+  return valor !== undefined && (IDIOMAS as readonly string[]).includes(valor);
+}
+
+const localeActual = Astro.currentLocale;
+const idioma: Idioma = idiomaProp ?? (esIdioma(localeActual) ? localeActual : IDIOMA_POR_DEFECTO);
+
+// Every metadata tag lives in `internos/Seo.astro` (SM-033); this layout only
+// decides what to feed it. `rutaActual` doubles as the canonical path and as
+// the route the `Nav` matches its active link against, so it falls back to
+// `Astro.url.pathname` here instead of inside `Seo`, keeping a single
+// definition of "the current route" per render.
+const ruta = rutaActual ?? Astro.url.pathname;
+
+// The `<body>` carries `font-mono text-tinta` (SM-013): without it any text
+// that reaches a page with no font class of its own falls back to Tailwind's
+// default sans stack (ui-sans-serif, system-ui…) — Arial or Roboto in
+// practice, which CLAUDE.md forbids as a visible typeface. Courier Prime is
+// the body face of the design, so it is the right default for the document.
 ---
 
-<html lang={idioma ?? 'es'}>
+<html lang={idioma}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <title>{titulo}</title>
+    <Seo
+      titulo={titulo}
+      descripcion={descripcion}
+      imagenOg={imagenOg}
+      idioma={idioma}
+      rutaActual={ruta}
+      noindex={noindex}
+    />
   </head>
-  <body class="papel">
-    <slot />
+  <body class="papel font-mono text-tinta flex min-h-screen flex-col">
+    <a
+      href="#contenido"
+      class="absolute -top-16 left-6 z-50 inline-flex min-h-11 items-center border-2 border-tinta bg-papel-puro px-6 py-3 font-mono text-etiqueta font-bold uppercase text-tinta focus:top-2 focus:outline-2 focus:outline-offset-2 focus:outline-azul-sello"
+      >{t(idioma, 'comun.irAlContenido')}</a
+    >
+    <Nav idioma={idioma} rutaActual={rutaActual} />
+    <main id="contenido" class="flex-1"><slot /></main>
+    <Pie idioma={idioma} />
   </body>
 </html>

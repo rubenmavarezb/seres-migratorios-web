@@ -1,0 +1,58 @@
+---
+/**
+ * CajaNombre — canonical name-tag chip (design-system.md §7.3, item 3;
+ * design/ds/canvas/Componentes.dc.html "02 · CAJANOMBRE").
+ *
+ * Renders an <a> when `href` is given (link to an artist's profile, a
+ * language-selector entry), otherwise a non-interactive <span>. Never a
+ * <button>: this ticket's scope has no onClick use case.
+ *
+ * Positioning is forbidden here (diseno-web-indice.md, decision 13): a
+ * caller that needs to place several of these in a grid or brick pattern
+ * wraps them instead — see internos/Aparejo.astro.
+ */
+interface Props {
+  /** Visible text, written with its real capitalization; CSS applies uppercase. */
+  texto: string;
+  href?: string;
+  /** 'normal': padding 12×24 (default). 'chica': padding 8×14, 12px type —
+   * language selector and filters, never in azul-sello (Componentes.dc.html). */
+  tamano?: 'normal' | 'chica';
+  /** Inverts to fondo tinta / texto papel: the active entry of a selector. */
+  activa?: boolean;
+}
+
+const { texto, href, tamano = 'normal', activa = false } = Astro.props;
+
+// `.caja-nombre` (theme.css) sets no font-size at all, so `text-etiqueta`
+// supplies the 0.875rem/14px of design-system.md §4's "etiqueta" role here.
+// It does NOT end up changing letter-spacing to that role's 0.04em, though:
+// `.caja-nombre` already applies `tracking-wide`, which pins the shared
+// `--tw-tracking` custom property to 0.025em, and Tailwind v4's `text-*`
+// utilities only read `--tw-tracking` as a *fallback* — see the OBSERVACIÓN
+// in this ticket's report. Left as-is: `theme.css` is outside this ticket's
+// Alcance, and the acceptance criteria do not name letter-spacing.
+const clases = [
+  'caja-nombre',
+  tamano === 'chica' ? 'px-3.5 py-2 text-xs' : 'text-etiqueta',
+  activa ? 'bg-tinta text-papel' : 'text-tinta',
+  href
+    ? 'transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello'
+    : '',
+  href && !activa ? 'hover:text-azul-marcador' : '',
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+{
+  href ? (
+    <a href={href} class={clases} aria-current={activa ? 'true' : undefined}>
+      {texto}
+    </a>
+  ) : (
+    <span class={clases} aria-current={activa ? 'true' : undefined}>
+      {texto}
+    </span>
+  )
+}

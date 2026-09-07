@@ -7,9 +7,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 // PLAN.md §14 keeps every public value in `PUBLIC_*` env vars. `site` is read
 // at config time (before `import.meta.env` exists), so it goes through Vite's
-// `loadEnv`. PLAN.md §4.3 literally writes `site: 'https://[DOMINIO]'`, which
-// is not a valid URL and breaks the build: the fallback is the real Netlify
-// URL until the custom domain lands in SM-010 / SM-064.
+// `loadEnv`. The fallback is the official domain (PLAN.md §4.3 and §14, SM-010
+// and SM-064 done on 06.09.2026); the internal seres-migratorios.netlify.app URL
+// is never used for `site` or canonical URLs.
 const { PUBLIC_SITE_URL } = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd(), 'PUBLIC_');
 
 /** Internal routes kept out of the sitemap (PLAN.md §4.3, "Analytics"). */
@@ -27,7 +27,7 @@ const sinBarraFinal = (pathname) => (pathname === '/' ? pathname : pathname.repl
 export default defineConfig({
   // `||`, not `??`: `loadEnv` yields an empty string for a declared-but-empty
   // variable, and an empty `site` breaks the build the same way a missing one would.
-  site: PUBLIC_SITE_URL || 'https://seres-migratorios.netlify.app',
+  site: PUBLIC_SITE_URL || 'https://seresmigratorios.com',
   output: 'static',
   // Astro 7 defaults to 'jsx', which drops whitespace between inline elements.
   // `true` restores Astro 5's lossless compression — see docs/notas-astro-7.md.

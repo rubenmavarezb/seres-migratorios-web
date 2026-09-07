@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/texturas.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/styles.css">
+  <script src="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/_ds_bundle.js"></script>
+  <style>
+    body { background: #ECEAE4; }
+    a { color: #1B4BAF; }
+    a:hover { color: #0B2FCD; }
+    .papel > .sc-host-x > header > a:first-child { font-size: 2rem !important; }
+  </style>
+</helmet>
+
+<section style="display:flex; align-items:flex-start; gap:96px; padding:64px; font-family:'Courier Prime', monospace;">
+
+  <!-- ============ APOYAR · DESKTOP 1440 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Apoyar · Desktop · 1440</p>
+    <div class="papel" data-screen-label="Apoyar · Desktop" style="width:1440px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" href-marca="/" links="{{ navLinks }}" hint-size="100%,80px"></x-import>
+
+      <!-- TITULAR -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 80px; box-sizing:border-box; display:flex; flex-direction:column; gap:24px;">
+        <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:7.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Cómo apoyar</h1>
+        <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Toooda ayuda es bienvenida</p>
+      </section>
+
+      <!-- TRES COLUMNAS -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); grid-template-rows:auto auto auto; gap:24px 32px;">
+
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 3; gap:24px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="120px,44px">Aporte</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Cada edición recauda fondos para las víctimas de los terremotos en Venezuela.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Elegí la vía que te quede más cómoda.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK MERCADO PAGO]</a>
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK PAYPAL]</a>
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK CAFECITO]</a>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 3; gap:24px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="200px,44px">Copias en venta</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Copias de la obra expuesta en cada edición.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Lo recaudado va a la causa.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:24px; align-items:flex-start;">
+            <div style="padding-left:8px;">
+              <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FotoPegada" src="assets/obra/ruben-mavarez-web-01.png" alt="Copia en venta, obra de Rubén Mavarez" rotacion="-2" ancho="280px" alto="200px" pie="[TÍTULO] · [PRECIO]" hint-size="296px,250px"></x-import>
+            </div>
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK COPIAS EN VENTA]</a>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-rows:subgrid; grid-row:span 3; gap:24px; align-items:start; justify-items:start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="300px,44px">Voluntariado y difusión</x-import>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Sumate al equipo de la próxima edición o compartí la convocatoria.</p>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Escribinos por Instagram.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/convocatoria" hint-size="160px,44px">Postulate</x-import>
+            <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">@seresmigratorios</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- A DÓNDE VA LA PLATA -->
+      <section style="max-width:1280px; margin:0 auto; padding:64px 48px 96px; box-sizing:border-box; border-top:1px solid #D9D6CF;">
+        <div style="background:#E4EAF8; border:2px solid #0B0B0B; padding:48px; display:flex; flex-direction:column; gap:32px;">
+          <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">A dónde va la plata</h2>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">[TEXTO DE TRANSPARENCIA: destino de los fondos de cada edición]</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#0B0B0B; border-top:1px solid #D9D6CF; padding-top:24px;">Edición 01 · [MONTO Y DESTINO A CONFIRMAR]</p>
+        </div>
+      </section>
+
+      <!-- PIE -->
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:48px 48px 32px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogo }}" hint-size="100%,36px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="120px" rotacion="-8" hint-size="120px,120px"></x-import>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(160px, auto)); gap:24px 48px; flex:1; min-width:220px;">
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A;">[EMAIL DEL COLECTIVO]</p>
+            </div>
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+              <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+            </div>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="2.25rem" hint-size="300px,44px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ APOYAR · MOBILE 390 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Apoyar · Mobile · 390</p>
+    <div class="papel" data-screen-label="Apoyar · Mobile" style="width:390px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" mobile="{{ true }}" style="--tipo-display-lg:2.5rem;" href-marca="/" links="{{ navLinks }}" hint-size="100%,68px"></x-import>
+
+      <section style="padding:32px 24px 48px; box-sizing:border-box; display:flex; flex-direction:column; gap:16px;">
+        <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Cómo apoyar</h1>
+        <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Toooda ayuda es bienvenida</p>
+      </section>
+
+      <section style="padding:48px 24px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:40px;">
+        <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="100px,32px">Aporte</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Cada edición recauda fondos para las víctimas de los terremotos en Venezuela.</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Elegí la vía que te quede más cómoda.</p>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK MERCADO PAGO]</a>
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK PAYPAL]</a>
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK CAFECITO]</a>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="170px,32px">Copias en venta</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Copias de la obra expuesta en cada edición.</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Lo recaudado va a la causa.</p>
+          <div style="padding-left:8px;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FotoPegada" src="assets/obra/ruben-mavarez-web-01.png" alt="Copia en venta, obra de Rubén Mavarez" rotacion="-2" ancho="280px" alto="200px" pie="[TÍTULO] · [PRECIO]" hint-size="296px,250px"></x-import>
+          </div>
+          <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK COPIAS EN VENTA]</a>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="250px,32px">Voluntariado y difusión</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Sumate al equipo de la próxima edición o compartí la convocatoria.</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Escribinos por Instagram.</p>
+          <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-start; align-self:stretch;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/convocatoria" ancho="100%" hint-size="100%,44px">Postulate</x-import>
+            <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">@seresmigratorios</a>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding:48px 24px 64px; border-top:1px solid #D9D6CF;">
+        <div style="background:#E4EAF8; border:2px solid #0B0B0B; padding:24px; display:flex; flex-direction:column; gap:24px;">
+          <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:2rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">A dónde va la plata</h2>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">[TEXTO DE TRANSPARENCIA: destino de los fondos de cada edición]</p>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#0B0B0B; border-top:1px solid #D9D6CF; padding-top:24px;">Edición 01 · [MONTO Y DESTINO A CONFIRMAR]</p>
+        </div>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:40px 24px 24px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogoMobile }}" gap="{{ gapLogoMobile }}" justificar="flex-start" hint-size="100%,80px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-direction:column; gap:32px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr; gap:24px;">
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A; word-break:break-word;">[EMAIL DEL COLECTIVO]</p>
+              </div>
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+                <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+              </div>
+            </div>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="100px" rotacion="-8" hint-size="100px,100px"></x-import>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="1.75rem" hint-size="260px,36px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+</section>
+
+<!--
+NOTA PARA DESARROLLO · /apoyar
+- Componentes del design system: Nav, CajaNombre, FotoPegada, Boton, Sello, Anotacion, FranjaAliados, HiloTricolor. Nav y Pie idénticos a Home.dc.html (el Pie es único en todo el sitio y mantiene la FranjaAliados).
+- Pantallas: Desktop 1440 y Mobile 390.
+- Titular: display 7.5rem en desktop / 3rem en mobile, con el subtítulo "Toooda ayuda es bienvenida" en etiqueta mono grafito.
+- Tres columnas: versión desarrollada de la sección "Cómo apoyar" de la Home. Grilla de 3 columnas con subgrid (3 filas: CajaNombre, texto, acciones) para que las cajas y los bloques queden alineados; en mobile se apilan en una columna y las CajaNombre van chicas.
+- APORTE: tres links, uno por línea, con 12 px de padding vertical para llegar a 44 px de alto. Falta cargar [LINK MERCADO PAGO], [LINK PAYPAL] y [LINK CAFECITO].
+- COPIAS EN VENTA: la FotoPegada es una muestra; el listado real sale de la colección de obra en venta, con "[TÍTULO] · [PRECIO]" como pie de cada copia.
+- VOLUNTARIADO Y DIFUSIÓN: Boton a /convocatoria (ancho completo en mobile) y link mono a @seresmigratorios.
+- "A dónde va la plata": caja de fondo azul-tinta-agua #E4EAF8 con borde 2 px tinta y padding 48 px (24 en mobile). Sin cifras: la recaudación de la edición 01 no está confirmada, la fila queda como "EDICIÓN 01 · [MONTO Y DESTINO A CONFIRMAR]".
+- La colocación (grid, márgenes, rotación) siempre va en un div envolvente, nunca en el componente: los estilos de posición no atraviesan el montaje.
+- Radio 0, foco outline 2 px azul-sello, mínimo 44 px en todo lo interactivo, sin emojis ni íconos.
+- Placeholders: [LINK MERCADO PAGO], [LINK PAYPAL], [LINK CAFECITO], [LINK COPIAS EN VENTA], [TÍTULO] · [PRECIO], [TEXTO DE TRANSPARENCIA], [MONTO Y DESTINO A CONFIRMAR], [EMAIL DEL COLECTIVO], aliados a confirmar (logo tricolor de manos, CCC).
+-->
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      navLinks: [
+        { etiqueta: "Manifiesto", href: "/manifiesto" }, { etiqueta: "Artistas", href: "/artistas" }, { etiqueta: "Ediciones", href: "/ediciones" },
+        { etiqueta: "Convocatoria", href: "/convocatoria" }, { etiqueta: "Apoyar", href: "/apoyar" },
+      ],
+      altoLogo: 36, altoLogoMobile: 28, gapLogoMobile: 24,
+      aliados: [
+        { src: "assets/logos/consulado.png", alt: "CONSULADO Custom & Craft", href: "https://www.instagram.com/consulado.ba/" },
+        { src: "assets/logos/manos-tricolor.png", alt: "[ALIADO LOGO TRICOLOR — a confirmar]" },
+        { src: "assets/logos/infiltrado.png", alt: "infiltrado™", href: "https://www.instagram.com/infiltrado.tm/" },
+        { src: "assets/logos/ccc.png", alt: "CCC [a confirmar]" },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

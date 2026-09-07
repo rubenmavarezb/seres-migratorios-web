@@ -1,0 +1,26 @@
+:root {
+  --fuente-display: "Anton", Impact, "Arial Narrow Bold", sans-serif; /* @kind font */
+  --fuente-mono: "Courier Prime", "Courier New", Courier, monospace; /* @kind font */
+  --fuente-manuscrita: "Gochi Hand", "Comic Sans MS", cursive; /* @kind font */
+
+  /* Display: siempre MAYÚSCULAS */
+  --tipo-display-xl: clamp(4.5rem, 16vw, 14rem); /* @kind other */
+  --tipo-display-lg: clamp(3rem, 9vw, 7.5rem); /* @kind other */
+  --tipo-display-md: clamp(2rem, 5vw, 3.5rem); /* @kind other */
+  --tipo-display-line-height: 0.85; /* @kind other */
+  --tipo-display-letter-spacing: -0.01em; /* @kind other */
+
+  /* Mono */
+  --tipo-cuerpo: 1rem; /* @kind other */
+  --tipo-cuerpo-line-height: 1.6; /* @kind other */
+  --tipo-cuerpo-max-medida: 65ch; /* @kind other */
+  --tipo-etiqueta: 0.875rem; /* @kind other */
+  --tipo-etiqueta-letter-spacing: 0.04em; /* @kind other */
+  --tipo-metadatos: 0.8125rem; /* @kind other */
+
+  /* Manuscrita (fallback Gochi Hand) */
+  --tipo-manuscrita: clamp(1.5rem, 4vw, 3rem); /* @kind other */
+  --tipo-manuscrita-line-height: 1.05; /* @kind other */
+  --rotacion-manuscrita-min: -3deg; /* @kind other */
+  --rotacion-manuscrita-max: 2deg; /* @kind other */
+}

@@ -1,0 +1,282 @@
+/* ==========================================================================
+   SERES MIGRATORIOS — Design Tokens v1 (05 sep 2026)
+   Custom properties CSS + clases utilitarias de textura.
+   Fuente de verdad: 00-BRIEF-tecnico.md (§2), en la raíz de la carpeta Seres Migratorios
+   Snippets de textura copiados tal cual de canvas-base.html — no modificar
+   sin actualizar también el canvas de Claude Design.
+   ========================================================================== */
+
+:root {
+  /* ---- Color (BRIEF §2.1) ------------------------------------------- */
+  --papel: #FBFAF7;              /* fondo base del sitio */
+  --papel-puro: #FFFFFF;         /* bordes de fotos pegadas, tarjetas, cajas de nombre */
+  --tinta: #0B0B0B;              /* texto principal, titulares, bordes de cajas */
+  --tinta-suave: #3A3A3A;        /* texto secundario largo */
+  --grafito: #6B6B6B;            /* metadatos, captions, estados deshabilitados */
+  --linea: #D9D6CF;              /* divisores finos, bordes de inputs en reposo */
+  --azul-sello: #1B4BAF;         /* sellos, escudo, logos de aliados, links, foco */
+  --azul-marcador: #0B2FCD;      /* anotaciones manuscritas, subrayados, hover de links */
+  --azul-profundo: #0A2A78;      /* hover/pressed de elementos azules */
+  --azul-tinta-agua: #E4EAF8;    /* fondo suave para bloques azules (tinta diluida) */
+  --tricolor-amarillo: #F2C230;  /* SOLO hilo tricolor y logos de aliados */
+  --tricolor-azul: #0033A0;      /* ídem */
+  --tricolor-rojo: #E0393E;      /* ídem */
+  --color-error: #B3261E;        /* estado de error en Campo (§2.4.14) */
+
+  /* ---- Tipografía: familias (BRIEF §2.2) ----------------------------- */
+  /* display: Anton (Google Fonts, SIL OFL 1.1) es la fuente de marca
+     definitiva desde el 06.09.2026, en piezas y en web (Serial A descartada). */
+  --fuente-display: "Anton", Impact, "Arial Narrow Bold", sans-serif;
+  --fuente-mono: "Courier Prime", "Courier New", Courier, monospace;
+  --fuente-manuscrita: "Gochi Hand", "Comic Sans MS", cursive;
+
+  /* ---- Tipografía: escala (BRIEF §2.2) ------------------------------- */
+  --tipo-display-xl: clamp(4.5rem, 16vw, 14rem);
+  --tipo-display-lg: clamp(3rem, 9vw, 7.5rem);
+  --tipo-display-md: clamp(2rem, 5vw, 3.5rem);
+  --tipo-display-line-height: 0.85;
+  --tipo-display-letter-spacing: -0.01em;
+
+  --tipo-cuerpo: 1rem;               /* 16px, line-height 1.6, máximo 65ch */
+  --tipo-cuerpo-line-height: 1.6;
+  --tipo-cuerpo-max-medida: 65ch;
+
+  /* Tamaño de "etiqueta" (ETIQUETA:/valor, CajaNombre, Boton, Nav) no fijado
+     en px por el BRIEF — solo el tratamiento (mono 700, mayúsculas,
+     letter-spacing .04em). Se define en 0.875rem (14px) como valor de
+     sistema; ver "Pendientes" en design-system.md. */
+  --tipo-etiqueta: 0.875rem;
+  --tipo-etiqueta-letter-spacing: 0.04em;
+
+  --tipo-metadatos: 0.8125rem;       /* 13px */
+
+  --tipo-manuscrita: clamp(1.5rem, 4vw, 3rem);
+  --tipo-manuscrita-line-height: 1.05;
+
+  /* ---- Espaciado (BRIEF §2.3, base 4px) ------------------------------ */
+  --espacio-1: 4px;
+  --espacio-2: 8px;
+  --espacio-3: 12px;
+  --espacio-4: 16px;
+  --espacio-5: 24px;
+  --espacio-6: 32px;
+  --espacio-7: 48px;
+  --espacio-8: 64px;
+  --espacio-9: 96px;
+  --espacio-10: 128px;
+
+  /* ---- Contenedor y márgenes (BRIEF §2.3) ---------------------------- */
+  --contenedor-max: 1280px;
+  --margen-mobile: 24px;
+  --margen-desktop: 48px;
+  --grilla-columnas: 12;
+  --grilla-gap: 24px;
+
+  /* ---- Bordes (BRIEF §2.3) -------------------------------------------- */
+  --borde-grueso: 2px solid var(--tinta);   /* cajas de nombre, botones, inputs en foco */
+  --borde-fino: 1px solid var(--linea);     /* divisores */
+
+  /* ---- Radios (BRIEF §2.3: 0 en todo, salvo sello y números en círculo) */
+  --radio-cero: 0;
+  --radio-circular: 50%;
+
+  /* ---- Sombra "foto pegada" (BRIEF §2.3) ------------------------------ */
+  --sombra-foto: 0 1px 2px rgba(0, 0, 0, .18), 0 6px 14px rgba(0, 0, 0, .10);
+
+  /* ---- Duraciones de transición y entrada (DS §11) --------------------- */
+  --duracion-rapida: 150ms;   /* hover de botones, links */
+  --duracion-media: 250ms;    /* apertura de menú mobile, lightbox */
+  --duracion-entrada: 350ms;  /* entradas por carga de página (hero); las de scroll usan animation-duration: auto */
+  --desfase-entrada: 40ms;    /* escalonado entre hermanos en las entradas por carga */
+
+  /* ---- Z-index básicos -------------------------------------------------
+     0/1 reservados para las capas de textura del fondo (.papel::before/::after
+     van en z-index 0, el contenido de la pieza en 1). El resto es para UI web. */
+  --z-textura: 0;
+  --z-contenido: 1;
+  --z-flotante: 10;   /* Nav sticky, selector de idioma */
+  --z-modal: 100;     /* lightbox <dialog>, menú mobile a pantalla completa */
+}
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fuente-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--azul-sello);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--duracion-rapida) ease;
+}
+a:hover {
+  color: var(--azul-marcador);
+}
+
+/* ==========================================================================
+   Clases utilitarias de textura — copiadas tal cual de canvas-base.html.
+   No redibujar: si cambia acá, actualizar también el canvas de Claude Design.
+   ========================================================================== */
+
+/* Papel con grano + motas: aplicar al elemento raíz de la pieza/sección
+   (necesita position:relative, que la clase ya provee). */
+.papel {
+  position: relative;
+  background: var(--papel);
+  isolation: isolate;
+}
+.papel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-textura);
+  opacity: .07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+}
+.papel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-textura);
+  opacity: .5;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><g fill='%230B0B0B'><circle cx='23' cy='41' r='1.1'/><circle cx='131' cy='17' r='.8'/><circle cx='202' cy='96' r='1.3'/><circle cx='377' cy='58' r='.9'/><circle cx='88' cy='188' r='1'/><circle cx='301' cy='161' r='.7'/><circle cx='159' cy='266' r='1.2'/><circle cx='352' cy='289' r='.8'/><circle cx='47' cy='343' r='.9'/><circle cx='238' cy='372' r='1.1'/><circle cx='399' cy='401' r='.7'/><circle cx='118' cy='402' r='.9'/><circle cx='279' cy='238' r='.6'/><circle cx='11' cy='229' r='.8'/></g></svg>");
+}
+.papel > * {
+  position: relative;
+  z-index: var(--z-contenido);
+}
+
+/* Tinta de sello: textura "mal entintada" para Sello, Escudo, PalabrasClave.
+   Aplicar como máscara sobre elementos azules. */
+.sello-grano {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 2.2 -0.55'/></filter><rect width='100%' height='100%' fill='white'/><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>");
+  -webkit-mask-size: 200px 200px;
+  mask-size: 200px 200px;
+}
+
+/* Tipos */
+.display {
+  font-family: var(--fuente-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: var(--tipo-display-line-height);
+  letter-spacing: var(--tipo-display-letter-spacing);
+}
+.mono {
+  font-family: var(--fuente-mono);
+}
+.etiqueta {
+  font-family: var(--fuente-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.manuscrita {
+  font-family: var(--fuente-manuscrita);
+  color: var(--azul-marcador);
+  line-height: 1.05;
+}
+
+/* Foto pegada: copia impresa con borde blanco y sombra. La rotación
+   (-2° a 2°) se aplica inline por instancia, ver design-system.md §Componentes. */
+.foto-pegada {
+  background: var(--papel-puro);
+  padding: 8px;
+  box-shadow: var(--sombra-foto);
+  display: inline-block;
+}
+.foto-pegada img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Caja de nombre: también sirve de base visual para Boton (ver tailwind-theme.css) */
+.caja-nombre {
+  font-family: var(--fuente-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border: 2px solid var(--tinta);
+  background: var(--papel-puro);
+  padding: 12px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+/* Hilo tricolor: único lugar de la UI donde aparece el tricolor completo. */
+.hilo-tricolor {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--tricolor-amarillo) 0 33.34%, var(--tricolor-azul) 33.34% 66.67%, var(--tricolor-rojo) 66.67% 100%);
+}
+
+/* ==========================================================================
+   Entradas por scroll (DS §11.6). Los dos envoltorios son obligatorios:
+   sin `animation-range: entry` en el @supports pasan navegadores con soporte
+   parcial y los elementos quedan invisibles. Nada arranca oculto fuera de
+   este bloque. Solo opacity / translate / scale / clip-path: nunca `transform`,
+   que ya usan las rotaciones estáticas.
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes entrada-papel {
+      from { opacity: 0; translate: 0 12px; }
+    }
+    @keyframes entrada-sello {
+      from { opacity: 0; scale: 1.06; }
+    }
+    @keyframes entrada-hilo {
+      from { clip-path: inset(0 100% 0 0); }
+      to   { clip-path: inset(0 0 0 0); }
+    }
+    [data-entrada] {
+      animation: entrada-papel auto ease-out backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+    [data-entrada="sello"] {
+      animation-name: entrada-sello;
+    }
+    [data-entrada="hilo"] {
+      animation-name: entrada-hilo;
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+/* Cambio de página: View Transitions cross-document, sin JavaScript (DS §11.2). */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+
+/* ==========================================================================
+   Movimiento reducido: anula rotaciones y transiciones (BRIEF §3, Accesibilidad).
+   Las rotaciones de FotoPegada, Anotacion y Sello se aplican vía transform
+   inline o utilitario — este bloque las neutraliza sin tocar el layout.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .foto-pegada,
+  .manuscrita,
+  [class*="sello"],
+  [class*="anotacion"],
+  [data-rotacion] {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,250 @@
+---
+/**
+ * Pie — canonical footer of every page (design-system.md §7, item 16 "Pie
+ * (`Pie`)"; reference implementation at
+ * design/ds/components/navegacion/Pie.jsx; approved markup in the `<footer>`
+ * of every `design/*.dc.html`, identical in all 25 screens). It is the same on
+ * the nine pages of the approved design and has no variants
+ * (diseno-web-indice.md, decision 2: "el Pie es único en todo el sitio y no
+ * tiene variantes"; it keeps its `FranjaAliados` even on a page that already
+ * has an "Aliados" section).
+ *
+ * Fixed order, per §7.16 and decision 2: `FranjaAliados` (SM-023) →
+ * `HiloTricolor` (SM-024) → `Sello` (SM-017) → mono contact block →
+ * "¡Aguante la fotografía!" as an `Anotacion` (SM-018). The block is never
+ * omitted when data is missing: the contact values fall back to the visible
+ * placeholders of `.env.example` (CLAUDE.md, "No inventar datos").
+ *
+ * Geometry read off the láminas (all 25 `<footer>` elements carry the same
+ * inline style, so this is the spec, not one screen's accident):
+ * `flex-direction: column`, `gap: 32px` (`gap-8`), `padding: 48px 48px 32px`
+ * desktop / `40px 24px 24px` mobile, and `border-top: 1px solid #D9D6CF` —
+ * the `linea` token at 1px, the same border `Nav.astro`'s `<header>` uses on
+ * its other edge, NOT the 2px `tinta` rule the SM-012 skeleton carried.
+ *
+ * OBSERVACIÓN (layout width): unlike every `<section>` of the láminas, the
+ * `<footer>` has no `max-width: 1280px; margin: 0 auto` — it is full-bleed
+ * with only its own 48/24px side padding, so at 1440 the footer's contents are
+ * wider than the 1280px container above them. Consistent across all 25
+ * screens, so it is reproduced as approved (`px-6 md:px-12`, no
+ * `.contenedor`), which is also what SM-027 did with the `<header>`. Flagged
+ * because diseno-web-indice.md's "Constantes de layout" describes the site as
+ * a 1280px container and does not mention this exception.
+ *
+ * OBSERVACIÓN (footer background): the láminas give the `<footer>` no
+ * background of its own, so the paper grain and specks of `body.papel` show
+ * through it. The SM-012 skeleton painted it `bg-papel-puro` (opaque white),
+ * which both hid the grain and put a white band under a `#FBFAF7` page.
+ * Removed here to match the design; `Nav.astro`'s `bg-papel` is a different
+ * case (an opaque bar the mobile menu slides under).
+ *
+ * Handwritten size: the láminas set the closing annotation at `2.25rem`
+ * desktop / `1.75rem` mobile, not the `text-manuscrita` token (`clamp(1.5rem,
+ * 4vw, 3rem)`, 3rem at 1440). `Anotacion` takes that as `tamano`, the prop the
+ * reference Anotacion.jsx exposes and Pie.jsx overrides (SM-028 fix round):
+ * `clamp(1.75rem, 3vw, 2.25rem)` gives the lámina's value at both breakpoints.
+ *
+ * OBSERVACIÓN (global link rule): the design system ships a base rule
+ * (`design/_ds/…/tokens/texturas.css`: `a { color: azul-sello;
+ * text-decoration: underline; text-underline-offset: 3px; transition: color
+ * var(--duracion-rapida) ease }`, plus `a:hover` azul-marcador and `a:active`
+ * azul-profundo) that `src/styles/` does not carry, while Tailwind's preflight
+ * resets `text-decoration` to `inherit` — so a link in this project renders
+ * bare unless its component says otherwise, and the footer's underlined
+ * handle would have been lost. Applied per-element on the Instagram link
+ * below, which is what the lámina shows, rather than added globally: a global
+ * `a` rule would silently restyle every other component's links,
+ * `Nav.astro`'s and `Boton.astro`'s among them. Worth deciding site-wide
+ * outside this ticket.
+ *
+ * OBSERVACIÓN (unconfirmed partners, question handed here by
+ * `FranjaAliados.astro`): this ticket's criterion is "los aliados sin confirmar
+ * no muestran nombre", and that holds — the strip renders no caption at all,
+ * and `FranjaAliados` drops the `aria-label` for an aliado with
+ * `confirmado: false`, so the two unconfirmed logos are announced by their
+ * generic `logoAlt` ("Logo tricolor de manos", "Logo de CCC") and never by the
+ * `[NOMBRE ALIADO LOGO TRICOLOR DE MANOS]` placeholder. They do stay LINKED,
+ * to their real Instagram handles (`@redvoluntariosba`, `@creercrearcompartir`)
+ * and never to their `[URL …]` placeholders, which honours "nunca un href que
+ * sea un placeholder". The láminas' `renderVals()` omit `href` for those two
+ * altogether, while modelo-de-contenido.md §5 ties `confirmado` only to the
+ * name: `FranjaAliados` follows the prose and this footer does not override it
+ * (the alternative would mean editing another ticket's component to add a
+ * behaviour Ruben has not decided). Ruben to confirm on purpose whether an
+ * unconfirmed partner keeps its link.
+ *
+ * OBSERVACIÓN (`pie.aliados`): the dictionaries carry
+ * `pie.aliados` = `[ALIADOS]` / `[PARTNERS]` as a possible label for the
+ * strip. No lámina shows any heading over the logos, so none is rendered and
+ * the key is left unused rather than invented into the design
+ * (`FranjaAliados.astro` explicitly hands this decision to this ticket).
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+import Anotacion from './Anotacion.astro';
+import FranjaAliados from './FranjaAliados.astro';
+import HiloTricolor from './HiloTricolor.astro';
+import Sello from './Sello.astro';
+import selloCompacto from '../assets/marca/sello-compacto.png';
+import { type Idioma, t } from '../i18n/utils.ts';
+
+interface Props {
+  idioma: Idioma;
+  /**
+   * Partner strip override, in render order. Defaults to the whole `aliados`
+   * collection ordered as the approved design shows it (see `ordenarAliados`).
+   * Part of this component's prop contract in PLAN.md §5 and kept for a caller
+   * that needs to narrow or reorder the strip; no page passes it today, since
+   * the footer is identical site-wide (diseno-web-indice.md, decision 2).
+   */
+  aliados?: CollectionEntry<'aliados'>[];
+}
+
+const { idioma, aliados: aliadosProp } = Astro.props;
+
+/**
+ * `getCollection('aliados')` yields entries sorted by id (ccc, consulado,
+ * infiltrado, manos-tricolor), which is not the approved order: every lámina's
+ * `renderVals()` lists CONSULADO · manos tricolor · infiltrado™ · CCC, which
+ * is exactly the `aliados` array of `src/content/ediciones/buenos-aires-2026.md`.
+ * So the edition's reference list is the source of order, and any aliado it
+ * does not mention follows, by id, so a partner added to the collection never
+ * silently disappears from the footer.
+ */
+function ordenarAliados(
+  todos: CollectionEntry<'aliados'>[],
+  orden: string[]
+): CollectionEntry<'aliados'>[] {
+  const posicion = new Map(orden.map((id, indice) => [id, indice]));
+  return [...todos].sort((a, b) => {
+    const posicionA = posicion.get(a.id) ?? Number.POSITIVE_INFINITY;
+    const posicionB = posicion.get(b.id) ?? Number.POSITIVE_INFINITY;
+    if (posicionA !== posicionB) return posicionA - posicionB;
+    return a.id.localeCompare(b.id);
+  });
+}
+
+/**
+ * The footer stamp is the real scan `marca/sello-compacto.png`, which reads
+ * "SERES MIGRATORIOS / BUENOS AIRES / 08 AGO 2026" — edition 01's stamp. Its
+ * `ciudad`/`fecha` props feed `Sello`'s `alt`, so they must describe THAT
+ * image and not the newest edition: the oldest edition by `fecha` (edition 01)
+ * is the one the scan depicts. A future edition with its own compact scan
+ * changes the asset and this lookup together.
+ */
+const ediciones = await getCollection('ediciones');
+const edicionMasAntigua = [...ediciones].sort(
+  (a, b) => a.data.fecha.getTime() - b.data.fecha.getTime()
+)[0];
+
+const aliados =
+  aliadosProp ??
+  ordenarAliados(
+    await getCollection('aliados'),
+    edicionMasAntigua?.data.aliados.map((referencia) => referencia.id) ?? []
+  );
+
+// A site with no edition in the collection cannot happen today (the loader
+// requires at least the seed edition), but the stamp still needs two strings:
+// the bilingual "[A CONFIRMAR]" placeholder rather than an invented city.
+const aConfirmar = t(idioma, 'estados.aConfirmar');
+const selloCiudad = edicionMasAntigua?.data.sello.ciudad ?? aConfirmar;
+const selloFecha = edicionMasAntigua?.data.sello.fechaCorta ?? aConfirmar;
+
+/**
+ * A `PUBLIC_*` variable of PLAN.md §14 as a string. Vite types `import.meta.env`
+ * with an `any` index signature, so the value is narrowed here instead of
+ * spreading `any` through the component. An empty value falls back too, the way
+ * astro.config.mjs treats `PUBLIC_SITE_URL`.
+ */
+function variablePublica(valor: unknown, respaldo: string): string {
+  return typeof valor === 'string' && valor !== '' ? valor : respaldo;
+}
+
+// The collective has no address yet: the fallback is the visible placeholder of
+// .env.example, and the value is plain text rather than a `mailto:` so an
+// unresolved placeholder never becomes a broken link. The láminas render it as
+// plain text too, never as a link.
+const email = variablePublica(import.meta.env.PUBLIC_EMAIL_CONTACTO, '[EMAIL DEL COLECTIVO]');
+
+// Unlike the email, PLAN.md §14 and .env.example carry the real Instagram URL,
+// so the fallback is that value and not a placeholder.
+const instagram = variablePublica(
+  import.meta.env.PUBLIC_INSTAGRAM_URL,
+  'https://www.instagram.com/seresmigratorios/'
+);
+
+/** Official handle (design system §13, v1.1). A handle is never translated. */
+const HANDLE = '@seresmigratorios';
+---
+
+<footer class="border-t border-linea flex flex-col gap-8 px-6 pt-10 pb-6 md:px-12 md:pt-12 md:pb-8">
+  {
+    /* Defaults are exactly the footer's spec — 36px/40px centered on desktop,
+      28px/24px left-aligned below it — so no size prop is passed here; see the
+      "Two approved uses" note in FranjaAliados.astro. Skipped entirely with an
+      empty collection, as Pie.jsx does, so the footer never keeps an empty
+      32px gap where the strip would be. */
+  }
+  {aliados.length > 0 && <FranjaAliados aliados={aliados} idioma={idioma} />}
+  {
+    /* `entrada` is the one place in the site that turns on the tricolor sweep
+      of design-system.md §11.4 ("Solo en el `Pie`, una vez por página") — see
+      HiloTricolor.astro, including the device test Ruben still owes it. */
+  }
+  <HiloTricolor entrada />
+  {
+    /* One wrapping flex row at every width. Mobile: contact and stamp share
+      the first line (`gap-x-4` = the láminas' 16px) and the annotation is
+      pushed onto its own line by `basis-full`, 32px below (`gap-y-8`).
+      Desktop: `md:basis-auto` lets it rejoin the row and `order-*` puts the
+      stamp first, giving the láminas' stamp | contact | annotation with
+      `justify-between`. */
+  }
+  <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-8 md:gap-8">
+    {
+      /* The scan is rendered at 100px below the desktop breakpoint and 120px
+        from it up (láminas). `Sello` takes a single `tamano`, so the larger
+        value is generated once and sized per breakpoint from the wrapper with
+        the direct-child variant — the same "dynamic geometry goes outside the
+        canonical component" split FranjaAliados uses for its own heights. */
+    }
+    <div class="order-2 shrink-0 *:size-25 md:order-1 md:*:size-30">
+      <Sello
+        imagen={selloCompacto}
+        ciudad={selloCiudad}
+        fecha={selloFecha}
+        tamano={120}
+        rotacion={-8}
+        idioma={idioma}
+      />
+    </div>
+    <div
+      class="order-1 grid min-w-0 flex-1 grid-cols-1 gap-6 md:order-2 md:min-w-55 md:grid-cols-[repeat(2,minmax(160px,auto))] md:gap-x-12"
+    >
+      <div>
+        <p class="font-mono text-etiqueta m-0 font-bold uppercase">
+          {t(idioma, 'pie.contacto.email')}
+        </p>
+        <p class="font-mono text-etiqueta text-tinta-suave m-0 break-words">{email}</p>
+      </div>
+      <div>
+        <p class="font-mono text-etiqueta m-0 font-bold uppercase">
+          {t(idioma, 'pie.contacto.instagram')}
+        </p>
+        <a
+          href={instagram}
+          class="font-mono text-etiqueta text-azul-sello inline-flex min-h-11 items-center break-words underline underline-offset-[3px] transition-colors hover:text-azul-marcador active:text-azul-profundo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+          >{HANDLE}</a
+        >
+      </div>
+    </div>
+    <div class="order-3 basis-full md:basis-auto">
+      <Anotacion
+        texto={t(idioma, 'pie.aguante')}
+        rotacion={-2}
+        tamano="clamp(1.75rem, 3vw, 2.25rem)"
+      />
+    </div>
+  </div>
+</footer>

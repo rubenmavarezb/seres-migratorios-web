@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/texturas.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/styles.css">
+  <script src="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/_ds_bundle.js"></script>
+  <style>
+    html, body { margin:0; padding:0; background:#FBFAF7; }
+    a { color:#0B2FCD; }
+    a:hover { color:#0A2A78; }
+  </style>
+</helmet>
+
+<div style="height:100vh; display:flex; flex-direction:column; overflow:hidden; background:#FBFAF7; font-family:'Courier Prime', monospace;">
+
+  <template id="__bundler_thumbnail">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#1B4BAF"></rect><text x="100" y="118" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="64" fill="#FBFAF7">SM</text></svg>
+  </template>
+
+
+  <header style="flex-shrink:0; background:#FFFFFF; border-bottom:2px solid #0B0B0B; padding:12px 16px; display:flex; flex-direction:column; gap:10px;">
+
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <span style="font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#0B0B0B;">Prototipo · Seres Migratorios</span>
+      <span style="font-size:0.8125rem; color:#6B6B6B;">{{ rutaActual }}</span>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+        <button type="button" onClick="{{ atras }}" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.75rem; letter-spacing:0.04em; text-transform:uppercase; color:#0B0B0B; background:#FFFFFF; border:2px solid #0B0B0B; border-radius:0; padding:7px 12px; cursor:pointer;" style-hover="background:#0B0B0B; color:#FBFAF7;">← Atrás</button>
+        <button type="button" onClick="{{ irDesktop }}" style="{{ estiloDesktop }}">Desktop 1440</button>
+        <button type="button" onClick="{{ irMobile }}" style="{{ estiloMobile }}">Mobile 390</button>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+      <span style="font-weight:700; font-size:0.6875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B; margin-right:6px;">Pantallas:</span>
+      <sc-for list="{{ chips }}" as="chip" hint-placeholder-count="11">
+        <button type="button" onClick="{{ chip.ir }}" style="{{ chip.estilo }}">{{ chip.nombre }}</button>
+      </sc-for>
+    </div>
+
+  </header>
+
+  <div ref="{{ refViewport }}" onClick="{{ alClic }}" onSubmit="{{ alEnviar }}" style="flex:1; min-height:0; overflow:auto; display:flex; justify-content:center; align-items:flex-start; padding:16px;">
+    <div ref="{{ refLienzo }}" style="flex-shrink:0;">
+      <sc-if value="{{ dcHome }}" hint-placeholder-val="{{ true }}">
+        <dc-import name="Home" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ dcManifiesto }}">
+        <dc-import name="Manifiesto" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ dcArtistas }}">
+        <dc-import name="Artistas" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ dcArtista }}">
+        <dc-import name="Artista" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ dcEdiciones }}">
+        <dc-import name="Ediciones" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ dcEdicion }}">
+        <dc-import name="Edicion" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ dcConvocatoria }}">
+        <dc-import name="Convocatoria" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ dcApoyar }}">
+        <dc-import name="Apoyar" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ dcNoEncontrada }}">
+        <dc-import name="NoEncontrada" hint-size="1440px,900px"></dc-import>
+      </sc-if>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;vistaInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Desktop&quot;,&quot;Mobile&quot;],&quot;default&quot;:&quot;Desktop&quot;,&quot;tsType&quot;:&quot;\&quot;Desktop\&quot; | \&quot;Mobile\&quot;&quot;},&quot;paginaInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;manifiesto&quot;,&quot;artistas&quot;,&quot;artista&quot;,&quot;artista-expone&quot;,&quot;ediciones&quot;,&quot;edicion&quot;,&quot;convocatoria&quot;,&quot;gracias&quot;,&quot;apoyar&quot;,&quot;no-encontrada&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const PAGINAS = [
+  { id: "home", ruta: "/", dc: "Home", nombre: "Home", desktop: "Home · Desktop", mobile: "Home · Mobile" },
+  { id: "manifiesto", ruta: "/manifiesto", dc: "Manifiesto", nombre: "Manifiesto", desktop: "Manifiesto · Desktop", mobile: "Manifiesto · Mobile" },
+  { id: "artistas", ruta: "/artistas", dc: "Artistas", nombre: "Artistas", desktop: "Artistas · Desktop", mobile: "Artistas · Mobile" },
+  { id: "artista", ruta: "/artistas/herick-frontado", dc: "Artista", nombre: "Artista · fotea", desktop: "Artista · Herick · Desktop", mobile: "Artista · Herick · Mobile" },
+  { id: "artista-expone", ruta: "/artistas/ruben-mavarez", dc: "Artista", nombre: "Artista · expone", desktop: "Artista · Rubén · Desktop", mobile: "Artista · Rubén · Mobile" },
+  { id: "ediciones", ruta: "/ediciones", dc: "Ediciones", nombre: "Ediciones", desktop: "Ediciones · Desktop", mobile: "Ediciones · Mobile" },
+  { id: "edicion", ruta: "/ediciones/buenos-aires-2026", dc: "Edicion", nombre: "Edición 01", desktop: "Edición 01 · Desktop", mobile: "Edición 01 · Mobile" },
+  { id: "convocatoria", ruta: "/convocatoria", dc: "Convocatoria", nombre: "Convocatoria", desktop: "Convocatoria · Desktop", mobile: "Convocatoria · Mobile" },
+  { id: "gracias", ruta: "/convocatoria/gracias", dc: "Convocatoria", nombre: "Gracias", desktop: "Gracias · Desktop", mobile: "Gracias · Mobile" },
+  { id: "apoyar", ruta: "/apoyar", dc: "Apoyar", nombre: "Apoyar", desktop: "Apoyar · Desktop", mobile: "Apoyar · Mobile" },
+  { id: "no-encontrada", ruta: "/404", dc: "NoEncontrada", nombre: "404", desktop: "404 · Desktop", mobile: "404 · Mobile" },
+];
+
+const BOTON_BASE = "font-family:'Courier Prime', monospace; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; border:2px solid #0B0B0B; border-radius:0; cursor:pointer;";
+
+class Component extends DCLogic {
+  state = { id: "home", vista: "desktop", historial: [] };
+  refViewport = React.createRef();
+  refLienzo = React.createRef();
+
+  componentDidMount() {
+    const p = this.props || {};
+    const inicial = PAGINAS.find((x) => x.nombre === p.paginaInicial || x.id === p.paginaInicial);
+    if (inicial || p.vistaInicial) {
+      this.setState({ id: inicial ? inicial.id : this.state.id, vista: p.vistaInicial === "Mobile" ? "mobile" : this.state.vista });
+    }
+    this.programar = () => {
+      if (this.raf) cancelAnimationFrame(this.raf);
+      this.raf = requestAnimationFrame(() => this.aplicar());
+    };
+    if (window.ResizeObserver && this.refViewport.current) {
+      this.ro = new ResizeObserver(this.programar);
+      this.ro.observe(this.refViewport.current);
+    }
+    if (window.MutationObserver && this.refLienzo.current) {
+      this.mo = new MutationObserver(this.programar);
+      this.mo.observe(this.refLienzo.current, { childList: true, subtree: true, attributes: false });
+    }
+    window.addEventListener("resize", this.programar);
+    this.programar();
+  }
+
+  componentDidUpdate() { if (this.programar) this.programar(); }
+
+  componentWillUnmount() {
+    if (this.ro) this.ro.disconnect();
+    if (this.mo) this.mo.disconnect();
+    if (this.programar) window.removeEventListener("resize", this.programar);
+    if (this.raf) cancelAnimationFrame(this.raf);
+  }
+
+  pagina() { return PAGINAS.find((p) => p.id === this.state.id) || PAGINAS[0]; }
+
+  /** Recorta el artboard pedido dentro del DC importado y lo escala al ancho disponible. */
+  aplicar() {
+    const v = this.refViewport.current, l = this.refLienzo.current;
+    if (!v || !l) return;
+    const pag = this.pagina();
+    const movil = this.state.vista === "mobile";
+    const buscada = movil ? (pag.mobile || pag.desktop) : pag.desktop;
+    const ancho = movil ? 390 : 1440;
+    const libre = Math.max(320, v.clientWidth - 40);
+    l.style.zoom = String(Math.min(1, libre / ancho));
+    const tableros = l.querySelectorAll("[data-screen-label]");
+    tableros.forEach((el) => {
+      const grupo = el.parentElement;
+      if (!grupo) return;
+      const activo = el.getAttribute("data-screen-label") === buscada;
+      grupo.style.display = activo ? "flex" : "none";
+      if (!activo) return;
+      el.style.outline = "none";
+      grupo.querySelectorAll(":scope > p").forEach((etiqueta) => { etiqueta.style.display = "none"; });
+      const raiz = grupo.parentElement;
+      if (raiz) { raiz.style.padding = "0"; raiz.style.gap = "0"; raiz.style.justifyContent = "center"; }
+    });
+  }
+
+  rutaDe(href) {
+    const limpio = href.split("#")[0].replace(/\/$/, "") || "/";
+    const exacta = PAGINAS.find((p) => p.ruta === limpio);
+    if (exacta) return exacta.id;
+    if (limpio.indexOf("/artistas/") === 0) return /ruben|mavarez|expone/i.test(limpio) ? "artista-expone" : "artista";
+    if (limpio.indexOf("/ediciones/") === 0) return "edicion";
+    if (limpio.indexOf("/convocatoria") === 0) return "convocatoria";
+    return "no-encontrada";
+  }
+
+  ir(id) {
+    if (id === this.state.id) { if (this.refViewport.current) this.refViewport.current.scrollTop = 0; return; }
+    this.setState((s) => ({ id: id, historial: s.historial.concat([s.id]).slice(-30) }), () => {
+      if (this.refViewport.current) this.refViewport.current.scrollTop = 0;
+    });
+  }
+
+  renderVals() {
+    const pag = this.pagina();
+    const activoBtn = BOTON_BASE + " font-size:0.75rem; padding:7px 12px; background:#0B0B0B; color:#FBFAF7;";
+    const pasivoBtn = BOTON_BASE + " font-size:0.75rem; padding:7px 12px; background:#FFFFFF; color:#0B0B0B;";
+    return {
+      rutaActual: pag.ruta + (this.state.vista === "mobile" ? "  ·  390" : "  ·  1440"),
+      refViewport: this.refViewport,
+      refLienzo: this.refLienzo,
+      estiloDesktop: this.state.vista === "desktop" ? activoBtn : pasivoBtn,
+      estiloMobile: this.state.vista === "mobile" ? activoBtn : pasivoBtn,
+      irDesktop: () => this.setState({ vista: "desktop" }),
+      irMobile: () => this.setState({ vista: "mobile" }),
+      atras: () => this.setState((s) => (s.historial.length ? { id: s.historial[s.historial.length - 1], historial: s.historial.slice(0, -1) } : {})),
+      chips: PAGINAS.map((p) => ({
+        nombre: p.nombre,
+        ir: () => this.ir(p.id),
+        estilo: BOTON_BASE + " font-size:0.6875rem; padding:5px 9px;" + (p.id === this.state.id ? " background:#1B4BAF; color:#FBFAF7; border-color:#1B4BAF;" : " background:#FFFFFF; color:#3A3A3A;"),
+      })),
+      alClic: (e) => {
+        const nodo = e.target;
+        if (!nodo || !nodo.closest) return;
+        const boton = nodo.closest("button, [role='button']");
+        if (boton) {
+          const texto = (boton.textContent || "").trim().toLowerCase();
+          if (/enviar|postular|postulate/.test(texto)) { e.preventDefault(); this.ir("gracias"); }
+          return;
+        }
+        const a = nodo.closest("a[href]");
+        if (!a) return;
+        const href = a.getAttribute("href") || "";
+        if (!href || href.charAt(0) === "#" || /^(https?:|mailto:|tel:)/.test(href)) return;
+        e.preventDefault();
+        this.ir(this.rutaDe(href));
+      },
+      alEnviar: (e) => { e.preventDefault(); this.ir("gracias"); },
+      dcHome: pag.dc === "Home",
+      dcManifiesto: pag.dc === "Manifiesto",
+      dcArtistas: pag.dc === "Artistas",
+      dcArtista: pag.dc === "Artista",
+      dcEdiciones: pag.dc === "Ediciones",
+      dcEdicion: pag.dc === "Edicion",
+      dcConvocatoria: pag.dc === "Convocatoria",
+      dcApoyar: pag.dc === "Apoyar",
+      dcNoEncontrada: pag.dc === "NoEncontrada",
+    };
+  }
+}
+
+</script>
+</body>
+</html>

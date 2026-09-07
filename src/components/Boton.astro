@@ -1,0 +1,140 @@
+---
+/**
+ * Boton — canonical button/link (design-system.md §7, item 13; canvas spec
+ * at design/ds/canvas/Componentes.dc.html, block "03 · BOTON"; reference
+ * implementation at design/ds/components/formularios/Boton.jsx, read for the
+ * exact shape and translated here to theme.css classes + Tailwind, never
+ * copied as React).
+ *
+ * Renders an <a> when `href` is given, a <button> otherwise — the element is
+ * chosen from the `href` PROP alone, never from `deshabilitado`: a disabled
+ * link keeps its <a> tag (see below), it never becomes a <button>.
+ *
+ * Sizing and color come from theme.css's `.boton` / `.boton--sello`, already
+ * built to spec (border 2px, padding 14×24, 44px min-height, hover invert,
+ * focus-visible outline) — this component only layers on what those two
+ * classes do not cover: the font-size utility neither sets on its own, the
+ * `chico` / `anchoCompleto*` size and width modifiers, and two hover
+ * overrides (sello and deshabilitado) described in the OBSERVACIONES below.
+ * `theme.css` is not touched: it is outside this ticket's Alcance and the
+ * tech lead's instructions say to use the two classes as they stand.
+ *
+ * OBSERVACIÓN (letter-spacing): neither `.boton` nor `.boton--sello` sets a
+ * font-size, so `text-etiqueta` supplies the 0.875rem "etiqueta" role's size
+ * here — but not its 0.04em letter-spacing: `.boton` already applies
+ * `tracking-wide` (0.025em), and Tailwind v4's `text-*` utilities only read
+ * their own letter-spacing as a *fallback* for the shared `--tw-tracking`
+ * custom property, which `tracking-wide` already pinned. Same root cause
+ * already flagged on `CajaNombre` (its own ticket's report) for the same
+ * `.caja-nombre`/`text-etiqueta` combination; `theme.css` is outside this
+ * ticket's Alcance too, so it is left as-is and reported again here rather
+ * than "fixed" unilaterally (CLAUDE.md: un posible error de diseño no se
+ * corrige por cuenta propia, se documenta).
+ *
+ * OBSERVACIÓN (hover de la variante sello): design/ds/canvas/Componentes.dc.html
+ * "03 · BOTON", estado "VARIANTE SELLO → hover" shows a full invert
+ * (`background: var(--azul-profundo); color: var(--papel)`), matching
+ * `Boton.jsx`'s reference behavior. `theme.css`'s `.boton--sello:hover`
+ * instead keeps a transparent background (`border-azul-profundo`,
+ * `bg-transparent`, `text-azul-profundo`) — an outline-hover, not an invert.
+ * Per the tech lead's explicit instruction this component follows the
+ * lámina (full invert), overriding just the background/text of
+ * `.boton--sello:hover` with two Tailwind utilities (`hover:bg-azul-profundo
+ * hover:text-papel` — a utility class always wins over a `@layer components`
+ * class of equal specificity, since Tailwind v4's base `@layer theme, base,
+ * components, utilities;` declares `utilities` after `components`; verified
+ * empirically for this exact pair with Playwright, see this ticket's
+ * report). `theme.css` itself is not changed; the diff between the lámina
+ * and the shared class is reported here, not resolved in `theme.css`.
+ *
+ * `deshabilitado` drops the variant's color in favor of `border-linea` /
+ * `text-grafito` (Componentes.dc.html's "deshabilitado" state, both
+ * variants) and neutralizes the hover invert with the same
+ * utilities-beat-components technique as the sello override above, so it
+ * applies whether or not `variante="sello"` was also passed. An `<a>` loses
+ * its `href` attribute (so it does nothing and is not string-matchable as a
+ * live link) and gains `aria-disabled="true"`; a `<button>` gets the native
+ * `disabled` attribute — exactly the tech lead's instruction.
+ *
+ * Text comes from the default slot, never a `texto` prop (tech lead's
+ * instruction), so a caller can nest an inline element if the approved copy
+ * ever needs one.
+ *
+ * Positioning is forbidden here (diseno-web-indice.md, decision 13): a
+ * caller that needs to place this among other buttons or align it wraps it,
+ * as `CajaNombre` and `Anotacion` already do.
+ */
+interface Props {
+  /** Presence decides the element: given → <a>, absent → <button>. */
+  href?: string;
+  /** 'base' (tinta, default) or 'sello' (azul-sello — design-system.md §7 item 13). */
+  variante?: 'base' | 'sello';
+  /** <button> only, ignored on <a>. Defaults to 'button' so a bare Boton never submits an enclosing form by accident; Convocatoria.dc.html's submit buttons pass 'submit' explicitly. */
+  tipo?: 'button' | 'submit' | 'reset';
+  /** Border → linea, text → grafito, hover neutralized either way (Componentes.dc.html "03 · BOTON", estado "deshabilitado"). */
+  deshabilitado?: boolean;
+  /** Compact size from Boton.jsx: padding 8×16, 36px min-height, 0.75rem type. No approved screen uses it today (`grep` across design/*.dc.html finds no `chico` usage). OBSERVACIÓN: 36px directly conflicts with this same ticket's own acceptance criterion "alto ≥ 44 px" and with CLAUDE.md's ≥44px touch target; implemented anyway because the tech lead's Props contract asks for it by name (`design/ds/components/formularios/Boton.jsx`'s `chico`), never fixed unilaterally per CLAUDE.md — the tech lead should decide before any page ever passes `chico`. */
+  chico?: boolean;
+  /** w-full at every breakpoint. */
+  anchoCompleto?: boolean;
+  /** w-full on mobile, content-width from `md:` up — the "ancho completo en mobile, a ancho de contenido en desktop" pattern used across Home, Manifiesto, Ediciones (diseno-web-indice.md, constantes de layout). Ignored when `anchoCompleto` is also set. */
+  anchoCompletoMobile?: boolean;
+  /** Adds rel="noopener" on the <a>. Does not add target="_blank": the approved Instagram buttons (Convocatoria.dc.html, Ediciones.dc.html) open in the same tab, per the tech lead's instruction. */
+  externo?: boolean;
+}
+
+const {
+  href,
+  variante = 'base',
+  tipo = 'button',
+  deshabilitado = false,
+  chico = false,
+  anchoCompleto = false,
+  anchoCompletoMobile = false,
+  externo = false,
+} = Astro.props;
+
+const clases = [
+  'boton',
+  variante === 'sello' ? 'boton--sello' : '',
+  chico ? 'min-h-9 px-4 py-2 text-xs' : 'text-etiqueta',
+  anchoCompleto ? 'w-full' : anchoCompletoMobile ? 'w-full md:w-auto' : '',
+  deshabilitado
+    ? 'cursor-not-allowed border-linea text-grafito hover:border-linea hover:bg-papel-puro hover:text-grafito'
+    : variante === 'sello'
+      ? 'hover:bg-azul-profundo hover:text-papel'
+      : '',
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+{
+  href ? (
+    // The `<a>` below is deliberately href-less when `deshabilitado`, per the
+    // tech lead's instruction: "en <a>, aria-disabled y sin href" — no
+    // href="#"/"" stand-in, which would make it a real, keyboard-focusable,
+    // do-nothing link. That is exactly what `anchor-is-valid` exists to
+    // flag, so this line disables it entirely for this anchor, in every
+    // render path (ESLint suppression is static, not conditional on
+    // `deshabilitado`) — this element is no longer lint-guarded for a
+    // missing `href`; reported in this ticket's OBSERVACIONES, since no
+    // other file in `src/` carries an `eslint-disable` today and
+    // `eslint.config.mjs` (where `anchor-is-valid`'s `aspects` option could
+    // drop this check project-wide instead) is outside this ticket's
+    // Alcance.
+    // eslint-disable-next-line astro/jsx-a11y/anchor-is-valid
+    <a
+      href={deshabilitado ? undefined : href}
+      class={clases}
+      aria-disabled={deshabilitado ? 'true' : undefined}
+      rel={externo && !deshabilitado ? 'noopener' : undefined}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button type={tipo} class={clases} disabled={deshabilitado}>
+      <slot />
+    </button>
+  )
+}

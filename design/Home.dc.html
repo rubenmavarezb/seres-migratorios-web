@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/texturas.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/styles.css">
+  <script src="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/_ds_bundle.js"></script>
+  <style>
+    body { background: #ECEAE4; }
+    a { color: #1B4BAF; }
+    a:hover { color: #0B2FCD; }
+    .papel > .sc-host-x > header > a:first-child { font-size: 2rem !important; }
+  </style>
+</helmet>
+
+<section style="display:flex; align-items:flex-start; gap:96px; padding:64px; font-family:'Courier Prime', monospace;">
+
+  <template id="__bundler_thumbnail">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#1B4BAF"></rect><text x="100" y="118" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="64" fill="#FBFAF7">SM</text></svg>
+  </template>
+
+
+  <!-- ============ HOME · DESKTOP 1440 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Home · Desktop · 1440</p>
+    <div class="papel" data-screen-label="Home · Desktop" style="width:1440px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" href-marca="/" links="{{ navLinks }}" hint-size="100%,80px"></x-import>
+
+      <!-- HERO -->
+      <section style="position:relative; overflow:hidden; padding:48px 0 96px;">
+        <img src="assets/obra/herick-frontado-01.png" alt="Dos monjas de espaldas frente al río, obra de Herick Frontado" style="position:absolute; left:0; top:200px; width:300px; height:420px; object-fit:cover; display:block;">
+        <img src="assets/obra/sofia-martin-02.png" alt="Fachada de un local de barrio con la puerta abierta, obra de Sofía Martín" style="position:absolute; right:0; bottom:0; width:260px; height:400px; object-fit:cover; object-position:50% 100%; display:block;">
+        <div style="position:relative; max-width:1280px; margin:0 auto; padding:0 48px; box-sizing:border-box;">
+          <div style="position:relative; max-width:760px; margin:0 auto;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.BloqueFicha" fecha="08.08.2026" horarios="10:00 AM – 19:00" lugar="{{ lugar }}" hint-size="100%,80px"></x-import>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-4" tamano="1.75rem" style="position:absolute; right:-40px; top:-34px;" hint-size="120px,32px">edición 01</x-import>
+          </div>
+          <div style="position:relative; margin-top:64px;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.TitularPartido" tamano="14rem" gap="8px" hint-size="100%,520px">
+              <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" src="assets/manuscritas/claim-refugio.png" alt="La fotografía como refugio en el exilio" rotacion="0" ancho="560px" style="margin:-24px 0 -16px 80px;" hint-size="560px,190px"></x-import>
+            </x-import>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello.png" tamano="200px" rotacion="-14" style="position:absolute; right:40px; top:20px;" hint-size="200px,200px"></x-import>
+          </div>
+        </div>
+      </section>
+
+      <!-- MANIFIESTO -->
+      <section id="manifiesto" style="max-width:1280px; margin:0 auto; padding:64px 48px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:24px; align-items:start;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Manifiesto</h2>
+        <div style="display:flex; flex-direction:column; gap:32px; align-items:flex-start;">
+          <blockquote style="margin:0; font-family:'Courier Prime', monospace; font-size:18px; line-height:1.6; max-width:60ch; color:#0B0B0B; text-wrap:pretty;">“En la vorágine de la rutina en el exilio buscamos la manera de ayudar, de agruparnos y compartir esto que sentimos en el pecho, de mirar a los ojos a quienes comparten un dolor que no se puede describir en palabras y que tratamos de codificar en una imagen, un retrato. En momentos como estos entendemos la importancia de la fotografía, y de nuestra labor como fotograf@s”.</blockquote>
+          <span style="font-family:'Courier Prime', monospace; font-size:0.8125rem; color:#6B6B6B;">Post del 31.07.2026</span>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/manifiesto" hint-size="220px,44px">Leer el manifiesto</x-import>
+        </div>
+      </section>
+
+      <!-- FOTÓGRAFOS -->
+      <section id="fotografos" style="max-width:1280px; margin:0 auto; padding:64px 48px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:48px;">
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" src="assets/manuscritas/fotografos.png" alt="FOTÓGRAFOS" rotacion="-2" ancho="420px" hint-size="420px,58px"></x-import>
+          <span style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Fotean · Edición 01</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FichaFotografo" numero="001" nombre="Herick Frontado" instagram="@herickfrontado" foto="assets/obra/herick-frontado-02.png" foto-alt="Obra de Herick Frontado" retrato="assets/retratos/herick-frontado.png" retrato-alt="Retrato de Herick Frontado" retrato-tamano="{{ retratoChico }}" alto-foto="200px" ancho="100%" href="/artistas/herick-frontado" hint-size="100%,300px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FichaFotografo" numero="002" nombre="Naia Guanipa" instagram="@naianaianaia" foto="assets/obra/naia-guanipa-01.png" foto-alt="Obra de Naia Guanipa" retrato="assets/placeholder-retrato.svg" retrato-alt="Retrato de Naia Guanipa pendiente" retrato-tamano="{{ retratoChico }}" alto-foto="200px" ancho="100%" href="/artistas/naia-guanipa" hint-size="100%,300px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FichaFotografo" numero="003" nombre="Angela Pérez" instagram="@angelaluisap" foto="assets/obra/angela-perez-01.png" foto-alt="Obra de Angela Pérez" retrato="assets/retratos/angela-perez.png" retrato-alt="Retrato de Angela Pérez" retrato-tamano="{{ retratoChico }}" alto-foto="200px" ancho="100%" href="/artistas/angela-perez" hint-size="100%,300px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FichaFotografo" numero="004" nombre="Pati Caro" instagram="@huella.solar" foto="assets/obra/pati-caro-01.png" foto-alt="Obra de Pati Caro" retrato="assets/retratos/pati-caro.png" retrato-alt="Retrato de Pati Caro" retrato-tamano="{{ retratoCuadrado }}" alto-foto="200px" ancho="100%" href="/artistas/pati-caro" hint-size="100%,300px"></x-import>
+        </div>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/artistas" style="align-self:flex-start;" hint-size="160px,44px">Ver todos</x-import>
+      </section>
+
+      <!-- EXPONEN -->
+      <section id="exponen" style="max-width:1280px; margin:0 auto; padding:64px 48px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:48px; align-items:center;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" src="assets/manuscritas/exponen.png" alt="EXPONEN" rotacion="-2" ancho="320px" hint-size="320px,60px"></x-import>
+          <span style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Exposición · Edición 01</span>
+        </div>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Aparejo" nombres="{{ exponen }}" filas="{{ filasExponen }}" hrefs="{{ hrefsExponen }}" hint-size="100%,160px"></x-import>
+      </section>
+
+      <!-- PRÓXIMA EDICIÓN / CONVOCATORIA -->
+      <section id="convocatoria" style="max-width:1280px; margin:0 auto; padding:64px 48px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:grid; grid-template-columns:minmax(0,4fr) minmax(0,8fr); gap:24px; align-items:start;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Próxima edición</h2>
+        <div style="display:flex; flex-direction:column; gap:32px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.BloqueFicha" fecha="[FECHA PRÓXIMA EDICIÓN]" horarios="[HORARIOS]" lugar="[LUGAR]" style="width:100%;" hint-size="100%,60px"></x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">La próxima edición se arma con quienes se postulan: fotógraf@s, film, música y manos para el equipo.<br>Si querés fotear, exponer o dar una mano, dejanos tus datos.</p>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/convocatoria" hint-size="160px,44px">Postulate</x-import>
+        </div>
+      </section>
+
+      <!-- CÓMO APOYAR -->
+      <section id="apoyar" style="max-width:1280px; margin:0 auto; padding:64px 48px 96px; box-sizing:border-box; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:48px;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Cómo apoyar</h2>
+        <div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); grid-template-rows:auto auto auto; gap:24px;">
+          <div style="display:grid; grid-template-rows:subgrid; grid-row:span 3; gap:16px; align-items:start; justify-items:start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="120px,44px">Aporte</x-import>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Cada edición recauda fondos para las víctimas de los terremotos en Venezuela.</p>
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK MERCADO PAGO]</a>
+          </div>
+          <div style="display:grid; grid-template-rows:subgrid; grid-row:span 3; gap:16px; align-items:start; justify-items:start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="200px,44px">Copias en venta</x-import>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Copias de la obra expuesta en cada edición. Lo recaudado va a la causa.</p>
+            <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK COPIAS EN VENTA]</a>
+          </div>
+          <div style="display:grid; grid-template-rows:subgrid; grid-row:span 3; gap:16px; align-items:start; justify-items:start;">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="160px,44px">Voluntariado</x-import>
+            <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Sumate al equipo de la próxima edición o compartí la convocatoria. Escribinos por Instagram.</p>
+            <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">@seresmigratorios</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- PIE -->
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:48px 48px 32px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogo }}" hint-size="100%,36px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="120px" rotacion="-8" hint-size="120px,120px"></x-import>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(160px, auto)); gap:24px 48px; flex:1; min-width:220px;">
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A;">[EMAIL DEL COLECTIVO]</p>
+            </div>
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+              <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+            </div>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="2.25rem" hint-size="300px,44px" data-comment-anchor="22fd429ade-span">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ HOME · MOBILE 390 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Home · Mobile · 390</p>
+    <div class="papel" data-screen-label="Home · Mobile" style="width:390px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" mobile="{{ true }}" style="--tipo-display-lg:2.5rem;" href-marca="/" links="{{ navLinks }}" hint-size="100%,68px"></x-import>
+
+      <!-- HERO -->
+      <section style="position:relative; overflow:hidden; padding:32px 0 0; display:flex; flex-direction:column; gap:32px;">
+        <div style="position:relative; padding:0 24px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.BloqueFicha" fecha="08.08.2026" horarios="10:00 AM – 19:00" lugar="{{ lugar }}" apilado="{{ true }}" hint-size="100%,200px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-4" tamano="1.5rem" style="position:absolute; right:24px; top:-6px;" hint-size="110px,28px">edición 01</x-import>
+        </div>
+        <div style="position:relative; padding:0 24px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.TitularPartido" tamano="3rem" alinear="left" gap="4px" hint-size="100%,180px">
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" src="assets/manuscritas/claim-refugio.png" alt="La fotografía como refugio en el exilio" rotacion="0" ancho="230px" style="margin:-8px 0 -8px 40px; align-self:flex-start;" hint-size="230px,78px"></x-import>
+          </x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello.png" tamano="120px" rotacion="-14" style="position:absolute; right:16px; top:-28px;" hint-size="120px,120px"></x-import>
+        </div>
+        <img src="assets/obra/herick-frontado-01.png" alt="Dos monjas de espaldas frente al río, obra de Herick Frontado" style="display:block; width:100%; height:240px; object-fit:cover;">
+      </section>
+
+      <!-- MANIFIESTO -->
+      <section style="padding:48px 24px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:24px; align-items:stretch;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:2rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Manifiesto</h2>
+        <blockquote style="margin:0; font-family:'Courier Prime', monospace; font-size:18px; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">“En la vorágine de la rutina en el exilio buscamos la manera de ayudar, de agruparnos y compartir esto que sentimos en el pecho, de mirar a los ojos a quienes comparten un dolor que no se puede describir en palabras y que tratamos de codificar en una imagen, un retrato. En momentos como estos entendemos la importancia de la fotografía, y de nuestra labor como fotograf@s”.</blockquote>
+        <span style="font-family:'Courier Prime', monospace; font-size:0.8125rem; color:#6B6B6B;">Post del 31.07.2026</span>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/manifiesto" ancho="100%" hint-size="100%,44px">Leer el manifiesto</x-import>
+      </section>
+
+      <!-- FOTÓGRAFOS -->
+      <section style="padding:48px 24px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:32px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" src="assets/manuscritas/fotografos.png" alt="FOTÓGRAFOS" rotacion="-2" ancho="300px" hint-size="300px,42px"></x-import>
+          <span style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Fotean · Edición 01</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr; gap:40px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FichaFotografo" numero="001" nombre="Herick Frontado" instagram="@herickfrontado" foto="assets/obra/herick-frontado-02.png" foto-alt="Obra de Herick Frontado" retrato="assets/retratos/herick-frontado.png" retrato-alt="Retrato de Herick Frontado" retrato-tamano="{{ retratoChico }}" alto-foto="220px" ancho="100%" href="/artistas/herick-frontado" hint-size="100%,320px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FichaFotografo" numero="002" nombre="Naia Guanipa" instagram="@naianaianaia" foto="assets/obra/naia-guanipa-01.png" foto-alt="Obra de Naia Guanipa" retrato="assets/placeholder-retrato.svg" retrato-alt="Retrato de Naia Guanipa pendiente" retrato-tamano="{{ retratoChico }}" alto-foto="220px" ancho="100%" href="/artistas/naia-guanipa" hint-size="100%,320px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FichaFotografo" numero="003" nombre="Angela Pérez" instagram="@angelaluisap" foto="assets/obra/angela-perez-01.png" foto-alt="Obra de Angela Pérez" retrato="assets/retratos/angela-perez.png" retrato-alt="Retrato de Angela Pérez" retrato-tamano="{{ retratoChico }}" alto-foto="220px" ancho="100%" href="/artistas/angela-perez" hint-size="100%,320px"></x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FichaFotografo" numero="004" nombre="Pati Caro" instagram="@huella.solar" foto="assets/obra/pati-caro-01.png" foto-alt="Obra de Pati Caro" retrato="assets/retratos/pati-caro.png" retrato-alt="Retrato de Pati Caro" retrato-tamano="{{ retratoCuadrado }}" alto-foto="220px" ancho="100%" href="/artistas/pati-caro" hint-size="100%,320px"></x-import>
+        </div>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/artistas" ancho="100%" hint-size="100%,44px">Ver todos</x-import>
+      </section>
+
+      <!-- EXPONEN -->
+      <section style="padding:48px 24px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:32px; align-items:center;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" src="assets/manuscritas/exponen.png" alt="EXPONEN" rotacion="-2" ancho="240px" hint-size="240px,45px"></x-import>
+          <span style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Exposición · Edición 01</span>
+        </div>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Aparejo" nombres="{{ exponen }}" filas="{{ filasExponenMobile }}" hrefs="{{ hrefsExponen }}" chica="{{ true }}" gap-caja="12px" gap-fila="12px" hint-size="100%,220px"></x-import>
+      </section>
+
+      <!-- PRÓXIMA EDICIÓN -->
+      <section style="padding:48px 24px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:24px;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:2rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Próxima edición</h2>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.BloqueFicha" fecha="[FECHA PRÓXIMA EDICIÓN]" horarios="[HORARIOS]" lugar="[LUGAR]" apilado="{{ true }}" hint-size="100%,150px"></x-import>
+        <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">La próxima edición se arma con quienes se postulan: fotógraf@s, film, música y manos para el equipo. Si querés fotear, exponer o dar una mano, dejanos tus datos.</p>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/convocatoria" ancho="100%" hint-size="100%,44px">Postulate</x-import>
+      </section>
+
+      <!-- CÓMO APOYAR -->
+      <section style="padding:48px 24px 64px; border-top:1px solid #D9D6CF; display:flex; flex-direction:column; gap:32px;">
+        <h2 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:2rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Cómo apoyar</h2>
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="120px,44px">Aporte</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Cada edición recauda fondos para las víctimas de los terremotos en Venezuela.</p>
+          <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK MERCADO PAGO]</a>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="200px,44px">Copias en venta</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Copias de la obra expuesta en cada edición. Lo recaudado va a la causa.</p>
+          <a href="#" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">[LINK COPIAS EN VENTA]</a>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" hint-size="160px,44px">Voluntariado</x-import>
+          <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Sumate al equipo de la próxima edición o compartí la convocatoria. Escribinos por Instagram.</p>
+          <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">@seresmigratorios</a>
+        </div>
+      </section>
+
+      <!-- PIE -->
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:40px 24px 24px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogoMobile }}" gap="{{ gapLogoMobile }}" justificar="flex-start" hint-size="100%,80px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-direction:column; gap:32px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr; gap:24px;">
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A; word-break:break-word;">[EMAIL DEL COLECTIVO]</p>
+              </div>
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+                <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+              </div>
+            </div>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="100px" rotacion="-8" hint-size="100px,100px"></x-import>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="1.75rem" hint-size="260px,36px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ HOME · MOBILE · MENÚ ABIERTO ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Home · Mobile · Menú abierto</p>
+    <div class="papel" data-screen-label="Home · Mobile · Menú abierto" role="dialog" aria-modal="true" style="width:390px; height:844px; outline:1px solid #D9D6CF; overflow:hidden; padding:24px; box-sizing:border-box; display:flex; flex-direction:column; gap:32px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:4px;" role="group" aria-label="Idioma">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" activo="{{ true }}" aria-pressed="true" hint-size="40px,32px">ES</x-import>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.CajaNombre" chica="{{ true }}" hint-size="40px,32px">EN</x-import>
+        </div>
+        <button aria-label="Cerrar menú" style="font-family:'Courier Prime', monospace; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; font-size:0.75rem; border:2px solid #0B0B0B; background:#0B0B0B; color:#FBFAF7; padding:6px 12px; min-height:44px; cursor:pointer; border-radius:0;">Cerrar</button>
+      </div>
+      <nav style="display:flex; flex-direction:column; gap:16px;">
+        <a href="/manifiesto" style="font-family:Anton, Impact, sans-serif; text-transform:uppercase; font-size:3rem; line-height:0.9; color:#0B0B0B; text-decoration:none;">Manifiesto</a>
+        <a href="/artistas" style="font-family:Anton, Impact, sans-serif; text-transform:uppercase; font-size:3rem; line-height:0.9; color:#0B0B0B; text-decoration:none;">Artistas</a>
+        <a href="/ediciones" style="font-family:Anton, Impact, sans-serif; text-transform:uppercase; font-size:3rem; line-height:0.9; color:#0B0B0B; text-decoration:none;">Ediciones</a>
+        <a href="/convocatoria" style="font-family:Anton, Impact, sans-serif; text-transform:uppercase; font-size:3rem; line-height:0.9; color:#0B0B0B; text-decoration:none;">Convocatoria</a>
+        <a href="/apoyar" style="font-family:Anton, Impact, sans-serif; text-transform:uppercase; font-size:3rem; line-height:0.9; color:#0B0B0B; text-decoration:none;">Apoyar</a>
+      </nav>
+      <div style="margin-top:auto; display:flex; justify-content:space-between; align-items:flex-end; gap:16px;">
+        <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; text-underline-offset:3px; padding:12px 0; display:inline-block;">@seresmigratorios</a>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="96px" rotacion="-8" hint-size="96px,96px"></x-import>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!--
+ÍNDICE DEL SITIO · Seres Migratorios · web (ES; /en/ pendiente)
+
+ARCHIVOS Y RUTAS
+1. Home.dc.html — /
+   Pantallas: "Home · Desktop" · "Home · Mobile" · "Home · Mobile · Menú abierto"
+2. Manifiesto.dc.html — /manifiesto
+   Pantallas: "Manifiesto · Desktop" · "Manifiesto · Mobile"
+3. Artistas.dc.html — /artistas
+   Pantallas: "Artistas · Desktop" · "Artistas · Mobile" · "Fila · estados"
+4. Artista.dc.html — /artistas/[slug]
+   Pantallas: "Artista · Herick · Desktop" · "Artista · Rubén · Desktop" · "Artista · Herick · Mobile" · "Artista · Rubén · Mobile" · "Artista · Sin obra · Desktop" · "Artista · Sin obra · Mobile" · "Lightbox"
+5. Ediciones.dc.html — /ediciones
+   Pantallas: "Ediciones · Desktop" · "Ediciones · Mobile" · "Próxima edición · Con fecha"
+6. Edicion.dc.html — /ediciones/[slug] (hoy /ediciones/buenos-aires-2026)
+   Pantallas: "Edición 01 · Desktop" · "Edición 01 · Mobile"
+7. Convocatoria.dc.html — /convocatoria (+ /gracias)
+   Pantallas: "Convocatoria · Desktop" · "Convocatoria · Mobile" · "Convocatoria · Formulario · error" · "Gracias · Desktop" · "Gracias · Mobile" · "Convocatoria cerrada · Desktop"
+8. Apoyar.dc.html — /apoyar
+   Pantallas: "Apoyar · Desktop" · "Apoyar · Mobile"
+9. NoEncontrada.dc.html — 404 (cualquier ruta inexistente)
+   Pantallas: "404 · Desktop" · "404 · Mobile"
+
+COMPONENTES DEL DESIGN SYSTEM USADOS EN TODO EL SITIO (SeresMigratoriosDesignSystem_0c7dc7)
+- expediente: BloqueFicha · TitularPartido · CajaNombre · Aparejo · Anotacion · PalabrasClave · HiloTricolor
+- sellos: Sello · Escudo
+- fotos: FotoPegada · FichaFotografo
+- aliados: FranjaAliados
+- formularios: Boton · Campo
+- navegacion: Nav
+- No se usan: SelloHorario (los horarios ya van en el BloqueFicha) y el componente Pie: el pie está compuesto a mano con FranjaAliados + HiloTricolor + Sello + Anotacion y es idéntico en las nueve páginas.
+
+PLACEHOLDERS PENDIENTES (dato → archivos donde aparece)
+- [EMAIL DEL COLECTIVO] → las nueve páginas (pie)
+- [FECHA PRÓXIMA EDICIÓN] → Home.dc.html, Ediciones.dc.html
+- [HORARIOS] → Home.dc.html, Ediciones.dc.html
+- [LUGAR] → Home.dc.html, Ediciones.dc.html
+- [PRÓXIMA EDICIÓN A CONFIRMAR] → Convocatoria.dc.html (campo "Edición a la que te postulás")
+- [LINK MERCADO PAGO] → Home.dc.html, Apoyar.dc.html
+- [LINK PAYPAL] → Apoyar.dc.html
+- [LINK CAFECITO] → Apoyar.dc.html
+- [LINK COPIAS EN VENTA] → Home.dc.html, Apoyar.dc.html
+- [TÍTULO] · [PRECIO] → Apoyar.dc.html (pie de la copia en venta)
+- [TEXTO DE TRANSPARENCIA] → Apoyar.dc.html ("A dónde va la plata")
+- [MONTO Y DESTINO A CONFIRMAR] → Apoyar.dc.html (fila "Edición 01")
+- [AUTORÍA A CONFIRMAR] → Edicion.dc.html (tres fotos de la jornada: pusadolfo-01, sin-atribuir-sombrero, sin-atribuir-puente)
+- [RETRATO] de Naia Guanipa (assets/placeholder-retrato.svg) → Home.dc.html, Artistas.dc.html, Artista.dc.html, Edicion.dc.html
+- Handles a confirmar: Pati Caro (@huella.solar) y Leo Simmons (@xlsimio) → Artistas.dc.html, Artista.dc.html, Home.dc.html, Edicion.dc.html; Gabriela Rondón y Gustavo Sánchez muestran [HANDLE] → Artistas.dc.html, Artista.dc.html
+- Aliados a confirmar: logo tricolor de manos y CCC → las nueve páginas (FranjaAliados del pie)
+- Endpoint del formulario de postulación → Convocatoria.dc.html
+- Otros de la ficha de artista: [BIO CORTA], [TÍTULO DE LA FOTO], [OBRA], frase y firma manuscritas [PENDIENTES] → Artista.dc.html
+- [DOMINIO] del sitio: sin definir; todos los links internos son rutas relativas.
+--></x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      navLinks: [
+        { etiqueta: "Manifiesto", href: "/manifiesto" }, { etiqueta: "Artistas", href: "/artistas" }, { etiqueta: "Ediciones", href: "/ediciones" },
+        { etiqueta: "Convocatoria", href: "/convocatoria" }, { etiqueta: "Apoyar", href: "/apoyar" },
+      ],
+      exponen: ["Gabriela Rondón", "Rubén Mavarez", "Leo Simmons", "Daniela Barbera", "Angela Pérez", "Sofía Martín", "Rona Rangel", "Kremlin Prieto", "Gustavo Sánchez"],
+      hrefsExponen: { "Gabriela Rondón": "/artistas/gabriela-rondon", "Rubén Mavarez": "/artistas/ruben-mavarez", "Leo Simmons": "/artistas/leo-simmons", "Daniela Barbera": "/artistas/daniela-barbera", "Angela Pérez": "/artistas/angela-perez", "Sofía Martín": "/artistas/sofia-martin", "Rona Rangel": "/artistas/rona-rangel", "Kremlin Prieto": "/artistas/kremlin-prieto", "Gustavo Sánchez": "/artistas/gustavo-sanchez" },
+      filasExponen: [3, 3, 3],
+      filasExponenMobile: [2, 1],
+      lugar: ["Consulado", "Humberto Primo 3032", "Buenos Aires, ARG"],
+      retratoChico: [72, 90],
+      retratoCuadrado: [72, 72],
+      altoLogo: 36,
+      altoLogoMobile: 28,
+      gapLogoMobile: 24,
+      aliados: [
+        { src: "assets/logos/consulado.png", alt: "CONSULADO Custom & Craft", href: "https://www.instagram.com/consulado.ba/" },
+        { src: "assets/logos/manos-tricolor.png", alt: "[ALIADO LOGO TRICOLOR — a confirmar]" },
+        { src: "assets/logos/infiltrado.png", alt: "infiltrado™", href: "https://www.instagram.com/infiltrado.tm/" },
+        { src: "assets/logos/ccc.png", alt: "CCC [a confirmar]" },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

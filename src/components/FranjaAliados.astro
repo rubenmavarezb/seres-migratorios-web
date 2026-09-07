@@ -1,0 +1,212 @@
+---
+/**
+ * FranjaAliados — canonical partner-logo strip (design-system.md §7, item 11
+ * "Franja de aliados (`FranjaAliados`)"; canvas spec at
+ * design/ds/canvas/Componentes.dc.html, block "07 · FRANJAALIADOS"; reference
+ * implementation at design/ds/components/aliados/FranjaAliados.jsx — read for
+ * the exact shape (flex row, `flexWrap: "wrap"`, uniform height, fixed gap,
+ * configurable `justificar`) and translated here to `astro:assets` + Tailwind,
+ * never copied as React).
+ *
+ * Two approved uses, both read from `design/Home.dc.html` and
+ * `design/Edicion.dc.html`'s `renderVals()` (the page wins over the canvas
+ * lamina per diseno-web-indice.md decision 13's spirit — here neither actually
+ * conflicts, the canvas card just demonstrates both configurations side by
+ * side):
+ * - The `Pie` (SM-028, not built yet): 36px tall logos / 40px gap / centered
+ *   on desktop, 28px / 24px / left-aligned on mobile — exactly the default
+ *   props below, with NO size overrides needed
+ *   (`<FranjaAliados aliados={...} idioma={...} />`): `altoLogo`/`separacion`
+ *   default to 36/40 and `altoLogoMobile`/`separacionMobile` default to 28/24
+ *   *independently* — they do not fall back to the desktop values, see the
+ *   props below — and `justificar` defaults to `"centro"`.
+ * - The "Aliados" section of `/ediciones/[slug]` (`Edicion.dc.html`, both its
+ *   Desktop and Mobile screens): 48px / 48px / left-aligned, uniform at every
+ *   width. Because the mobile props no longer inherit from the desktop ones,
+ *   this use MUST pass all four size props explicitly, not only the desktop
+ *   two: `altoLogo={48} altoLogoMobile={48} separacion={48}
+ *   separacionMobile={48} justificar="inicio"`.
+ *
+ * Responsive switch (all three properties, `alto`/`gap`/`justificar`, per the
+ * tech lead's "alto 36 desktop / 28 mobile, gap 40 / 24, justificar center /
+ * flex-start") is implemented with Tailwind's custom-property arbitrary-value
+ * syntax (`h-(<custom-property>)`, `gap-(<custom-property>)` — verified
+ * against the Tailwind docs: "Arbitrary value referencing a CSS variable",
+ * adding-custom-styles.mdx) rather than a computed class name: Tailwind's
+ * source scanner extracts literal class text, so a template-literal class
+ * like `h-[${altoLogo}px]` would never be recognized for an arbitrary
+ * `altoLogo`. The two custom properties instead carry the actual pixel
+ * values, set once via an inline `style` on the wrapper (the same "dynamic
+ * geometry goes inline, colors stay tokens" split already used by
+ * `HiloTricolor`'s `ancho` and `Anotacion`/`FotoPegada`'s rotation), and the
+ * static classes `h-(--fa-alto-mobile) md:h-(--fa-alto-desktop)` /
+ * `gap-(--fa-gap-mobile) md:gap-(--fa-gap-desktop)` read them per breakpoint.
+ * `justify-start md:justify-{start,center}` is a plain conditional between
+ * two literal Tailwind classes (same idiom as `CajaNombre`'s `activa`), no
+ * custom property needed there.
+ *
+ * OBSERVACIÓN: the backlog's acceptance criterion ("altura uniforme 32–40
+ * px") and Componentes.dc.html's "regla de altura" describe the canonical
+ * default (36px, this component's default `altoLogo`) — the footer/`Pie`
+ * use case. The approved `Edicion.dc.html` "Aliados" section uses 48px,
+ * outside that range. `altoLogo`/`altoLogoMobile` are therefore plain
+ * numbers, not clamped: a clamp would make that second, equally approved use
+ * impossible. This ticket's own verification step renders both (36/40 and
+ * 48px), confirming the range is a documented default, not an enforced one.
+ * The same logic covers `altoLogoMobile`'s own default (28px): it sits below
+ * §7.11's 32–40 band too, sanctioned by the same page-wins-over-lamina rule
+ * (`diseno-web-indice.md`: "Pie con FranjaAliados a 36 px de alto (28 en
+ * mobile)") — not an oversight, and not something a future clamp should
+ * "fix".
+ *
+ * OBSERVACIÓN: `logoColor` is accepted by the `aliados` content collection
+ * (SM-030) and documents which aliado is the single monochrome exception (the
+ * tricolor hands logo), but per the tech lead's instructions it drives no
+ * styling here — "los PNG de logos ya vienen en azul-sello desde el PSD (no
+ * hace falta filtro)". The source assets are already the right color; this
+ * component never reads `aliado.data.logoColor`.
+ *
+ * OBSERVACIÓN: every logo here is a small (28–48px tall) image and, when
+ * linked, the `<a>` around it inherits that box as its whole clickable area —
+ * smaller than the 44px touch target design-system.md §12 asks of "todo
+ * interactivo". The approved design (both `Home.dc.html` and
+ * `Edicion.dc.html`) shows the logos bare, with no padding added around them,
+ * and this ticket's acceptance criteria fix the rendered height exactly
+ * ("alto exacto 36 px a 1440 y 28 px a 390"), which padding would break.
+ * Flagged, not fixed here: padding around each logo is a visual change
+ * outside this ticket's scope (`FranjaAliados.astro`, `src/i18n/*.json`
+ * only).
+ *
+ * Placement (grid position, margins, the wrapper's own rotation) is the
+ * caller's job — this component accepts no position classes, per
+ * diseno-web-indice.md decision 13. A visible or `aria-label` heading for the
+ * whole strip (`pie.aliados`, already `[ALIADOS]`/`[PARTNERS]` in the
+ * dictionaries, still a placeholder because it is undecided whether the
+ * `Pie` shows it at all) is the same kind of caller concern and is left to
+ * `Pie.astro` (SM-028).
+ */
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+import { type Idioma } from '../i18n/utils.ts';
+
+interface Props {
+  aliados: CollectionEntry<'aliados'>[];
+  /** Logo height in px, desktop and up (`md:` breakpoint). Default 36 — design-system.md §7 item 11 / Componentes.dc.html's "regla de altura". */
+  altoLogo?: number;
+  /** Logo height in px, below the desktop breakpoint. Default 28 — `diseno-web-indice.md`'s "Pie con FranjaAliados a 36 px de alto (28 en mobile)" and both pages' `renderVals()` (`altoLogoMobile: 28`). Independent of `altoLogo`: it does NOT fall back to it, so the Edicion "Aliados" section (uniform 48px at every width) must pass this prop explicitly too, not only `altoLogo`. */
+  altoLogoMobile?: number;
+  /** Gap between logos in px, desktop and up. Default 40 — the ticket's own acceptance criterion and `FranjaAliados.jsx`'s default. */
+  separacion?: number;
+  /** Gap between logos in px, below the desktop breakpoint. Default 24 — both pages' `renderVals()` (`gapLogoMobile: 24`). Independent of `separacion`: it does NOT fall back to it, so the Edicion "Aliados" section (uniform 48px at every width) must pass this prop explicitly too, not only `separacion`. */
+  separacionMobile?: number;
+  /** Desktop justification: 'centro' (default, the `Pie`'s use) or 'inicio' (the Edicion "Aliados" section). Below the desktop breakpoint the strip is always left-aligned ('inicio'): design-system.md gives no mobile-centered example, and a wrapped multi-row centered strip reads worse than a left-aligned one — every real use (`Home.dc.html` 231, `Edicion.dc.html` 259) is left-aligned on mobile regardless of its own desktop value. */
+  justificar?: 'centro' | 'inicio';
+  idioma?: Idioma;
+}
+
+const {
+  aliados,
+  altoLogo = 36,
+  // Literal 28, NOT `= altoLogo`: the Pie's mobile spec (28px) is independent
+  // of its desktop spec (36px) and must hold even when a caller passes only
+  // `altoLogo` — see the prop doc above and the "Two approved uses" note.
+  altoLogoMobile = 28,
+  separacion = 40,
+  // Literal 24, NOT `= separacion`, for the same reason as `altoLogoMobile`.
+  separacionMobile = 24,
+  justificar = 'centro',
+  idioma,
+} = Astro.props;
+
+const idiomaActual: Idioma = idioma ?? (Astro.currentLocale === 'en' ? 'en' : 'es');
+
+/**
+ * A bracket placeholder like "[URL CONSULADO]" (content.config.ts's
+ * `oPlaceholder` schema union — CLAUDE.md, "No inventar datos") is valid
+ * content but never a usable link. `undefined` counts too: an unset field is
+ * not a link either.
+ */
+function esPlaceholder(valor: string | undefined): boolean {
+  return valor === undefined || /^\[[^\]]+\]$/.test(valor);
+}
+
+/** Public profile URL from a handle written with the at sign, e.g. "@consulado.ba" -> "https://www.instagram.com/consulado.ba/" (matches `aliados` in `Home.dc.html`/`Edicion.dc.html`'s `renderVals()`). */
+function urlDeInstagram(handleConArroba: string): string {
+  return `https://www.instagram.com/${handleConArroba.slice(1)}/`;
+}
+
+/**
+ * Per-logo view model: the link (Instagram first, then `url`, only when
+ * confirmed-not-a-placeholder), the bilingual alt, and the `aria-label` — the
+ * real `nombre`, but only when `confirmado` is `true`. When it is `false`
+ * (the tricolor-hands and CCC aliados today) the `<a>`'s accessible name
+ * falls back to the `<img>`'s own `alt` instead, which is always the
+ * (already appropriately generic) `logoAlt` — CLAUDE.md's "no inventar
+ * datos" extends to not asserting an unconfirmed identity in an aria-label.
+ *
+ * `href` intentionally does NOT depend on `confirmado`: modelo-de-contenido.md
+ * §5 (line ~446) states explicitly that `confirmado` governs "el nombre en el
+ * alt [...] hasta que Ruben confirme la identidad", nothing about the link.
+ * OBSERVACIÓN (kept from the previous review round, not resolved here per
+ * CLAUDE.md — "si algo parece un error, se documenta [...] nunca se corrige
+ * unilateralmente"): the approved `Home.dc.html`/`Edicion.dc.html`
+ * `renderVals()` omit `href` outright for the two unconfirmed aliados, which
+ * reads as the opposite intent. Ruben/SM-028 should confirm on purpose
+ * whether an unconfirmed partner should stay linked before the `Pie` ships;
+ * until then this component follows the explicit prose of
+ * modelo-de-contenido.md over the mockups' implicit omission.
+ */
+const items = aliados.map((aliado) => {
+  const { data } = aliado;
+  const instagramValido = esPlaceholder(data.instagram) ? undefined : data.instagram;
+  const urlValida = esPlaceholder(data.url) ? undefined : data.url;
+  const href = instagramValido ? urlDeInstagram(instagramValido) : urlValida;
+  return {
+    aliado,
+    href,
+    alt: data.logoAlt[idiomaActual],
+    ariaLabel: data.confirmado ? data.nombre : undefined,
+  };
+});
+
+const claseJustificarDesktop = justificar === 'inicio' ? 'md:justify-start' : 'md:justify-center';
+
+const estiloVariables = `--fa-alto-mobile: ${altoLogoMobile}px; --fa-alto-desktop: ${altoLogo}px; --fa-gap-mobile: ${separacionMobile}px; --fa-gap-desktop: ${separacion}px;`;
+---
+
+<div
+  class:list={[
+    'flex flex-wrap items-center justify-start gap-(--fa-gap-mobile) md:gap-(--fa-gap-desktop)',
+    claseJustificarDesktop,
+  ]}
+  style={estiloVariables}
+>
+  {
+    items.map(({ aliado, href, alt, ariaLabel }) =>
+      href ? (
+        <a
+          href={href}
+          aria-label={ariaLabel}
+          class="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+        >
+          <Image
+            src={aliado.data.logo}
+            alt={alt}
+            loading="lazy"
+            class="block h-(--fa-alto-mobile) w-auto md:h-(--fa-alto-desktop)"
+          />
+        </a>
+      ) : (
+        <span class="block">
+          <Image
+            src={aliado.data.logo}
+            alt={alt}
+            loading="lazy"
+            class="block h-(--fa-alto-mobile) w-auto md:h-(--fa-alto-desktop)"
+          />
+        </span>
+      )
+    )
+  }
+</div>

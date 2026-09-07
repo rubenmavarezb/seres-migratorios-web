@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/tokens/texturas.css">
+  <link rel="stylesheet" href="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/styles.css">
+  <script src="_ds/seres-migratorios-design-system-0c7dc7ac-4de3-43ea-b58b-9219245dfbcd/_ds_bundle.js"></script>
+  <style>
+    body { background: #ECEAE4; }
+    a { color: #1B4BAF; }
+    a:hover { color: #0B2FCD; }
+    .papel > .sc-host-x > header > a:first-child { font-size: 2rem !important; }
+  </style>
+</helmet>
+
+<section style="display:flex; align-items:flex-start; gap:96px; padding:64px; font-family:'Courier Prime', monospace;">
+
+  <!-- ============ 404 · DESKTOP 1440 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Página no encontrada · 404 · Desktop · 1440</p>
+    <div class="papel" data-screen-label="404 · Desktop" style="width:1440px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" href-marca="/" links="{{ navLinks }}" hint-size="100%,80px"></x-import>
+
+      <section style="max-width:1280px; margin:0 auto; padding:96px 48px 128px; box-sizing:border-box; display:flex; flex-direction:column; align-items:flex-start; gap:48px;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello.png" tamano="320px" rotacion="-12" hint-size="320px,320px"></x-import>
+        <div style="position:relative; display:inline-block;">
+          <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:7.5rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Página no<br>encontrada</h1>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-6" tamano="4rem" style="position:absolute; right:-400px; bottom:-24px; whiteSpace:nowrap;" hint-size="440px,72px">acá no hay nada</x-import>
+        </div>
+        <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; max-width:65ch; color:#0B0B0B; text-wrap:pretty;">Puede que el link esté mal o que la página se haya movido.</p>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/" hint-size="240px,44px">Volver al inicio</x-import>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:48px 48px 32px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogo }}" hint-size="100%,36px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:32px;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="120px" rotacion="-8" hint-size="120px,120px"></x-import>
+          <div style="display:grid; grid-template-columns:repeat(2, minmax(160px, auto)); gap:24px 48px; flex:1; min-width:220px;">
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A;">[EMAIL DEL COLECTIVO]</p>
+            </div>
+            <div>
+              <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+              <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+            </div>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="2.25rem" hint-size="300px,44px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============ 404 · MOBILE 390 ============ -->
+  <div style="display:flex; flex-direction:column; gap:12px; flex-shrink:0;">
+    <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.8125rem; letter-spacing:0.04em; text-transform:uppercase; color:#6B6B6B;">Página no encontrada · 404 · Mobile · 390</p>
+    <div class="papel" data-screen-label="404 · Mobile" style="width:390px; outline:1px solid #D9D6CF; overflow:hidden;">
+
+      <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Nav" mobile="{{ true }}" style="--tipo-display-lg:2.5rem;" href-marca="/" links="{{ navLinks }}" hint-size="100%,68px"></x-import>
+
+      <section style="padding:48px 24px 64px; box-sizing:border-box; display:flex; flex-direction:column; align-items:flex-start; gap:32px;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello.png" tamano="200px" rotacion="-12" hint-size="200px,200px"></x-import>
+        <div style="position:relative; display:inline-block; padding-bottom:40px;">
+          <h1 style="margin:0; font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:3rem; line-height:0.85; letter-spacing:-0.01em; color:#0B0B0B;">Página no<br>encontrada</h1>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-6" tamano="1.5rem" style="position:absolute; right:-8px; bottom:0; whiteSpace:nowrap;" hint-size="180px,30px">acá no hay nada</x-import>
+        </div>
+        <p style="margin:0; font-family:'Courier Prime', monospace; font-size:1rem; line-height:1.6; color:#0B0B0B; text-wrap:pretty;">Puede que el link esté mal o que la página se haya movido.</p>
+        <div style="align-self:stretch;">
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Boton" href="/" ancho="100%" hint-size="100%,44px">Volver al inicio</x-import>
+        </div>
+      </section>
+
+      <footer style="display:flex; flex-direction:column; gap:32px; padding:40px 24px 24px; border-top:1px solid #D9D6CF;">
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.FranjaAliados" aliados="{{ aliados }}" alto="{{ altoLogoMobile }}" gap="{{ gapLogoMobile }}" justificar="flex-start" hint-size="100%,80px"></x-import>
+        <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.HiloTricolor" hint-size="100%,3px"></x-import>
+        <div style="display:flex; flex-direction:column; gap:32px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div style="display:grid; grid-template-columns:1fr; gap:24px;">
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Email:</p>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; color:#3A3A3A; word-break:break-word;">[EMAIL DEL COLECTIVO]</p>
+              </div>
+              <div>
+                <p style="margin:0; font-family:'Courier Prime', monospace; font-weight:700; font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; line-height:1.4;">Instagram:</p>
+                <a href="https://www.instagram.com/seresmigratorios/" style="font-family:'Courier Prime', monospace; font-size:0.875rem; line-height:1.4; text-underline-offset:3px;">@seresmigratorios</a>
+              </div>
+            </div>
+            <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Sello" src="assets/marca/sello-compacto.png" tamano="100px" rotacion="-8" hint-size="100px,100px"></x-import>
+          </div>
+          <x-import component-from-global-scope="SeresMigratoriosDesignSystem_0c7dc7.Anotacion" rotacion="-2" tamano="1.75rem" hint-size="260px,36px">¡Aguante la fotografía!</x-import>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+</section>
+
+<!--
+NOTA PARA DESARROLLO · 404
+- Componentes del design system: Nav, Sello, Anotacion, Boton, FranjaAliados, HiloTricolor. Nav y Pie idénticos a Home.dc.html (el Pie es único en todo el sitio y mantiene la FranjaAliados).
+- Pantallas: Desktop 1440 y Mobile 390.
+- Fondo papel con grano (.papel). El Sello grande es assets/marca/sello.png rotado -12°: 320 px en desktop, 200 en mobile.
+- Titular display 7.5rem en desktop / 3rem en mobile, partido en dos líneas, con la anotación manuscrita "acá no hay nada" superpuesta al ángulo inferior derecho (-6°), igual que "sumate" en /convocatoria. La anotación es decorativa; el mensaje accesible lo da la línea mono.
+- La rotación del Sello y la posición de la anotación van en el div envolvente, no en el componente.
+- Radio 0, foco outline 2 px azul-sello, mínimo 44 px en todo lo interactivo, sin emojis ni íconos.
+- Placeholders: [EMAIL DEL COLECTIVO], aliados a confirmar (logo tricolor de manos, CCC).
+-->
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      navLinks: [
+        { etiqueta: "Manifiesto", href: "/manifiesto" }, { etiqueta: "Artistas", href: "/artistas" }, { etiqueta: "Ediciones", href: "/ediciones" },
+        { etiqueta: "Convocatoria", href: "/convocatoria" }, { etiqueta: "Apoyar", href: "/apoyar" },
+      ],
+      altoLogo: 36, altoLogoMobile: 28, gapLogoMobile: 24,
+      aliados: [
+        { src: "assets/logos/consulado.png", alt: "CONSULADO Custom & Craft", href: "https://www.instagram.com/consulado.ba/" },
+        { src: "assets/logos/manos-tricolor.png", alt: "[ALIADO LOGO TRICOLOR — a confirmar]" },
+        { src: "assets/logos/infiltrado.png", alt: "infiltrado™", href: "https://www.instagram.com/infiltrado.tm/" },
+        { src: "assets/logos/ccc.png", alt: "CCC [a confirmar]" },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

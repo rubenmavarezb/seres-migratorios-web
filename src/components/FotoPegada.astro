@@ -1,0 +1,117 @@
+---
+/**
+ * FotoPegada — the single-photo wrapper of the design system (design-system.md
+ * §7, item 7; design/ds/canvas/Elementos.dc.html, block "FOTOPEGADA";
+ * design/ds/components/fotos/FotoPegada.jsx is the reference for sizes,
+ * padding and the shadow token — translated here to Tailwind utilities and
+ * astro:assets, never copied as React).
+ *
+ * Three variants (PLAN.md §5, this ticket's acceptance criteria):
+ * - `pegada` (default): white "print" border (`bordePx`, 6-10px, default 8)
+ *   plus the system's only shadow, `shadow-foto`. Both already live on
+ *   `.foto-pegada` (theme.css), which also bakes in the 8px default padding;
+ *   a `bordePx` of 6 or 10 overrides it with a Tailwind spacing utility.
+ *   Tailwind v4 declares `@layer theme, base, components, utilities` up
+ *   front, and a later layer always wins over an earlier one regardless of
+ *   source order or specificity — so `p-1.5`/`p-2.5` (utilities) reliably
+ *   beat the `p-2` that `.foto-pegada` applies via `@apply` (components).
+ * - `recortada`: no border, no shadow — the bare image.
+ * - `sangrada`: same bare rendering as `recortada`. The bleed effect itself
+ *   (sizing the image bigger than the visible area, `overflow: hidden`,
+ *   absolute positioning against the canvas edge, as in the Elementos.dc.html
+ *   example) belongs to the caller's wrapper, per diseno-web-indice.md
+ *   decision 13 ("toda colocación vive en un envoltorio, no en el
+ *   componente"): this component never sets `overflow` or a position class.
+ *
+ * Rotation (`rotacion`, clamped to [-2, 2] per design-system.md §7 item 7)
+ * is applied the same way on all three variants: an inline
+ * `transform: rotate()` plus the `data-rotacion` attribute that theme.css's
+ * `prefers-reduced-motion` block selects to force `transform: none`.
+ *
+ * `data-entrada` (SM-069, design-system.md §11.4 "FotoPegada — Se apoya:
+ * opacidad más translate de 12 px hacia arriba") rides on the same wrapper.
+ * The keyframes and both required guards — `@media (prefers-reduced-motion:
+ * no-preference)` and `@supports ((animation-timeline: view()) and
+ * (animation-range: entry))` — live in theme.css, so nothing here can start
+ * hidden: on a browser without scroll-driven animations, or under reduced
+ * motion, the attribute matches no rule at all. It animates `opacity` and
+ * `translate`, never `transform`, which is why it can coexist with the static
+ * rotation above (§11.6, rule 3).
+ *
+ * OBSERVACIÓN: the FotoPegada.jsx reference and the Elementos.dc.html canvas
+ * both special-case `sangrada` to never rotate (a rotated bleed can leave a
+ * gap at the canvas edge once the wrapper crops it). This component does not
+ * carve out that exception: the acceptance criterion is unqualified
+ * ("rotación por prop") and the tech lead's instructions do not mention a
+ * per-variant rule either. A caller compositing a `sangrada` bleed should
+ * simply pass `rotacion={0}` (the default).
+ *
+ * `<Image>` from astro:assets computes `width`/`height` from the imported
+ * asset automatically (no CLS, docs.astro.build "Optimize images using the
+ * Image component"); `loading="lazy"` unless `prioridad` is set, in which
+ * case `priority` takes over (sets `loading="eager"`, `fetchpriority="high"`
+ * and `decoding="sync"` per docs.astro.build, "priority").
+ *
+ * Placement (grid position, margins, container width) is the caller's job —
+ * this component accepts no position classes, per diseno-web-indice.md
+ * decision 13.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  imagen: ImageMetadata;
+  alt: string;
+  variante?: 'pegada' | 'recortada' | 'sangrada';
+  rotacion?: number;
+  bordePx?: 6 | 8 | 10;
+  widths?: number[];
+  sizes?: string;
+  prioridad?: boolean;
+}
+
+const {
+  imagen,
+  alt,
+  variante = 'pegada',
+  rotacion = 0,
+  bordePx = 8,
+  widths,
+  sizes,
+  prioridad = false,
+} = Astro.props;
+
+// design-system.md §7, item 7: "-2° a 2°" — a value copy-pasted from a wider
+// range (e.g. Anotacion's -3° a 2°) gets clamped instead of silently
+// breaking the system's "leve" look.
+const rotacionClamp = Math.min(2, Math.max(-2, rotacion));
+
+/** Tailwind spacing utility for each allowed `bordePx` (theme.css's
+ * `--spacing: 0.25rem` multiplier, left at its default: 1.5 -> 6px,
+ * 2 -> 8px, 2.5 -> 10px). Only `pegada` reads this. */
+const CLASE_BORDE: Record<6 | 8 | 10, string> = {
+  6: 'p-1.5',
+  8: 'p-2',
+  10: 'p-2.5',
+};
+
+const clasesEnvoltorio =
+  variante === 'pegada' ? ['foto-pegada', CLASE_BORDE[bordePx]].join(' ') : undefined;
+---
+
+<div
+  class={clasesEnvoltorio}
+  data-entrada
+  data-rotacion
+  style={`transform: rotate(${rotacionClamp}deg)`}
+>
+  <Image
+    src={imagen}
+    alt={alt}
+    widths={widths}
+    sizes={sizes}
+    loading={prioridad ? undefined : 'lazy'}
+    priority={prioridad || undefined}
+    class="block h-auto w-full"
+  />
+</div>

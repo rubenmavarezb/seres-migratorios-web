@@ -1,0 +1,215 @@
+---
+/**
+ * Sello — canonical stamp of the design system (design-system.md §7, item 4
+ * "Sello circular (`Sello`)"; canvas spec at design/ds/canvas/Elementos.dc.html,
+ * block "SELLO"; reference implementation at
+ * design/ds/components/sellos/Sello.jsx — translated here to Tailwind tokens
+ * and astro:assets, never copied as React).
+ *
+ * Two renderings, chosen by whether `imagen` is passed:
+ * - Without `imagen` (default): the inline SVG of the reference — double ring
+ *   (r=88 stroke 3, r=70 stroke 1.5), "SERES MIGRATORIOS" set on the arc
+ *   `M 16,95 A 79,79 0 0 1 174,95` (13px, letter-spacing 3.2), `ciudad` at
+ *   y=90 and `fecha` at y=112 (13px, letter-spacing 1), three stamp stars at
+ *   (69,140) / (95,140) / (121,140), and the `.sello-grano` "bad inking" mask
+ *   (design-system.md §6). "Seres Migratorios" is the fixed brand name
+ *   (CLAUDE.md: never translated) written in real case and set uppercase only
+ *   through the `uppercase` Tailwind utility (`text-transform`), same as
+ *   `ciudad`/`fecha` — CLAUDE.md, "Mayúsculas solo con text-transform": the
+ *   accessible name below stays in real case on purpose. Color comes only
+ *   from `text-azul-sello` on the `<svg>` plus `fill`/`stroke="currentColor"`
+ *   on every shape — never a hex or `rgb()` inside the SVG.
+ * - With `imagen` (the real scanned stamp, e.g. `assets/marca/sello.png` /
+ *   `sello-compacto.png`): an `<Image>` from astro:assets at `tamano`×`tamano`.
+ *   The scan already carries its own physical grain, so `.sello-grano` is not
+ *   applied here — matching Sello.jsx, which only adds that class to the SVG
+ *   branch.
+ *
+ * The arc's `<path id>` needs a value unique per rendered instance so two
+ * Sello's on the same page don't collide (two invalid duplicate ids, and a
+ * `<textPath>` that could resolve to the wrong arc). A module-level counter
+ * does NOT work for this: Astro re-executes a component's whole frontmatter
+ * on every render call, so a `let` declared here resets to its initial value
+ * each time (verified empirically — two `<Sello>` on one page both got
+ * `arco-0` with a counter approach). `crypto.randomUUID()` (a Node/browser
+ * global, no import needed) sidesteps that entirely.
+ *
+ * Rotation (`rotacion`, clamped to [-15, 15] per this ticket's acceptance
+ * criteria; default -12° per design-system.md §7 item 4) is applied the same
+ * way on both branches: an inline `transform: rotate()` plus `data-rotacion`,
+ * which theme.css's `prefers-reduced-motion: reduce` block selects to force
+ * `transform: none`. Both branches also carry `data-entrada="sello"` (SM-069,
+ * design-system.md §11.4: "Estampado: opacidad 0 → 1 con scale 1.06 → 1.
+ * Nunca gira al aparecer: la rotación es estática"), whose keyframes and two
+ * mandatory guards live in theme.css — so the stamp never starts hidden on a
+ * browser without scroll-driven animations, and the entrance only touches
+ * `opacity` and `scale`, leaving the static `transform` rotation alone.
+ * On the `<Image>` branch this attribute serializes as
+ * `data-rotacion="true"` rather than a bare attribute (Astro 7 renders
+ * non-boolean attributes explicitly — see the Astro v5 upgrade notes; `data-*`
+ * is never a boolean attribute) — that is fine, the `[data-rotacion]`
+ * attribute selector in theme.css still matches it, so this is not a bug to
+ * "fix" later.
+ *
+ * `decorativo` picks between the two valid accessible treatments (this
+ * ticket's acceptance criteria, "alt o aria-hidden según uso"): `false`
+ * (default) renders `role="img"` with an `aria-label` (SVG branch) or a real
+ * `alt` (`<Image>` branch); `true` renders `aria-hidden="true"` and drops
+ * `role`/`alt` content (`alt=""` on the `<Image>` branch, CLAUDE.md
+ * "Imágenes"). Verified empirically that `attr={condition || undefined}` /
+ * `attr={condition ? undefined : value}` omits the attribute outright rather
+ * than emitting `aria-hidden="false"` or `role="undefined"`.
+ *
+ * `t()` (i18n/utils.ts) has no string interpolation: `sello.alt` in
+ * es.json/en.json carries the literal placeholders `{ciudad}`/`{fecha}`,
+ * substituted locally below. "Sello" (the noun) is translated inside that
+ * dictionary string; "Seres Migratorios" inside it is not (CLAUDE.md).
+ *
+ * No position classes are accepted here (diseno-web-indice.md, decision 13):
+ * a caller that needs to place this within a layout wraps it instead.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import { t, type Idioma } from '../i18n/utils.ts';
+
+interface Props {
+  /** Real-case city name (e.g. "Buenos Aires"). Rendered uppercase via CSS. */
+  ciudad: string;
+  /** Real-case short date (e.g. "08 ago 2026"). Rendered uppercase via CSS. */
+  fecha: string;
+  /** Rendered width and height in pixels (the SVG viewBox is square). Defaults to 200. */
+  tamano?: number;
+  /** Degrees, clamped to [-15, 15]. Defaults to -12 (design-system.md §7 item 4). */
+  rotacion?: number;
+  /** The real scanned stamp. Without it, the component renders the inline SVG instead. */
+  imagen?: ImageMetadata;
+  /** `true` hides the stamp from assistive tech (`aria-hidden`) instead of naming it. */
+  decorativo?: boolean;
+  idioma?: Idioma;
+}
+
+const {
+  ciudad,
+  fecha,
+  tamano = 200,
+  rotacion = -12,
+  imagen,
+  decorativo = false,
+  idioma,
+} = Astro.props;
+
+const idiomaActual: Idioma = idioma ?? (Astro.currentLocale === 'en' ? 'en' : 'es');
+
+const ROTACION_MIN = -15;
+const ROTACION_MAX = 15;
+
+/**
+ * Clamps to this ticket's range instead of failing the build: an out-of-range
+ * value is a content mistake, not a reason to break a page. Warns during
+ * `astro dev` only, matching Anotacion.astro's convention.
+ */
+function limitarRotacion(valor: number): number {
+  if (valor >= ROTACION_MIN && valor <= ROTACION_MAX) return valor;
+  const recortada = Math.min(ROTACION_MAX, Math.max(ROTACION_MIN, valor));
+  if (import.meta.env.DEV) {
+    console.warn(
+      `[Sello] rotacion=${valor} fuera de [${ROTACION_MIN}, ${ROTACION_MAX}]; se recorta a ${recortada}.`
+    );
+  }
+  return recortada;
+}
+
+const rotacionClamp = limitarRotacion(rotacion);
+const estiloRotacion = `transform: rotate(${rotacionClamp}deg); overflow: visible;`;
+
+/** Local stand-in for `t()`'s missing interpolation (see file header). */
+function interpolar(plantilla: string, valores: Record<string, string>): string {
+  return Object.entries(valores).reduce(
+    (acumulado, [clave, valor]) => acumulado.replaceAll(`{${clave}}`, valor),
+    plantilla
+  );
+}
+
+const etiqueta = interpolar(t(idiomaActual, 'sello.alt'), { ciudad, fecha });
+
+// Unique per rendered instance (see file header on why a module counter fails here).
+const idArco = `arco-${crypto.randomUUID()}`;
+
+/** design-system.md §6, "tres estrellas"; points lifted from Sello.jsx as-is. */
+const ESTRELLA =
+  '0,-7 1.57,-2.16 6.66,-2.16 2.54,0.83 4.11,5.66 0,2.67 -4.11,5.66 -2.54,0.83 -6.66,-2.16 -1.57,-2.16';
+---
+
+{
+  imagen ? (
+    <Image
+      src={imagen}
+      alt={decorativo ? '' : etiqueta}
+      width={tamano}
+      height={tamano}
+      class="block shrink-0 object-contain"
+      aria-hidden={decorativo || undefined}
+      data-entrada="sello"
+      data-rotacion
+      style={estiloRotacion}
+    />
+  ) : (
+    <svg
+      viewBox="0 0 190 190"
+      width={tamano}
+      height={tamano}
+      class="sello-grano text-azul-sello block shrink-0"
+      role={decorativo ? undefined : 'img'}
+      aria-label={decorativo ? undefined : etiqueta}
+      aria-hidden={decorativo || undefined}
+      data-entrada="sello"
+      data-rotacion
+      style={estiloRotacion}
+    >
+      <defs>
+        <path id={idArco} d="M 16,95 A 79,79 0 0 1 174,95" fill="none" />
+      </defs>
+      <circle cx="95" cy="95" r="88" fill="none" stroke="currentColor" stroke-width="3" />
+      <circle cx="95" cy="95" r="70" fill="none" stroke="currentColor" stroke-width="1.5" />
+      <text
+        class="font-mono font-bold uppercase"
+        fill="currentColor"
+        font-size="13"
+        letter-spacing="3.2"
+        text-anchor="middle"
+      >
+        <textPath href={`#${idArco}`} startOffset="50%">
+          Seres Migratorios
+        </textPath>
+      </text>
+      <text
+        class="font-mono font-bold uppercase"
+        fill="currentColor"
+        x="95"
+        y="90"
+        font-size="13"
+        letter-spacing="1"
+        text-anchor="middle"
+      >
+        {ciudad}
+      </text>
+      <text
+        class="font-mono font-bold uppercase"
+        fill="currentColor"
+        x="95"
+        y="112"
+        font-size="13"
+        letter-spacing="1"
+        text-anchor="middle"
+      >
+        {fecha}
+      </text>
+      <g fill="currentColor">
+        <polygon points={ESTRELLA} transform="translate(69,140)" />
+        <polygon points={ESTRELLA} transform="translate(95,140)" />
+        <polygon points={ESTRELLA} transform="translate(121,140)" />
+      </g>
+    </svg>
+  )
+}
