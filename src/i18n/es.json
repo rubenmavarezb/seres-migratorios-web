@@ -165,10 +165,77 @@
     "escribinosPorInstagram": "Escribinos por Instagram.",
     "aDondeVaLaPlata": "A dónde va la plata",
     "textoTransparencia": "[TEXTO DE TRANSPARENCIA: destino de los fondos de cada edición]",
-    "edicion01Monto": "Edición 01 · [MONTO Y DESTINO A CONFIRMAR]"
+    "edicion01Monto": "Edición 01 · [MONTO Y DESTINO A CONFIRMAR]",
+    "aporteLinea1": "Cada edición recauda fondos para las víctimas de los terremotos en Venezuela.",
+    "aporteLinea2": "Elegí la vía que te quede más cómoda.",
+    "copiasLinea1": "Copias de la obra expuesta en cada edición.",
+    "voluntariadoLinea1": "Sumate al equipo de la próxima edición o compartí la convocatoria.",
+    "muestraCopiaAlt": "Copia en venta: obra de Rubén Mavarez",
+    "muestraCopiaPie": "[TÍTULO] · [PRECIO]",
+    "linkCopias": "[LINK COPIAS EN VENTA]"
   },
   "manifiesto": {
-    "comoEmpezo": "Cómo empezó"
+    "comoEmpezo": "Cómo empezó",
+    "titulo": "Manifiesto",
+    "pasos": {
+      "uno": {
+        "caja": "13.07.2026 · el reel",
+        "linea1": "Herick Frontado convoca a fotógraf@s de la diáspora para documentar el exilio.",
+        "linea2": "La idea: juntar fondos para las víctimas de los terremotos en Venezuela."
+      },
+      "dos": {
+        "caja": "31.07.2026 · el post",
+        "linea1": "Se anuncia la edición 01: un recorrido fotográfico por los sets 001 a 007.",
+        "linea2": "Exposición de nueve artistas, música en vivo y café de especialidad."
+      },
+      "tres": {
+        "caja": "08.08.2026 · la edición 01",
+        "linea1": "CONSULADO, Humberto Primo 3032, Buenos Aires.",
+        "linea2": "De 10:00 a 19:00."
+      }
+    },
+    "cierre": {
+      "boton": "Ver la edición 01"
+    }
+  },
+  "home": {
+    "manifiesto": {
+      "titulo": "Manifiesto",
+      "cita": "“En la vorágine de la rutina en el exilio buscamos la manera de ayudar, de agruparnos y compartir esto que sentimos en el pecho, de mirar a los ojos a quienes comparten un dolor que no se puede describir en palabras y que tratamos de codificar en una imagen, un retrato. En momentos como estos entendemos la importancia de la fotografía, y de nuestra labor como fotograf@s”.",
+      "atribucion": "Post del 31.07.2026"
+    },
+    "fotografos": {
+      "anotacionAlt": "FOTÓGRAFOS",
+      "etiqueta": "Fotean · Edición 01"
+    },
+    "exponen": {
+      "anotacionAlt": "EXPONEN",
+      "etiqueta": "Exposición · Edición 01"
+    },
+    "proximaEdicion": {
+      "titulo": "Próxima edición",
+      "textoLinea1": "La próxima edición se arma con quienes se postulan: fotógraf@s, film, música y manos para el equipo.",
+      "textoLinea2": "Si querés fotear, exponer o dar una mano, dejanos tus datos."
+    },
+    "comoApoyar": {
+      "titulo": "Cómo apoyar",
+      "aporte": {
+        "titulo": "Aporte",
+        "texto": "Cada edición recauda fondos para las víctimas de los terremotos en Venezuela."
+      },
+      "copiasEnVenta": {
+        "titulo": "Copias en venta",
+        "texto": "Copias de la obra expuesta en cada edición. Lo recaudado va a la causa.",
+        "link": "[LINK COPIAS EN VENTA]"
+      },
+      "voluntariado": {
+        "titulo": "Voluntariado",
+        "texto": "Sumate al equipo de la próxima edición o compartí la convocatoria. Escribinos por Instagram."
+      }
+    },
+    "hero": {
+      "anotacion": "edición 01"
+    }
   },
   "sello": {
     "alt": "Sello Seres Migratorios, {ciudad}, {fecha}"
@@ -180,5 +247,61 @@
     "lectura": "{desde} AM a {hasta} PM · {fechaCorta}",
     "am": "AM",
     "pm": "PM"
+  },
+  "artistas": {
+    "titulo": "Artistas",
+    "anotacion": "artistas",
+    "descripcion": "Quiénes fotean el recorrido y quiénes exponen en cada edición de Seres Migratorios.",
+    "fotean": {
+      "titulo": "Fotean",
+      "detalle": "Recorrido · sets {primero} a {ultimo}",
+      "detalleUno": "Recorrido · set {primero}"
+    },
+    "exponen": {
+      "titulo": "Exponen",
+      "detalle": "Exposición · {cantidad} artistas",
+      "detalleUno": "Exposición · un artista"
+    },
+    "rolConSet": "{rol} · Set {numero}",
+    "volver": "← Artistas",
+    "cajaEdicion": "{edicion} {anio}",
+    "handlePendiente": "[HANDLE]",
+    "manuscritaPendiente": "Frase y firma manuscritas: [PENDIENTES]",
+    "obra": {
+      "titulo": "Obra",
+      "grupoSet": "Set {numero}",
+      "grupoExposicion": "Exposición",
+      "detalle": "{grupo} · {cantidad} fotos",
+      "detalleUna": "{grupo} · una foto",
+      "vacia": "[OBRA]",
+      "vaciaLinea": "Las fotos se cargan cuando la persona las entrega."
+    },
+    "otros": "Otros artistas",
+    "anterior": "← {nombre}",
+    "siguiente": "{nombre} →"
+  },
+  "lightbox": {
+    "titulo": "Visor de fotos",
+    "contador": "{indice} / {total}",
+    "anterior": "Foto anterior",
+    "siguiente": "Foto siguiente"
+  },
+  "ediciones": {
+    "titulo": "Ediciones",
+    "subtitulo": "Archivo del colectivo",
+    "descripcionSeo": "El archivo de las ediciones de Seres Migratorios.",
+    "proximaEdicion": "Próxima edición",
+    "proximaLinea": "La próxima edición se arma con quienes se postulan: fotógraf@s, film, música y manos para el equipo.",
+    "edicionesPasadas": "Ediciones pasadas",
+    "volver": "← Ediciones",
+    "subtituloExperienciaAlt": "Experiencia fotográfica en apoyo a Venezuela",
+    "comoFunciono": "Cómo funcionó",
+    "anotacionFotean": "Fotógrafos",
+    "fotean": "Fotean",
+    "foteanSets": "Fotean · Sets {desde} – {hasta}",
+    "anotacionExponen": "Exponen",
+    "exposicion": "Exposición · {edicion}",
+    "aliados": "Aliados",
+    "laJornada": "La jornada"
   }
 }

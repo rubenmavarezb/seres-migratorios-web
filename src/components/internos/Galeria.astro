@@ -1,0 +1,141 @@
+---
+/**
+ * Galeria — internal helper (not a canonical component; it lives in
+ * `internos/` per CLAUDE.md, "los helpers ajenos al design system van en
+ * internos/") that lays out the "Obra" collage of `/artistas/[slug]` and hands
+ * `internos/Lightbox.astro` its thumbnails (SM-038).
+ *
+ * Shape of the approved design (`design/Artista.dc.html`, screens "Artista ·
+ * Rubén · Desktop" and "· Mobile", plus its NOTA PARA DESARROLLO: "collage
+ * libre de FotoPegada sobre grilla de 12 columnas, rotaciones alternadas -2° /
+ * +1.5°, solapadas (margin-top 200 px)"):
+ * - desktop: a 12-column grid, two photos per row, each one spanning 4 to 7
+ *   columns with a top offset that makes it overlap its neighbour;
+ * - mobile: a single column, each photo at 88% of the width, alternately
+ *   flush left and flush right.
+ *
+ * The eight slots of `RANURAS` are the eight photos of the approved Rubén
+ * screen, read off its markup; a gallery with more photos cycles through them,
+ * which is what "collage libre" needs to stay a collage as the collection
+ * grows. Every slot value that varies per photo (column span, row, top offset)
+ * is dynamic, so it cannot be a Tailwind class — a class name has to exist in
+ * the source for Tailwind to generate it. It travels as custom properties in
+ * the `style` attribute instead, read back by `md:col-start-(--…)`-style
+ * utilities: the same "dynamic geometry goes inline, static geometry stays a
+ * class" idiom `FichaFotografo.astro` and `FranjaAliados.astro` already use.
+ *
+ * Without JavaScript every thumbnail is a plain link to the image file
+ * (SM-038's acceptance criterion), so the gallery works on its own;
+ * `Lightbox.astro`'s script upgrades those same links — it binds to the
+ * `data-galeria-foto` attribute below, and its `data-indice` is the position
+ * in this array. One `Galeria` and one `Lightbox` per page, both fed the same
+ * `fotos`.
+ *
+ * OBSERVACIÓN: the design sizes every photo of the collage with an explicit
+ * height (`alto="460px"`, `540px`, …) through its own FotoPegada. The canonical
+ * `FotoPegada.astro` of this repo has no `alto`/`ancho` prop and renders the
+ * image at `h-auto w-full`, and this ticket may not add props to it, so each
+ * photo keeps its natural aspect ratio inside the column it spans. The
+ * overlaps, rotations and column spans are the ones of the design; the heights
+ * follow the photo.
+ */
+import type { ImageMetadata } from 'astro';
+
+import FotoPegada from '../FotoPegada.astro';
+import { type Idioma } from '../../i18n/utils.ts';
+
+/** Same shape as `Lightbox.astro`'s own `fotos` (Astro cannot export a type from a component): keep the two in sync. */
+interface FotoDeGaleria {
+  imagen: ImageMetadata;
+  /** Real description of the photo, or the collection's bracket placeholder. */
+  alt: string;
+  /** Caption under the photo. Absent (or a placeholder-free entry) renders no caption. */
+  titulo?: string;
+}
+
+interface Props {
+  fotos: FotoDeGaleria[];
+  idioma?: Idioma;
+}
+
+const { fotos } = Astro.props;
+
+/**
+ * The eight slots of the approved collage, in order: `inicio`/`fin` are grid
+ * column lines (1-13), `desfase` the top offset in px that produces the
+ * overlap, `rotacion` the degrees of that photo's FotoPegada.
+ */
+const RANURAS = [
+  { inicio: 1, fin: 8, desfase: 0, rotacion: -2 },
+  { inicio: 7, fin: 13, desfase: 200, rotacion: 1.5 },
+  { inicio: 1, fin: 5, desfase: 48, rotacion: 1 },
+  { inicio: 5, fin: 12, desfase: 160, rotacion: -1.5 },
+  { inicio: 2, fin: 7, desfase: 48, rotacion: 2 },
+  { inicio: 7, fin: 13, desfase: 140, rotacion: -1 },
+  { inicio: 1, fin: 6, desfase: 64, rotacion: -1.5 },
+  { inicio: 6, fin: 13, desfase: 160, rotacion: 1 },
+] as const;
+
+/**
+ * Widths of the generated files: a photo spans 4 to 7 of the 12 columns of the
+ * 1184px content box, so half the viewport is the useful upper bound. Capped at
+ * the source's natural width so the image service is never asked for more
+ * pixels than the file has — same reasoning as `Anotacion.astro`'s own
+ * `widths`.
+ */
+function anchosDe(imagen: ImageMetadata): number[] {
+  const candidatos = [400, 800, 1200].filter((ancho) => ancho < imagen.width);
+  return [...candidatos, imagen.width];
+}
+
+const SIZES = '(min-width: 768px) 50vw, 88vw';
+
+const items = fotos.map((foto, indice) => {
+  const ranura = RANURAS[indice % RANURAS.length];
+  return {
+    ...foto,
+    indice,
+    rotacion: ranura.rotacion,
+    // `grid-row` is the pair number: two photos per row, as in the design.
+    estilo: `--galeria-inicio: ${ranura.inicio}; --galeria-fin: ${ranura.fin}; --galeria-fila: ${Math.floor(indice / 2) + 1}; --galeria-desfase: ${ranura.desfase}px;`,
+    // Mobile alternates flush left / flush right (design: `align-self`).
+    claseMobile: indice % 2 === 0 ? 'self-start' : 'self-end',
+    anchos: anchosDe(foto.imagen),
+  };
+});
+
+const CLASE_FIGURA = [
+  'flex w-[88%] flex-col gap-2 md:w-auto md:self-auto',
+  'md:col-start-(--galeria-inicio) md:col-end-(--galeria-fin) md:row-start-(--galeria-fila) md:mt-(--galeria-desfase)',
+].join(' ');
+const CLASE_ENLACE =
+  'block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello';
+const CLASE_PIE = 'font-mono text-metadatos font-bold tracking-[0.04em] text-grafito uppercase';
+---
+
+<div class="flex flex-col gap-8 md:grid md:grid-cols-12 md:items-start md:gap-x-6 md:gap-y-0">
+  {
+    items.map((item) => (
+      <figure class={`${CLASE_FIGURA} ${item.claseMobile}`} style={item.estilo}>
+        {/* The link's accessible name is the photo's own `alt` (no `aria-label`
+            here, which would replace that description with a generic one). Its
+            href is the image file, so this works with no JavaScript at all. */}
+        <a
+          href={item.imagen.src}
+          class={CLASE_ENLACE}
+          data-galeria-foto
+          data-indice={String(item.indice)}
+        >
+          <FotoPegada
+            imagen={item.imagen}
+            alt={item.alt}
+            rotacion={item.rotacion}
+            widths={item.anchos}
+            sizes={SIZES}
+          />
+        </a>
+        {item.titulo !== undefined && <figcaption class={CLASE_PIE}>{item.titulo}</figcaption>}
+      </figure>
+    ))
+  }
+</div>

@@ -165,10 +165,77 @@
     "escribinosPorInstagram": "Message us on Instagram.",
     "aDondeVaLaPlata": "Where the money goes",
     "textoTransparencia": "[TRANSPARENCY TEXT: what each edition's funds go to]",
-    "edicion01Monto": "Edition 01 · [AMOUNT AND USE TO BE CONFIRMED]"
+    "edicion01Monto": "Edition 01 · [AMOUNT AND USE TO BE CONFIRMED]",
+    "aporteLinea1": "[EN PENDIENTE]",
+    "aporteLinea2": "[EN PENDIENTE]",
+    "copiasLinea1": "[EN PENDIENTE]",
+    "voluntariadoLinea1": "[EN PENDIENTE]",
+    "muestraCopiaAlt": "Print for sale: work by Rubén Mavarez",
+    "muestraCopiaPie": "[TITLE] · [PRICE]",
+    "linkCopias": "[PRINTS FOR SALE LINK]"
   },
   "manifiesto": {
-    "comoEmpezo": "How it began"
+    "comoEmpezo": "How it began",
+    "titulo": "Manifesto",
+    "pasos": {
+      "uno": {
+        "caja": "[EN PENDIENTE]",
+        "linea1": "[EN PENDIENTE]",
+        "linea2": "[EN PENDIENTE]"
+      },
+      "dos": {
+        "caja": "[EN PENDIENTE]",
+        "linea1": "[EN PENDIENTE]",
+        "linea2": "[EN PENDIENTE]"
+      },
+      "tres": {
+        "caja": "[EN PENDIENTE]",
+        "linea1": "[EN PENDIENTE]",
+        "linea2": "[EN PENDIENTE]"
+      }
+    },
+    "cierre": {
+      "boton": "[EN PENDIENTE]"
+    }
+  },
+  "home": {
+    "manifiesto": {
+      "titulo": "Manifesto",
+      "cita": "[EN PENDIENTE]",
+      "atribucion": "[EN PENDIENTE]"
+    },
+    "fotografos": {
+      "anotacionAlt": "FOTÓGRAFOS",
+      "etiqueta": "[EN PENDIENTE]"
+    },
+    "exponen": {
+      "anotacionAlt": "EXPONEN",
+      "etiqueta": "[EN PENDIENTE]"
+    },
+    "proximaEdicion": {
+      "titulo": "Next edition",
+      "textoLinea1": "[EN PENDIENTE]",
+      "textoLinea2": "[EN PENDIENTE]"
+    },
+    "comoApoyar": {
+      "titulo": "How to support",
+      "aporte": {
+        "titulo": "Contribution",
+        "texto": "[EN PENDIENTE]"
+      },
+      "copiasEnVenta": {
+        "titulo": "Prints for sale",
+        "texto": "[EN PENDIENTE]",
+        "link": "[PRINTS FOR SALE LINK]"
+      },
+      "voluntariado": {
+        "titulo": "Volunteer",
+        "texto": "[EN PENDIENTE]"
+      }
+    },
+    "hero": {
+      "anotacion": "edition 01"
+    }
   },
   "sello": {
     "alt": "Seres Migratorios seal, {ciudad}, {fecha}"
@@ -180,5 +247,61 @@
     "lectura": "{desde} AM to {hasta} PM · {fechaCorta}",
     "am": "AM",
     "pm": "PM"
+  },
+  "artistas": {
+    "titulo": "Artists",
+    "anotacion": "artists",
+    "descripcion": "Who shoots the itinerary and who exhibits in every Seres Migratorios edition.",
+    "fotean": {
+      "titulo": "Shoots",
+      "detalle": "Itinerary · sets {primero} to {ultimo}",
+      "detalleUno": "Itinerary · set {primero}"
+    },
+    "exponen": {
+      "titulo": "Exhibits",
+      "detalle": "Exhibition · {cantidad} artists",
+      "detalleUno": "Exhibition · one artist"
+    },
+    "rolConSet": "{rol} · Set {numero}",
+    "volver": "← Artists",
+    "cajaEdicion": "{edicion} {anio}",
+    "handlePendiente": "[HANDLE]",
+    "manuscritaPendiente": "Handwritten quote and signature: [PENDING]",
+    "obra": {
+      "titulo": "Work",
+      "grupoSet": "Set {numero}",
+      "grupoExposicion": "Exhibition",
+      "detalle": "{grupo} · {cantidad} photos",
+      "detalleUna": "{grupo} · one photo",
+      "vacia": "[WORK]",
+      "vaciaLinea": "Photos go up here once the artist hands them in."
+    },
+    "otros": "Other artists",
+    "anterior": "← {nombre}",
+    "siguiente": "{nombre} →"
+  },
+  "lightbox": {
+    "titulo": "Photo viewer",
+    "contador": "{indice} / {total}",
+    "anterior": "Previous photo",
+    "siguiente": "Next photo"
+  },
+  "ediciones": {
+    "titulo": "Editions",
+    "subtitulo": "The collective's archive",
+    "descripcionSeo": "The archive of Seres Migratorios' editions.",
+    "proximaEdicion": "Next edition",
+    "proximaLinea": "The next edition is built by whoever applies: photographers, film, music and hands for the crew.",
+    "edicionesPasadas": "Past editions",
+    "volver": "← Editions",
+    "subtituloExperienciaAlt": "Experiencia fotográfica en apoyo a Venezuela",
+    "comoFunciono": "How it worked",
+    "anotacionFotean": "Fotógrafos",
+    "fotean": "Shooting",
+    "foteanSets": "Shooting · Sets {desde} – {hasta}",
+    "anotacionExponen": "Exponen",
+    "exposicion": "Exhibition · {edicion}",
+    "aliados": "Partners",
+    "laJornada": "The day"
   }
 }

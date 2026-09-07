@@ -20,8 +20,10 @@ obra:
       en: '[WORK 01 TITLE]'
     lugar: '[LUGAR]'
 frase:
-  es: '[TRANSCRIPCIÓN A CONFIRMAR — PATI CARO]'
-  en: '[PATI CARO QUOTE — EN]'
+  es: >-
+    Raíces que flotan en mundos paralelos, volver siempre a la misma causa
+    desde los recovecos del sueño.
+  en: '[EN PENDIENTE]'
 fraseManuscrita: ../../assets/manuscritas/pati-caro.png
 ediciones:
   - buenos-aires-2026
