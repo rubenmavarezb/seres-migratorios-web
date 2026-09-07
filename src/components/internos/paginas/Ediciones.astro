@@ -1,0 +1,237 @@
+---
+/**
+ * Ediciones — shared body of `/ediciones` and `/en/editions` (SM-039, SM-048).
+ *
+ * The two routes are the same page in two languages, so the whole body lives
+ * here and each route file under `src/pages/` is a thin wrapper that only fixes
+ * `idioma` (skill `paginas-bilingues`, "La gemela EN es el mismo archivo con
+ * `idioma = 'en'`"). Nothing below changed with the move except the locale,
+ * which arrives as a prop instead of being hardcoded and is now passed
+ * explicitly to `Pagina` rather than left to `Astro.currentLocale`.
+ *
+ * `/ediciones` — the collective's edition archive (SM-039; sitemap.md §2.5,
+ * empty state §3.1). Built against `design/Ediciones.dc.html`, whose three
+ * screens ("Ediciones · Desktop", "Ediciones · Mobile", "Próxima edición · Con
+ * fecha") are the approved design and therefore win over the sitemap wherever
+ * the two disagree (see the OBSERVACIONES below, all reported, none resolved
+ * unilaterally).
+ *
+ * OBSERVACIÓN (bloque 4, `HiloTricolor`): sitemap.md §2.5 closes the list with
+ * a `HiloTricolor` divider. Neither approved screen has one, and
+ * design-system.md §7 item 12 is explicit that the thread is a "detalle de
+ * `Pie` o de badge de edición, nunca divisor genérico". Not rendered: the
+ * lamina and the design system agree against the sitemap. The `HiloTricolor`
+ * the page does show is the `Pie`'s own, from `Base.astro`.
+ *
+ * OBSERVACIÓN (bloque 3, `FotoPegada`): both the lamina and sitemap.md §2.5
+ * show photos in each past-edition row — the lamina names three concrete files
+ * (`carlos-vazquez-01`, `angela-perez-01`, `sofia-martin-01` from
+ * `assets/obra/`, rotations -2 / +1.5 / -1). The `ediciones` collection has no
+ * field those could come from: its only image list is `galeria`, and this
+ * ticket's non-negotiable rules put the three files of
+ * `assets/fotos/ediciones/buenos-aires-2026/` "solo en la galería del día …
+ * nunca en otro bloque". Picking an artist's `obra[0]` instead would be an
+ * arbitrary choice, not the approved one. So the photo block is omitted rather
+ * than filled with a stand-in ("si no hay, el bloque de foto se omite, sin
+ * placeholder gris"): the fix belongs in the content model — a
+ * `fotosDestacadas` field on `ediciones` holding exactly those three images —
+ * and `src/content.config.ts` is shared with the other Fase 2 branches.
+ *
+ * OBSERVACIÓN (encabezado): the lamina sets the `<h1>` at 7rem desktop /
+ * 3.5rem mobile. `Pagina.astro`'s header prop renders `text-display-lg`
+ * (7.5rem / 3rem), which this page uses as-is — the layout is outside this
+ * ticket's Alcance and its own header note already records the same divergence.
+ *
+ * OBSERVACIÓN (estado vacío, `LUGAR:`): the lamina passes a single `[LUGAR]`
+ * string to `BloqueFicha`, but the built component's `lugar` prop is a
+ * three-line object (`nombre` / `direccion` / `ciudad`) it always renders with
+ * two `<br>`. With nothing to confirm yet, only `nombre` carries
+ * `estados.aConfirmar` (sitemap.md §3.1's literal value for this cell) and the
+ * two remaining lines render empty, so the column is two line-heights taller
+ * than the lamina's. Left as-is: components are not modified in this ticket.
+ *
+ * OBSERVACIÓN (anotación de la próxima edición): the "Próxima edición · Con
+ * fecha" screen overlays the handwritten annotation "edición 02" at -4°.
+ * `Anotacion` clamps rotation to the design system's [-3, 2] range, so it
+ * renders at -3°, and its text is `etiquetaCortaDeEdicion(nombre)` — the real
+ * `nombre` of the entry with `estado: proxima`, trimmed at its em dash — since
+ * no field of the collection holds a short "edición NN" label.
+ */
+import { getCollection } from 'astro:content';
+
+import BloqueFicha from '../../BloqueFicha.astro';
+import Boton from '../../Boton.astro';
+import CajaNombre from '../../CajaNombre.astro';
+import Sello from '../../Sello.astro';
+import Anotacion from '../../Anotacion.astro';
+import Pagina from '../../../layouts/Pagina.astro';
+import selloEstampado from '../../../assets/marca/sello.png';
+import { direccionSinCiudad, etiquetaCortaDeEdicion, fechaCorta } from '../ediciones.ts';
+import { rutaLocalizada, t, type Idioma } from '../../../i18n/utils.ts';
+
+interface Props {
+  /** Locale of the route rendering this body; each wrapper fixes it literally. */
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+
+const ediciones = await getCollection('ediciones');
+
+/** There is a single `proxima` at a time (CLAUDE.md, "Cómo agregar … una edición"). */
+const proxima = ediciones.find((edicion) => edicion.data.estado === 'proxima');
+
+const pasadas = ediciones
+  .filter((edicion) => edicion.data.estado === 'pasada')
+  .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+
+/** Three `BloqueFicha` lines from an entry: venue, street, city and country. */
+function lineasDeLugar(edicion: (typeof ediciones)[number]) {
+  const { lugar, ciudad, pais } = edicion.data;
+  return {
+    nombre: lugar.nombre,
+    direccion: direccionSinCiudad(lugar.direccion, ciudad),
+    ciudad: `${ciudad}, ${pais}`,
+  };
+}
+
+/**
+ * Same `PUBLIC_*` helper (and same fallback) as `Nav.astro` / `Pie.astro`:
+ * Vite types `import.meta.env` with an `any` index signature, so the value is
+ * narrowed here instead of spreading `any` through the page.
+ */
+function variablePublica(valor: unknown, respaldo: string): string {
+  return typeof valor === 'string' && valor !== '' ? valor : respaldo;
+}
+
+const instagram = variablePublica(
+  import.meta.env.PUBLIC_INSTAGRAM_URL,
+  'https://www.instagram.com/seresmigratorios/'
+);
+
+const aConfirmar = t(idioma, 'estados.aConfirmar');
+---
+
+<Pagina
+  titulo={t(idioma, 'ediciones.titulo')}
+  descripcion={t(idioma, 'ediciones.descripcionSeo')}
+  idioma={idioma}
+  rutaActual={Astro.url.pathname}
+  encabezado={{
+    titulo: t(idioma, 'ediciones.titulo'),
+    subtitulo: t(idioma, 'ediciones.subtitulo'),
+  }}
+  contenedor={false}
+>
+  {/* PRÓXIMA EDICIÓN — 4fr/8fr grid, 32px column gap (Ediciones.dc.html:44) */}
+  <section class="contenedor seccion grilla-4-8">
+    <h2 class="seccion-titulo">{t(idioma, 'ediciones.proximaEdicion')}</h2>
+    <div class="flex flex-col items-start gap-6 md:gap-8">
+      {
+        proxima ? (
+          <div class="relative w-full">
+            <BloqueFicha
+              fecha={fechaCorta(proxima.data.fecha)}
+              horario={proxima.data.horario.etiqueta}
+              lugar={lineasDeLugar(proxima)}
+              idioma={idioma}
+            />
+            {/* Placement lives on this wrapper, never on the component
+                (diseno-web-indice.md decision 13). `--text-manuscrita` scopes the
+                lamina's 1.75rem onto `Anotacion`'s own `text-manuscrita`
+                utility, the same idiom `FichaFotografo.astro` already uses; no
+                class here contains "anotacion" or "sello", substrings theme.css
+                matches to cancel transforms under reduced motion. */}
+            <div
+              class="absolute -top-2 right-0 whitespace-nowrap md:-top-[34px]"
+              style="--text-manuscrita: 1.75rem;"
+            >
+              <Anotacion texto={etiquetaCortaDeEdicion(proxima.data.nombre)} rotacion={-3} />
+            </div>
+          </div>
+        ) : (
+          <BloqueFicha
+            fecha={t(idioma, 'estados.proximaEdicionAConfirmar')}
+            horario={aConfirmar}
+            lugar={{ nombre: aConfirmar, direccion: '', ciudad: '' }}
+            idioma={idioma}
+          />
+        )
+      }
+      {
+        proxima ? (
+          <p class="text-tinta m-0 max-w-[65ch] font-mono text-base leading-relaxed text-pretty">
+            {t(idioma, 'ediciones.proximaLinea')}
+          </p>
+        ) : (
+          <p class="text-grafito m-0 max-w-[65ch] font-mono text-base leading-relaxed text-pretty">
+            {t(idioma, 'estados.todaviaNoHayFecha')}
+          </p>
+        )
+      }
+      {
+        proxima ? (
+          <Boton href={rutaLocalizada('/convocatoria', idioma)} anchoCompletoMobile>
+            {t(idioma, 'botones.postulate')}
+          </Boton>
+        ) : (
+          <Boton href={instagram} variante="sello" externo anchoCompletoMobile>
+            {t(idioma, 'botones.seguinosEnInstagram')}
+          </Boton>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    /* EDICIONES PASADAS — one expediente row per entry (Ediciones.dc.html:57).
+      Rendered only when there is at least one: a heading over an empty list is
+      not a state the approved design has. */
+  }
+  {
+    pasadas.length > 0 && (
+      <section class="contenedor seccion flex flex-col gap-8 pb-16 md:gap-12 md:pb-24">
+        <h2 class="seccion-titulo">{t(idioma, 'ediciones.edicionesPasadas')}</h2>
+        {pasadas.map((edicion) => {
+          const rutaEdicion = rutaLocalizada(`/ediciones/${edicion.data.slug}`, idioma);
+          return (
+            <article class="grilla-4-8">
+              {/* 200px desktop / 120px mobile: the wrapper's width plus
+                  Tailwind's preflight `img { max-width: 100%; height: auto }`
+                  scales the single instance, so the stamp is not rendered twice. */}
+              <div class="w-[120px] md:w-[200px]">
+                <Sello
+                  ciudad={edicion.data.sello.ciudad}
+                  fecha={edicion.data.sello.fechaCorta}
+                  imagen={selloEstampado}
+                  tamano={200}
+                  rotacion={-12}
+                  idioma={idioma}
+                />
+              </div>
+              <div class="flex flex-col items-start gap-6 md:gap-10">
+                {/* OBSERVACIÓN: the lamina's row shows no edition name at all, so
+                    its "Ver la edición" button names no target — with more than one
+                    past edition every row would read the same. sitemap.md §2.5 asks
+                    for a `CajaNombre` with the name; it is rendered here as the
+                    row's heading so the archive is navigable by name. */}
+                <h3 class="m-0">
+                  <CajaNombre texto={edicion.data.nombre} href={rutaEdicion} />
+                </h3>
+                <BloqueFicha
+                  fecha={fechaCorta(edicion.data.fecha)}
+                  horario={edicion.data.horario.etiqueta}
+                  lugar={lineasDeLugar(edicion)}
+                  idioma={idioma}
+                />
+                <Boton href={rutaEdicion} anchoCompletoMobile>
+                  {t(idioma, 'botones.verLaEdicion')}
+                </Boton>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+    )
+  }
+</Pagina>

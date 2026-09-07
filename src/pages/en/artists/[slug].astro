@@ -1,0 +1,32 @@
+---
+/**
+ * `/en/artists/[slug]` — English twin of `/artistas/[slug]` (SM-037, SM-048).
+ * Shared body in `internos/paginas/Artista.astro`; this file only resolves the
+ * entry and fixes the locale, so the two languages cannot drift apart. Content
+ * slugs are not translated: `/en/artists/herick-frontado`.
+ */
+import { getCollection } from 'astro:content';
+
+import PlantillaArtista from '../../../components/internos/paginas/Artista.astro';
+import type { Idioma } from '../../../i18n/utils.ts';
+import { publicados, type Artista } from '../../../orden-artistas.ts';
+
+export async function getStaticPaths() {
+  const artistas = await getCollection('artistas');
+  // Drafts get no page at all, the same way they get no row in the index.
+  return publicados(artistas).map((artista) => ({
+    params: { slug: artista.data.slug },
+    props: { artista },
+  }));
+}
+
+interface Props {
+  artista: Artista;
+}
+
+/** This file only ever renders under the `/en/` locale. */
+const idioma: Idioma = 'en';
+const { artista } = Astro.props;
+---
+
+<PlantillaArtista idioma={idioma} artista={artista} />

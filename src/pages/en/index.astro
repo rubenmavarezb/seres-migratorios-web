@@ -1,27 +1,15 @@
 ---
 /**
- * English counterpart of the Fase 1 test page (SM-012, updated in SM-013):
- * same layout, same dictionary keys, `en.json` instead of `es.json`. Replaced
- * by the real home page in SM-034.
- *
- * `idioma` is not passed to `Pagina` on purpose: `Base` derives it from
- * `Astro.currentLocale`, and this page is the check that it resolves to `en`.
- * "Seres Migratorios" is a proper name and is never translated.
+ * `/en/` — English home, twin of `/` (SM-034), replacing the Fase 1 test page.
+ * Shared body in `internos/paginas/Home.astro` (SM-048); this file only fixes
+ * the locale, so both routes render the same structure with the same dictionary
+ * keys and `en.json` instead of `es.json`.
  */
-import Pagina from '../../layouts/Pagina.astro';
-import { type Idioma, t } from '../../i18n/utils.ts';
+import Home from '../../components/internos/paginas/Home.astro';
+import type { Idioma } from '../../i18n/utils.ts';
 
 /** This file only ever renders under the `/en/` locale. */
 const idioma: Idioma = 'en';
 ---
 
-<Pagina
-  titulo={t(idioma, 'seo.tituloSitio')}
-  descripcion={t(idioma, 'seo.descripcionPorDefecto')}
-  rutaActual={Astro.url.pathname}
-  encabezado={{
-    titulo: t(idioma, 'seo.tituloSitio'),
-    subtitulo: t(idioma, 'seo.descripcionPorDefecto'),
-  }}
-  contenedor={false}
-/>
+<Home idioma={idioma} />

@@ -16,7 +16,8 @@
     "check": "astro check",
     "test": "playwright test",
     "test:i18n": "node scripts/i18n-paridad.mjs",
-    "test:unit": "npm run test:i18n && node --test 'tests/unitarias/**/*.test.mjs'"
+    "test:textos": "node scripts/texto-hardcodeado.mjs",
+    "test:unit": "npm run test:i18n && npm run test:textos && node --test 'tests/unitarias/**/*.test.mjs'"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

@@ -1,0 +1,14 @@
+---
+/**
+ * `/en/editions` — English twin of `/ediciones` (SM-039, SM-048). Its body
+ * lives in `internos/paginas/Ediciones.astro`, shared with the Spanish route;
+ * this file only fixes the locale.
+ */
+import Ediciones from '../../../components/internos/paginas/Ediciones.astro';
+import type { Idioma } from '../../../i18n/utils.ts';
+
+/** This file only ever renders under the `/en/` locale. */
+const idioma: Idioma = 'en';
+---
+
+<Ediciones idioma={idioma} />

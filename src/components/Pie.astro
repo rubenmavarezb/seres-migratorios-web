@@ -161,11 +161,15 @@ function variablePublica(valor: unknown, respaldo: string): string {
   return typeof valor === 'string' && valor !== '' ? valor : respaldo;
 }
 
-// The collective has no address yet: the fallback is the visible placeholder of
-// .env.example, and the value is plain text rather than a `mailto:` so an
-// unresolved placeholder never becomes a broken link. The láminas render it as
-// plain text too, never as a link.
-const email = variablePublica(import.meta.env.PUBLIC_EMAIL_CONTACTO, '[EMAIL DEL COLECTIVO]');
+// The collective has no address yet: the fallback is the visible placeholder
+// (`pie.contacto.emailPendiente`, the same bracket text .env.example documents,
+// in the language of the page — SM-047), and the value is plain text rather
+// than a `mailto:` so an unresolved placeholder never becomes a broken link.
+// The láminas render it as plain text too, never as a link.
+const email = variablePublica(
+  import.meta.env.PUBLIC_EMAIL_CONTACTO,
+  t(idioma, 'pie.contacto.emailPendiente')
+);
 
 // Unlike the email, PLAN.md §14 and .env.example carry the real Instagram URL,
 // so the fallback is that value and not a placeholder.

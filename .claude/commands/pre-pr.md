@@ -26,7 +26,7 @@ Ejemplo:
 2. **Gates del CI, en orden y sin frenar en el primero** (para reportar todo junto):
    - `npx astro check`
    - `npm run lint`
-   - `npm run test:unit` (paridad i18n + `node --test`)
+   - `npm run test:unit` (paridad i18n + texto hardcodeado en `.astro` (`scripts/texto-hardcodeado.mjs`, SM-047) + `node --test`)
    - `npx prettier --check .`
    - `npm run build`
    - `npx playwright test` (levanta `npm run preview`; si `tests/e2e/` sigue solo con `.gitkeep`, informar "sin tests e2e todavía (SM-059)" y no contarlo como fallo)
