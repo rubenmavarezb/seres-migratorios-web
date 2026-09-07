@@ -231,10 +231,12 @@ function esPlaceholder(valor: string): boolean {
 }
 // Mercado Pago link of the "Cómo apoyar" band, read like /apoyar reads its
 // three donation links: a real `PUBLIC_LINK_MERCADOPAGO` renders a link, the
-// `.env.example` placeholder renders as mono text with no `href`.
+// placeholder (`apoyar.linkMercadoPago`, the bracket text .env.example
+// documents, in the language of the page — SM-047) renders as mono text with
+// no `href`.
 const mercadoPagoValor = variablePublica(
   import.meta.env.PUBLIC_LINK_MERCADOPAGO,
-  '[LINK MERCADO PAGO]'
+  t(idioma, 'apoyar.linkMercadoPago')
 );
 const mercadoPago = { valor: mercadoPagoValor, esLink: !esPlaceholder(mercadoPagoValor) };
 const CLASE_LINK_MONO =

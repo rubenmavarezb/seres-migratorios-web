@@ -40,7 +40,9 @@
  *  - Donation links and "copias en venta" link are placeholders in
  *    `.env.example`/the lámina, so they render as mono text with no `href` until
  *    real values land in the Netlify env. The `PUBLIC_LINK_*` values are the
- *    same in both languages: there is no per-locale donation link.
+ *    same in both languages (there is no per-locale donation link); only the
+ *    placeholder shown while they are unset is localized, through
+ *    `apoyar.linkMercadoPago` / `linkPaypal` / `linkCafecito` (SM-047).
  *  - `apoyar.edicion01Monto` is shown as the visible placeholder it is; no
  *    recaudation figure anywhere (this ticket's hard rule).
  *  - `apoyar.anotacion`, `.aporteLinea1`, `.aporteLinea2`, `.copiasLinea1` and
@@ -63,7 +65,7 @@ interface Props {
 
 const { idioma } = Astro.props;
 
-/** A `PUBLIC_*` env value as a string, falling back to the `.env.example` placeholder. Same shape as `Pie.astro`. */
+/** A `PUBLIC_*` env value as a string, falling back to the placeholder the dictionaries carry for it (the bracket text `.env.example` documents, in the language of the page — SM-047). Same shape as `Pie.astro`. */
 function variablePublica(valor: unknown, respaldo: string): string {
   return typeof valor === 'string' && valor !== '' ? valor : respaldo;
 }
@@ -86,9 +88,16 @@ const HANDLE = '@seresmigratorios';
  * the lámina.
  */
 const donaciones = [
-  { valor: variablePublica(import.meta.env.PUBLIC_LINK_MERCADOPAGO, '[LINK MERCADO PAGO]') },
-  { valor: variablePublica(import.meta.env.PUBLIC_LINK_PAYPAL, '[LINK PAYPAL]') },
-  { valor: variablePublica(import.meta.env.PUBLIC_LINK_CAFECITO, '[LINK CAFECITO]') },
+  {
+    valor: variablePublica(
+      import.meta.env.PUBLIC_LINK_MERCADOPAGO,
+      t(idioma, 'apoyar.linkMercadoPago')
+    ),
+  },
+  { valor: variablePublica(import.meta.env.PUBLIC_LINK_PAYPAL, t(idioma, 'apoyar.linkPaypal')) },
+  {
+    valor: variablePublica(import.meta.env.PUBLIC_LINK_CAFECITO, t(idioma, 'apoyar.linkCafecito')),
+  },
 ].map((d) => ({ valor: d.valor, esLink: !esPlaceholder(d.valor) }));
 
 const rutaConvocatoria = rutaLocalizada('/convocatoria', idioma);
