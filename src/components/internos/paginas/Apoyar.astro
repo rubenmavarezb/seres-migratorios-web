@@ -52,6 +52,8 @@
  *  - `/en/support` links to `/en/open-call`, which does not exist until Fase 4
  *    (same as `/apoyar` → `/convocatoria` today).
  */
+import { getCollection } from 'astro:content';
+
 import Boton from '../../Boton.astro';
 import CajaNombre from '../../CajaNombre.astro';
 import FotoPegada from '../../FotoPegada.astro';
@@ -64,6 +66,10 @@ interface Props {
 }
 
 const { idioma } = Astro.props;
+
+// SM-056: the call stays reachable while closed; only the CTA changes.
+const convocatorias = await getCollection('convocatorias');
+const convocatoriaAbierta = convocatorias.some((convocatoria) => convocatoria.data.abierta);
 
 /** A `PUBLIC_*` env value as a string, falling back to the placeholder the dictionaries carry for it (the bracket text `.env.example` documents, in the language of the page — SM-047). Same shape as `Pie.astro`. */
 function variablePublica(valor: unknown, respaldo: string): string {
@@ -179,7 +185,7 @@ const CLASE_PLACEHOLDER_MONO =
         </div>
         <div class="flex w-full flex-col items-start gap-4">
           <Boton href={rutaConvocatoria} anchoCompletoMobile>
-            {t(idioma, 'botones.postulate')}
+            {t(idioma, convocatoriaAbierta ? 'botones.postulate' : 'botones.comoParticipar')}
           </Boton>
           <a href={instagramUrl} rel="noopener" class={CLASE_LINK_MONO}>{HANDLE}</a>
         </div>

@@ -201,8 +201,8 @@ const convocatorias = defineCollection({
     disciplinas: z.array(z.enum(DISCIPLINAS)).default([...DISCIPLINAS]),
     // Netlify Forms identifies the form by its `name` in the HTML, not by an
     // endpoint: there is no URL to store and no environment variable to load.
-    // It is the same value in ES and EN so that submissions from both languages
-    // land in a single inbox (see PLAN.md §6 and §8).
+    // This is the Spanish name. English uses open-call: Netlify associates one
+    // success page with each name (Ruben decision, 08.09.2026; SM-054).
     formNombre: z.string().default('convocatoria'),
   }),
 });

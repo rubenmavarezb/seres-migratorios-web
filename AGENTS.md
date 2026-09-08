@@ -73,7 +73,7 @@ Contraste AA. Foco visible siempre (outline 2 px `azul-sello`, offset 2 px); nun
 
 ## Formulario de convocatoria
 
-`<form name="convocatoria" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/gracias">` (en EN, `action="/en/thanks"`), un solo `name` en los dos idiomas y un campo oculto `idioma`. El honeypot `bot-field` va con el atributo `hidden` y fuera del orden de tabulación. Netlify detecta el formulario en el HTML del build: si `abierta` es `false` en los dos idiomas, el `<form>` no existe y puede desaparecer del panel (ver `modelo-de-contenido.md` §6). Sin endpoint ni variable de entorno.
+`<form name="convocatoria" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/gracias">` en ES; en EN, `name="open-call"` y `action="/en/thanks"`. Ambos incluyen `form-name` con el nombre correspondiente y un campo oculto `idioma`. Decisión de Ruben del 08.09.2026: dos nombres porque Netlify comparte la página de éxito entre formularios del mismo nombre y devolvía HTML español después del POST inglés. El honeypot `bot-field` va con el atributo `hidden` y fuera del orden de tabulación. Netlify detecta el formulario en el HTML del build: si `abierta` es `false` en los dos idiomas, el `<form>` no existe y puede desaparecer del panel (ver `modelo-de-contenido.md` §6). Sin endpoint ni variable de entorno.
 
 ## Cómo agregar un artista o una edición
 

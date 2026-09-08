@@ -82,6 +82,10 @@ interface Props {
 
 const { idioma } = Astro.props;
 
+// SM-056: the call stays reachable while closed; only the CTA changes.
+const convocatorias = await getCollection('convocatorias');
+const convocatoriaAbierta = convocatorias.some((convocatoria) => convocatoria.data.abierta);
+
 const ediciones = await getCollection('ediciones');
 const artistas = await getCollection('artistas');
 const artistasPorId = new Map(artistas.map((entrada) => [entrada.id, entrada]));
@@ -437,7 +441,7 @@ const CLASE_PLACEHOLDER_MONO =
         {
           hayProxima ? (
             <Boton href={rutaLocalizada('/convocatoria', idioma)} anchoCompletoMobile>
-              {t(idioma, 'botones.postulate')}
+              {t(idioma, convocatoriaAbierta ? 'botones.postulate' : 'botones.comoParticipar')}
             </Boton>
           ) : (
             <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">

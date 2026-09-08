@@ -1,0 +1,9 @@
+---
+/** SM-054 — localized route; shared confirmation body in Gracias.astro. */
+import Gracias from '../../components/internos/paginas/Gracias.astro';
+import type { Idioma } from '../../i18n/utils.ts';
+
+const idioma: Idioma = 'en';
+---
+
+<Gracias idioma={idioma} />

@@ -1,0 +1,26 @@
+[
+  {
+    "idioma": "es",
+    "javaScriptEnabled": true,
+    "abierta": true,
+    "resultado": "OK"
+  },
+  {
+    "idioma": "es",
+    "javaScriptEnabled": false,
+    "abierta": true,
+    "resultado": "OK"
+  },
+  {
+    "idioma": "en",
+    "javaScriptEnabled": true,
+    "abierta": true,
+    "resultado": "OK"
+  },
+  {
+    "idioma": "en",
+    "javaScriptEnabled": false,
+    "abierta": true,
+    "resultado": "OK"
+  }
+]

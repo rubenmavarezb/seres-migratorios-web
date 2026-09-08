@@ -1,0 +1,62 @@
+---
+/**
+ * Gracias — shared confirmation page (SM-054; sitemap.md §2.9;
+ * design-system.md §7, Sello and Boton; design/Convocatoria.dc.html,
+ * Gracias desktop and mobile screens).
+ * OBSERVACIÓN: SM-054 takes precedence over sitemap §2.9: one home button
+ * and gracias.linea, without promising an automatic confirmation email.
+ * The decorative scan belongs to edition 01, not to the pending open call.
+ */
+import { getCollection } from 'astro:content';
+import Boton from '../../Boton.astro';
+import Sello from '../../Sello.astro';
+import selloImagen from '../../../assets/marca/sello.png';
+import Pagina from '../../../layouts/Pagina.astro';
+import { type Idioma, rutaLocalizada, t } from '../../../i18n/utils.ts';
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const ediciones = await getCollection('ediciones');
+const primera = [...ediciones].sort((a, b) => a.data.fecha.getTime() - b.data.fecha.getTime())[0];
+const aConfirmar = t(idioma, 'estados.aConfirmar');
+---
+
+<Pagina
+  titulo={t(idioma, 'gracias.titulo')}
+  descripcion={t(idioma, 'gracias.linea')}
+  idioma={idioma}
+  rutaActual={Astro.url.pathname}
+  noindex
+  contenedor={false}
+>
+  <section
+    slot="encabezado"
+    class="contenedor flex flex-col items-center gap-8 pt-12 pb-16 text-center md:gap-12 md:pt-24 md:pb-32"
+  >
+    <div class="*:size-50 md:*:size-80">
+      <Sello
+        imagen={selloImagen}
+        ciudad={primera?.data.sello.ciudad ?? aConfirmar}
+        fecha={primera?.data.sello.fechaCorta ?? aConfirmar}
+        tamano={320}
+        rotacion={-12}
+        decorativo
+        idioma={idioma}
+      />
+    </div>
+    <h1 class="font-display text-display-lg text-tinta m-0 uppercase">
+      {t(idioma, 'gracias.titulo')}
+    </h1>
+    <p class="font-mono text-tinta m-0 max-w-[50ch] leading-relaxed text-pretty">
+      {t(idioma, 'gracias.linea')}
+    </p>
+    <div class="w-full md:w-auto">
+      <Boton href={rutaLocalizada('/', idioma)} anchoCompletoMobile>
+        {t(idioma, 'botones.volverAlInicio')}
+      </Boton>
+    </div>
+  </section>
+</Pagina>

@@ -76,6 +76,10 @@ interface Props {
 
 const { idioma } = Astro.props;
 
+// SM-056: the call stays reachable while closed; only the CTA changes.
+const convocatorias = await getCollection('convocatorias');
+const convocatoriaAbierta = convocatorias.some((convocatoria) => convocatoria.data.abierta);
+
 const ediciones = await getCollection('ediciones');
 
 /** There is a single `proxima` at a time (CLAUDE.md, "Cómo agregar … una edición"). */
@@ -172,7 +176,7 @@ const aConfirmar = t(idioma, 'estados.aConfirmar');
       {
         proxima ? (
           <Boton href={rutaLocalizada('/convocatoria', idioma)} anchoCompletoMobile>
-            {t(idioma, 'botones.postulate')}
+            {t(idioma, convocatoriaAbierta ? 'botones.postulate' : 'botones.comoParticipar')}
           </Boton>
         ) : (
           <Boton href={instagram} variante="sello" externo anchoCompletoMobile>

@@ -1,0 +1,22 @@
+[
+  {
+    "idioma": "es",
+    "formName": "convocatoria",
+    "postStatus": 200,
+    "url": "https://deploy-preview-16--seres-migratorios.netlify.app/gracias",
+    "htmlLang": "es",
+    "titulo": " Gracias ",
+    "requestId": "01M20HDWG8JP4DNVFRE6B10JM1",
+    "javaScriptEnabled": false
+  },
+  {
+    "idioma": "en",
+    "formName": "open-call",
+    "postStatus": 200,
+    "url": "https://deploy-preview-16--seres-migratorios.netlify.app/en/thanks",
+    "htmlLang": "en",
+    "titulo": " Thanks ",
+    "requestId": "01M20HDXYTXBG3GTFY3KWSRC4H",
+    "javaScriptEnabled": false
+  }
+]

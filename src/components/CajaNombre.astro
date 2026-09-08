@@ -27,9 +27,18 @@ interface Props {
   tamanoMobile?: 'normal' | 'chica';
   /** Inverts to fondo tinta / texto papel: the active entry of a selector. */
   activa?: boolean;
+  /** SM-056: grafito marks the closed call, as in Convocatoria.dc.html. */
+  tono?: 'tinta' | 'grafito';
 }
 
-const { texto, href, tamano = 'normal', tamanoMobile = tamano, activa = false } = Astro.props;
+const {
+  texto,
+  href,
+  tamano = 'normal',
+  tamanoMobile = tamano,
+  activa = false,
+  tono = 'tinta',
+} = Astro.props;
 
 /**
  * Size classes per breakpoint. `.caja-nombre` (theme.css) carries the normal
@@ -84,7 +93,13 @@ const clases = [
   'caja-nombre',
   claseTamano,
   claseAreaDeToque,
-  activa ? 'bg-tinta text-papel' : 'text-tinta',
+  tono === 'grafito'
+    ? activa
+      ? 'border-grafito bg-grafito text-papel'
+      : 'border-grafito text-grafito'
+    : activa
+      ? 'bg-tinta text-papel'
+      : 'text-tinta',
   href
     ? 'transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello'
     : '',
