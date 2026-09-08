@@ -14,17 +14,17 @@
  * (`error`) and writes a mono message below the field — never colour alone
  * (design-system.md §12, "Formularios").
  *
- * Two independent error paths, by design (PLAN.md §8, diseno-web-indice.md
+ * Progressive error paths, by design (PLAN.md §8, diseno-web-indice.md
  * decision 8):
  * - the `error` prop, rendered by the server: the approved "Formulario ·
- *   error" screen and the component kit. It is the only path that can set
- *   `aria-invalid` and point `aria-describedby` at the message, so it is the
- *   one the acceptance criterion names.
+ *   error" screen and the component kit, with `aria-invalid` and
+ *   `aria-describedby` already present in the HTML.
  * - `:user-invalid`, native and JavaScript-free: after the person has
  *   interacted with the field, the browser's own validity state paints the
  *   same red and reveals the generic message of the dictionary. The
- *   per-field messages of the design ("Falta el email.") need the Constraint
- *   Validation API and land with the page's own script in SM-070.
+ *   per-field messages of the design ("Falta el email.") use the Constraint
+ *   Validation API in the page's own script (SM-070). The optional `errores`
+ *   prop adds its hooks and aria-state styles without changing other callers.
  *
  * The message slot is always rendered (with its height reserved on every
  * type but the checkbox) so revealing an error never makes the field jump —
@@ -66,6 +66,8 @@ interface Props {
   opciones?: { valor: string; etiqueta: string }[];
   /** Server-rendered error message. Turns on `aria-invalid` and `aria-describedby`. */
   error?: string;
+  /** SM-070: opt-in messages/hooks for the call's progressive validation. */
+  errores?: { requerido?: string; formato?: string };
   /** Help text below the field, in grafito. Hidden while the field is `:user-invalid`. */
   ayuda?: string;
   valor?: string;
@@ -86,6 +88,7 @@ const {
   placeholder,
   opciones = [],
   error,
+  errores,
   ayuda,
   valor,
   autocomplete,
@@ -106,6 +109,7 @@ const idAyuda = `${id}-ayuda`;
 
 const hayError = error !== undefined && error !== '';
 const hayAyuda = ayuda !== undefined && ayuda !== '';
+const mejoraProgresiva = errores !== undefined;
 
 // One message at a time, so the reserved slot never has to hold two: the
 // error wins over the help text, exactly as in Campo.jsx.
@@ -127,6 +131,7 @@ const clasesEtiqueta = [
   hayError
     ? 'text-error'
     : 'text-tinta group-focus-within/campo:text-azul-sello group-has-[:user-invalid]/campo:text-error',
+  ...(mejoraProgresiva ? ['group-has-[[aria-invalid=true]]/campo:text-error'] : []),
 ].join(' ');
 
 /**
@@ -147,6 +152,7 @@ const clasesControl = [
   // the focus blue on a field that is both — the precedence of Campo.jsx, and the
   // one that agrees with the label, whose `group-has-` rule already wins there.
   'user-invalid:border-error focus:user-invalid:border-error',
+  ...(mejoraProgresiva ? ['aria-invalid:border-error focus:aria-invalid:border-error'] : []),
   'focus:bg-azul-tinta-agua',
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello',
   tipo === 'textarea' ? 'resize-y' : 'min-h-11',
@@ -165,6 +171,7 @@ const clasesCasilla = [
   'bg-papel-puro checked:bg-tinta checked:bg-clip-content',
   hayError ? 'border-error' : 'border-tinta focus:border-azul-sello',
   'user-invalid:border-error focus:user-invalid:border-error',
+  ...(mejoraProgresiva ? ['aria-invalid:border-error focus:aria-invalid:border-error'] : []),
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello',
 ].join(' ');
 
@@ -183,7 +190,12 @@ const valorSeleccionado = valor ?? '';
 
 {
   tipo === 'checkbox' ? (
-    <div class="group/campo">
+    <div
+      class="group/campo"
+      data-validacion={mejoraProgresiva || undefined}
+      data-error-requerido={errores?.requerido}
+      data-error-formato={errores?.formato}
+    >
       {/* `for` on a label that also wraps its control is valid HTML and keeps the
           criterion's "<label for> real" literal. The message stays outside the
           label: any text inside it would be pulled into the accessible name. */}
@@ -217,14 +229,23 @@ const valorSeleccionado = valor ?? '';
           </span>
         )}
         {!hayError && (
-          <span class="hidden text-error group-has-[:user-invalid]/campo:block">
+          <span
+            id={mejoraProgresiva ? idError : undefined}
+            data-mensaje-error={mejoraProgresiva || undefined}
+            class="hidden text-error group-has-[:user-invalid]/campo:block"
+          >
             {mensajeGenerico}
           </span>
         )}
       </div>
     </div>
   ) : (
-    <div class="group/campo flex flex-col gap-1">
+    <div
+      class="group/campo flex flex-col gap-1"
+      data-validacion={mejoraProgresiva || undefined}
+      data-error-requerido={errores?.requerido}
+      data-error-formato={errores?.formato}
+    >
       <label for={id} class={clasesEtiqueta}>
         {etiqueta}
         {requerido && <span aria-hidden="true"> *</span>}
@@ -304,7 +325,11 @@ const valorSeleccionado = valor ?? '';
           </span>
         )}
         {!hayError && (
-          <span class="hidden text-error group-has-[:user-invalid]/campo:block">
+          <span
+            id={mejoraProgresiva ? idError : undefined}
+            data-mensaje-error={mejoraProgresiva || undefined}
+            class="hidden text-error group-has-[:user-invalid]/campo:block"
+          >
             {mensajeGenerico}
           </span>
         )}

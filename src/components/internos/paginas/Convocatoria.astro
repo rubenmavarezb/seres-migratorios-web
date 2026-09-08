@@ -1,6 +1,6 @@
 ---
 /**
- * Convocatoria — shared ES/EN page (SM-054, SM-055, SM-056), composed from
+ * Convocatoria — shared ES/EN page (SM-054, SM-055, SM-056, SM-070), composed from
  * design-system.md §7 canonical fields and buttons. Layout and both states
  * follow design/Convocatoria.dc.html, including its three information blocks.
  *
@@ -80,10 +80,10 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
     )
   }
   <section class="border-linea border-t">
-    <div class={`${CLASE_CONTENEDOR} grid gap-x-8 gap-y-8 py-12 md:grid-cols-3 md:py-16`}>
+    <div class={`${CLASE_CONTENEDOR} grid gap-x-8 gap-y-8 py-12 lg:grid-cols-3 md:py-16`}>
       {
         bloques.map((bloque) => (
-          <div class="grid items-start justify-items-start gap-3 md:row-span-2 md:grid-rows-subgrid md:gap-4">
+          <div class="grid items-start justify-items-start gap-3 lg:row-span-2 lg:grid-rows-subgrid md:gap-4">
             <h2 class="m-0">
               <CajaNombre texto={bloque.titulo} tamanoMobile="chica" />
             </h2>
@@ -123,6 +123,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
               etiqueta={t(idioma, 'formulario.etiquetas.nombre')}
               requerido
               autocomplete="name"
+              errores={{ requerido: t(idioma, 'formulario.errores.faltaNombre') }}
               idioma={idioma}
             />
             <Campo
@@ -130,6 +131,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
               etiqueta={t(idioma, 'formulario.etiquetas.ciudad')}
               requerido
               autocomplete="address-level2"
+              errores={{ requerido: t(idioma, 'formulario.errores.faltaCiudad') }}
               idioma={idioma}
             />
             <Campo
@@ -137,6 +139,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
               etiqueta={t(idioma, 'formulario.etiquetas.pais')}
               requerido
               autocomplete="country-name"
+              errores={{ requerido: t(idioma, 'formulario.errores.faltaPais') }}
               idioma={idioma}
             />
             <Campo
@@ -146,6 +149,10 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
               requerido
               autocomplete="email"
               inputmode="email"
+              errores={{
+                requerido: t(idioma, 'formulario.errores.faltaEmail'),
+                formato: t(idioma, 'formulario.errores.emailInvalido'),
+              }}
               idioma={idioma}
             />
             <Campo
@@ -153,6 +160,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
               etiqueta={t(idioma, 'formulario.etiquetas.instagram')}
               placeholder={t(idioma, 'formulario.placeholders.instagram')}
               patron="@.+"
+              errores={{ formato: t(idioma, 'formulario.errores.instagramInvalido') }}
               idioma={idioma}
             />
             <Campo
@@ -161,6 +169,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
               tipo="url"
               inputmode="url"
               autocomplete="url"
+              errores={{ formato: t(idioma, 'formulario.errores.portfolioInvalido') }}
               idioma={idioma}
             />
             <Campo
@@ -169,6 +178,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
               tipo="select"
               requerido
               opciones={disciplinas}
+              errores={{ requerido: t(idioma, 'formulario.errores.faltaDisciplina') }}
               placeholder={t(idioma, 'formulario.placeholders.disciplina')}
               idioma={idioma}
             />
@@ -190,13 +200,19 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
             <div class="md:col-span-2">
               <Campo
                 nombre="consentimiento"
+                errores={{ requerido: t(idioma, 'formulario.errores.faltaConsentimiento') }}
                 etiqueta={t(idioma, 'formulario.etiquetas.consentimiento')}
                 tipo="checkbox"
                 requerido
                 idioma={idioma}
               />
             </div>
-            <div class="md:col-span-2">
+            <div class="flex flex-col items-start gap-6 md:col-span-2">
+              <p
+                role="alert"
+                data-resumen={t(idioma, 'formulario.resumen')}
+                class="border-error font-mono text-etiqueta text-error m-0 border-2 px-4 py-3 font-bold uppercase empty:hidden"
+              />
               <Boton tipo="submit" anchoCompletoMobile>
                 {t(idioma, 'botones.postulate')}
               </Boton>
@@ -222,3 +238,87 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
     </div>
   </section>
 </Pagina>
+
+<script>
+  // SM-070: opt in only after the handlers exist. No JavaScript means native
+  // validation and an ordinary POST; valid submissions always keep that POST.
+  const formulario = document.querySelector<HTMLFormElement>('form[name="convocatoria"]');
+  const resumen = formulario?.querySelector<HTMLElement>('[data-resumen]');
+
+  if (formulario && resumen) {
+    const campos = Array.from(
+      formulario.querySelectorAll<HTMLElement>('[data-validacion]')
+    ).flatMap((envoltorio) => {
+      const control = envoltorio.querySelector<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >('input, select, textarea');
+      const mensaje = envoltorio.querySelector<HTMLElement>('[data-mensaje-error]');
+      if (!control || !mensaje) return [];
+      return [
+        {
+          control,
+          mensaje,
+          envoltorio,
+          generico: mensaje.textContent?.trim() ?? '',
+          descripcion: control.getAttribute('aria-describedby'),
+          revisado: false,
+        },
+      ];
+    });
+    let intentoEnvio = false;
+
+    function actualizarResumen() {
+      const hayErrores = campos.some(
+        ({ control }) => control.getAttribute('aria-invalid') === 'true'
+      );
+      resumen!.textContent = intentoEnvio && hayErrores ? (resumen!.dataset.resumen ?? '') : '';
+    }
+
+    function validar(campo: (typeof campos)[number]): boolean {
+      const { control, mensaje, envoltorio, generico, descripcion } = campo;
+      const valido = control.validity.valid;
+      campo.revisado = true;
+      mensaje.textContent = valido
+        ? ''
+        : control.validity.valueMissing
+          ? (envoltorio.dataset.errorRequerido ?? generico)
+          : (envoltorio.dataset.errorFormato ?? generico);
+      mensaje.classList.toggle('hidden', valido);
+      mensaje.classList.toggle('block', !valido);
+      if (valido) {
+        control.removeAttribute('aria-invalid');
+        if (descripcion) control.setAttribute('aria-describedby', descripcion);
+        else control.removeAttribute('aria-describedby');
+      } else {
+        control.setAttribute('aria-invalid', 'true');
+        control.setAttribute('aria-describedby', mensaje.id);
+      }
+      return valido;
+    }
+
+    for (const campo of campos) {
+      campo.control.addEventListener('blur', () => {
+        validar(campo);
+        actualizarResumen();
+      });
+      for (const evento of ['input', 'change']) {
+        campo.control.addEventListener(evento, () => {
+          if (!campo.revisado) return;
+          validar(campo);
+          actualizarResumen();
+        });
+      }
+    }
+
+    formulario.addEventListener('submit', (evento) => {
+      intentoEnvio = true;
+      const invalidos = campos.filter((campo) => !validar(campo));
+      actualizarResumen();
+      if (invalidos.length) {
+        evento.preventDefault();
+        invalidos[0].control.focus();
+      }
+    });
+    formulario.noValidate = true;
+  }
+</script>

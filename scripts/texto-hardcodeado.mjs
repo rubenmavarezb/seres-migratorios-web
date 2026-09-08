@@ -172,6 +172,9 @@ function recorrer(nodo, padre, hallazgos) {
   const esComponente = nodo.type === 'component';
   for (const atributo of nodo.attributes ?? []) {
     if (atributo.kind !== 'quoted') continue;
+    // Campo.nombre is the control's technical name/id, never its visible label.
+    // Other components still expose nombre as copy (e.g. FichaFotografo).
+    if (esComponente && nodo.name === 'Campo' && atributo.name === 'nombre') continue;
     const valor = normalizar(atributo.value);
     if (valor === '' || esNoTraducible(valor)) continue;
     const visible = ATRIBUTOS_VISIBLES.has(atributo.name) && PALABRA.test(valor);
