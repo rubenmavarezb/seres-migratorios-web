@@ -35,8 +35,11 @@
      24 px gutter of the 12-column grid (design-system.md §5). `minmax(0, …)`
      instead of a bare `4fr`/`8fr` so a long unbreakable string (a URL, a
      handle) cannot blow the track wider than its share — same spelling as the
-     approved design. */
+     approved design. The 24 px gap holds on mobile too: every stacked
+     title + content block of the láminas (Home, Manifiesto, Ediciones,
+     Edición 01, Artistas) uses `gap: 24px` there, not 16 (QA visual de
+     Fase 2, R09). */
   .grilla-4-8 {
-    @apply grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:gap-6;
+    @apply grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)];
   }
 }

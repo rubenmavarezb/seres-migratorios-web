@@ -1,0 +1,13 @@
+---
+/**
+ * `/en/support` — English twin of `/apoyar` (SM-042, SM-048). Shared body in
+ * `internos/paginas/Apoyar.astro`; this file only fixes the locale.
+ */
+import Apoyar from '../../components/internos/paginas/Apoyar.astro';
+import type { Idioma } from '../../i18n/utils.ts';
+
+/** This file only ever renders under the `/en/` locale. */
+const idioma: Idioma = 'en';
+---
+
+<Apoyar idioma={idioma} />

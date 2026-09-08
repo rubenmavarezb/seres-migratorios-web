@@ -161,11 +161,15 @@ function variablePublica(valor: unknown, respaldo: string): string {
   return typeof valor === 'string' && valor !== '' ? valor : respaldo;
 }
 
-// The collective has no address yet: the fallback is the visible placeholder of
-// .env.example, and the value is plain text rather than a `mailto:` so an
-// unresolved placeholder never becomes a broken link. The láminas render it as
-// plain text too, never as a link.
-const email = variablePublica(import.meta.env.PUBLIC_EMAIL_CONTACTO, '[EMAIL DEL COLECTIVO]');
+// The collective has no address yet: the fallback is the visible placeholder
+// (`pie.contacto.emailPendiente`, the same bracket text .env.example documents,
+// in the language of the page — SM-047), and the value is plain text rather
+// than a `mailto:` so an unresolved placeholder never becomes a broken link.
+// The láminas render it as plain text too, never as a link.
+const email = variablePublica(
+  import.meta.env.PUBLIC_EMAIL_CONTACTO,
+  t(idioma, 'pie.contacto.emailPendiente')
+);
 
 // Unlike the email, PLAN.md §14 and .env.example carry the real Instagram URL,
 // so the fallback is that value and not a placeholder.
@@ -222,19 +226,29 @@ const HANDLE = '@seresmigratorios';
     <div
       class="order-1 grid min-w-0 flex-1 grid-cols-1 gap-6 md:order-2 md:min-w-55 md:grid-cols-[repeat(2,minmax(160px,auto))] md:gap-x-12"
     >
+      {
+        /* The láminas set `line-height: 1.4` on the four contact lines and give
+          the 0.04em letter-spacing of the etiqueta role only to the two
+          labels: the values are plain mono (`tracking-normal` undoes the
+          spacing `text-etiqueta` carries). QA visual de Fase 2, R10. */
+      }
       <div>
-        <p class="font-mono text-etiqueta m-0 font-bold uppercase">
+        <p class="font-mono text-etiqueta m-0 leading-[1.4] font-bold uppercase">
           {t(idioma, 'pie.contacto.email')}
         </p>
-        <p class="font-mono text-etiqueta text-tinta-suave m-0 break-words">{email}</p>
+        <p
+          class="font-mono text-etiqueta text-tinta-suave m-0 leading-[1.4] break-words tracking-normal"
+        >
+          {email}
+        </p>
       </div>
       <div>
-        <p class="font-mono text-etiqueta m-0 font-bold uppercase">
+        <p class="font-mono text-etiqueta m-0 leading-[1.4] font-bold uppercase">
           {t(idioma, 'pie.contacto.instagram')}
         </p>
         <a
           href={instagram}
-          class="font-mono text-etiqueta text-azul-sello inline-flex min-h-11 items-center break-words underline underline-offset-[3px] transition-colors hover:text-azul-marcador active:text-azul-profundo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
+          class="font-mono text-etiqueta text-azul-sello inline-flex min-h-11 items-center leading-[1.4] break-words underline underline-offset-[3px] tracking-normal transition-colors hover:text-azul-marcador active:text-azul-profundo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-sello"
           >{HANDLE}</a
         >
       </div>

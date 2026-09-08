@@ -1,7 +1,8 @@
 {
   "comun": {
     "irAlContenido": "Ir al contenido",
-    "cargando": "Cargando…"
+    "cargando": "Cargando…",
+    "cuerpoEnPendiente": "[CUERPO EN PENDIENTE]"
   },
   "nav": {
     "manifiesto": "Manifiesto",
@@ -138,7 +139,8 @@
   "pie": {
     "contacto": {
       "email": "Email:",
-      "instagram": "Instagram:"
+      "instagram": "Instagram:",
+      "emailPendiente": "[EMAIL DEL COLECTIVO]"
     },
     "aguante": "¡Aguante la fotografía!",
     "aliados": "[ALIADOS]"
@@ -172,7 +174,10 @@
     "voluntariadoLinea1": "Sumate al equipo de la próxima edición o compartí la convocatoria.",
     "muestraCopiaAlt": "Copia en venta: obra de Rubén Mavarez",
     "muestraCopiaPie": "[TÍTULO] · [PRECIO]",
-    "linkCopias": "[LINK COPIAS EN VENTA]"
+    "linkCopias": "[LINK COPIAS EN VENTA]",
+    "linkMercadoPago": "[LINK MERCADO PAGO]",
+    "linkPaypal": "[LINK PAYPAL]",
+    "linkCafecito": "[LINK CAFECITO]"
   },
   "manifiesto": {
     "comoEmpezo": "Cómo empezó",
@@ -278,7 +283,8 @@
     },
     "otros": "Otros artistas",
     "anterior": "← {nombre}",
-    "siguiente": "{nombre} →"
+    "siguiente": "{nombre} →",
+    "traduccion": "Traducción"
   },
   "lightbox": {
     "titulo": "Visor de fotos",

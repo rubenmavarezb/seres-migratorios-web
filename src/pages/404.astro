@@ -1,120 +1,15 @@
 ---
 /**
- * 404 (SM-043) — built to match `design/NoEncontrada.dc.html`. Astro emits this
- * as `dist/404.html`; Netlify serves it for any unknown route automatically
- * (no redirect rule needed).
- *
- * Uses `Pagina.astro` through its `encabezado` SLOT (not the prop): the 404
- * header is a custom section — a large `Sello`, a two-line `<h1>`, a decorative
- * `Anotacion`, a mono line and a `Boton` — that the standard prop header cannot
- * produce. `Pagina`'s own doc lists the 404 as the slot case ("96px 48px 128px,
- * with a Sello above the headline"). Filling the slot replaces the whole header
- * `<section>`, so this page writes its own `<section class="contenedor …">`.
- * `contenedor={false}` and no default children: the page is only the header.
- *
- * `noindex` through `Pagina`/`Base`: a 404 must never be indexed.
- *
- * Accessibility: the "acá no hay nada" `Anotacion` is decorative (the lámina's
- * NOTA says so), rendered `aria-hidden`; the accessible message is the mono
- * line (`noEncontrada.linea`). The `<h1>` two-line split keeps its accessible
- * name equal to the full title "Página no encontrada".
- *
- * OBSERVACIONES:
- *  - The lámina sets the annotation at 4rem (desktop, 1440) / 1.5rem (mobile,
- *    390) and rotated -6°. The size goes through `Anotacion`'s `tamano` prop as
- *    a `clamp()` whose linear term hits exactly 1.5rem at 390px and 4rem at
- *    1440px. `Anotacion.astro` still clamps rotation to [-3, 2], so it renders
- *    at -3° instead of -6°: widening the clamp on a canonical component is
- *    outside this ticket's scope (CLAUDE.md: a design mismatch is documented,
- *    not corrected unilaterally).
- *  - The large `Sello` uses `marca/sello.png` at 320px desktop / 200px mobile,
- *    rotated -12° (within `Sello`'s [-15, 15] range). Sizing lives on the
- *    wrapper (the component takes a single `tamano`), so it is generated at
- *    320 and scaled down on mobile with the direct-child variant.
+ * `/404` (SM-043) — Spanish route, emitted as `dist/404.html`, which Netlify
+ * serves for any unknown route. Shared body in
+ * `internos/paginas/NoEncontrada.astro` (SM-048); this file only fixes the
+ * locale, so the English twin `/en/404` renders the very same body.
  */
-import { getCollection } from 'astro:content';
+import NoEncontrada from '../components/internos/paginas/NoEncontrada.astro';
+import type { Idioma } from '../i18n/utils.ts';
 
-import Anotacion from '../components/Anotacion.astro';
-import Boton from '../components/Boton.astro';
-import Sello from '../components/Sello.astro';
-import selloImagen from '../assets/marca/sello.png';
-import Pagina from '../layouts/Pagina.astro';
-import { type Idioma, rutaLocalizada, t } from '../i18n/utils.ts';
-
+/** Default locale: this route carries no `/en/` prefix. */
 const idioma: Idioma = 'es';
-
-// The seal is edition 01's scan, so its accessible name reads the oldest
-// edition of the collection — the same lookup `Pie.astro` does — never a
-// literal written into the page.
-const ediciones = await getCollection('ediciones');
-const edicionMasAntigua = [...ediciones].sort(
-  (a, b) => a.data.fecha.getTime() - b.data.fecha.getTime()
-)[0];
-const aConfirmar = t(idioma, 'estados.aConfirmar');
-const SELLO_CIUDAD = edicionMasAntigua?.data.sello.ciudad ?? aConfirmar;
-const SELLO_FECHA = edicionMasAntigua?.data.sello.fechaCorta ?? aConfirmar;
-
-// The lámina breaks the title after "Página no". The dictionary keeps the
-// sentence whole (`noEncontrada.titulo`) and the last word moves to the second
-// line, so the accessible name is still the full title.
-const titulo404 = t(idioma, 'noEncontrada.titulo');
-const corte = titulo404.lastIndexOf(' ');
-const tituloLineas =
-  corte === -1 ? [titulo404, ''] : [titulo404.slice(0, corte), titulo404.slice(corte + 1)];
 ---
 
-<Pagina
-  titulo={`${t(idioma, 'noEncontrada.titulo')} ${t(idioma, 'seo.separador')} ${t(idioma, 'seo.tituloSitio')}`}
-  descripcion={t(idioma, 'noEncontrada.linea')}
-  idioma={idioma}
-  rutaActual={Astro.url.pathname}
-  noindex
-  contenedor={false}
->
-  <section
-    slot="encabezado"
-    class="contenedor flex flex-col items-start gap-12 pt-16 pb-24 md:pt-24 md:pb-32"
-  >
-    {/* Large seal: 320px generated, scaled to 200px below the desktop breakpoint. */}
-    <div class="*:size-50 md:*:size-80">
-      <Sello
-        imagen={selloImagen}
-        ciudad={SELLO_CIUDAD}
-        fecha={SELLO_FECHA}
-        tamano={320}
-        rotacion={-12}
-        idioma={idioma}
-      />
-    </div>
-
-    <div class="relative inline-block pb-10 md:pb-0">
-      {/* Two visual lines; the accessible name reads "Página no encontrada". */}
-      <h1 class="font-display text-display-lg text-tinta m-0 uppercase">
-        {tituloLineas[0]}
-        {tituloLineas[1] !== '' && <br />}
-        {tituloLineas[1]}
-      </h1>
-      {/* Decorative annotation overlaid on the bottom-right corner (lámina). */}
-      <div
-        class="absolute right-0 -bottom-2 whitespace-nowrap md:-right-4 md:bottom-6"
-        aria-hidden="true"
-      >
-        <Anotacion
-          texto={t(idioma, 'noEncontrada.anotacion')}
-          rotacion={-3}
-          tamano="clamp(1.5rem, 0.571rem + 3.81vw, 4rem)"
-        />
-      </div>
-    </div>
-
-    <p class="font-mono text-tinta m-0 max-w-[65ch] leading-relaxed text-pretty">
-      {t(idioma, 'noEncontrada.linea')}
-    </p>
-
-    <div class="w-full md:w-auto">
-      <Boton href={rutaLocalizada('/', idioma)} anchoCompletoMobile>
-        {t(idioma, 'botones.volverAlInicio')}
-      </Boton>
-    </div>
-  </section>
-</Pagina>
+<NoEncontrada idioma={idioma} />

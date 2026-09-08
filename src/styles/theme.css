@@ -159,9 +159,15 @@
     @apply block h-auto w-full;
   }
 
-  /* Caja de nombre: usar para CajaNombre y como base del selector ES/EN en Nav. */
+  /* Caja de nombre: usar para CajaNombre y como base del selector ES/EN en Nav.
+     Letter-spacing del rol etiqueta (0.04em, el mismo token que text-etiqueta) y
+     line-height 1: con padding 12 y borde 2 la caja mide exactamente los 44 px
+     de min-h-11, como CajaNombre.jsx (line-height normal + min-height 44). Con
+     tracking-wide (0.025em) y el 1.5 heredado medía 49 px y 0.35 px de
+     espaciado (QA visual de Fase 2, R07 y R08). whitespace-nowrap como
+     CajaNombre.jsx: un nombre nunca parte en dos líneas dentro de la caja. */
   .caja-nombre {
-    @apply inline-flex min-h-11 items-center justify-center border-2 border-tinta bg-papel-puro px-6 py-3 font-bold uppercase tracking-wide;
+    @apply inline-flex min-h-11 items-center justify-center border-2 border-tinta bg-papel-puro px-6 py-3 font-bold whitespace-nowrap uppercase leading-none tracking-(--text-etiqueta--letter-spacing);
     font-family: var(--font-mono);
   }
 
@@ -178,9 +184,12 @@
 
   /* Boton (BRIEF §2.4.13): mono 700 mayúsculas, borde 2px tinta, fondo
      papel-puro; hover invierte a fondo tinta/texto papel; foco con outline
-     azul-sello. Variante "sello": borde y texto azul-sello, hover azul-profundo. */
+     azul-sello. Variante "sello": borde y texto azul-sello, hover azul-profundo.
+     Line-height 1.2 y letter-spacing 0.04em como Boton.jsx: 48.8 px de alto
+     con padding 14 y borde 2. Con el 1.5 heredado y tracking-wide medía 53 px
+     y 0.35 px de espaciado (QA visual de Fase 2, R07). */
   .boton {
-    @apply inline-flex min-h-11 items-center justify-center border-2 border-tinta bg-papel-puro px-6 py-3.5 font-bold uppercase tracking-wide text-tinta transition-colors duration-150;
+    @apply inline-flex min-h-11 items-center justify-center border-2 border-tinta bg-papel-puro px-6 py-3.5 font-bold uppercase leading-[1.2] tracking-(--text-etiqueta--letter-spacing) text-tinta transition-colors duration-150;
     font-family: var(--font-mono);
   }
   .boton:hover {

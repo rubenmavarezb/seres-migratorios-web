@@ -87,8 +87,10 @@
       "Bash(rm -rf:*)",
       "Bash(sudo:*)",
       "Bash(eval:*)",
-      "Bash(curl:*|*sh)",
-      "Bash(wget:*|*sh)"
+      "Bash(curl*|*sh)",
+      "Bash(curl*|*sh *)",
+      "Bash(wget*|*sh)",
+      "Bash(wget*|*sh *)"
     ]
   },
   "cleanupPeriodDays": 30

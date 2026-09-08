@@ -32,12 +32,13 @@
  * `fotos`.
  *
  * OBSERVACIÓN: the design sizes every photo of the collage with an explicit
- * height (`alto="460px"`, `540px`, …) through its own FotoPegada. The canonical
- * `FotoPegada.astro` of this repo has no `alto`/`ancho` prop and renders the
- * image at `h-auto w-full`, and this ticket may not add props to it, so each
- * photo keeps its natural aspect ratio inside the column it spans. The
- * overlaps, rotations and column spans are the ones of the design; the heights
- * follow the photo.
+ * height (`alto="460px"`, `540px`, …) through its own FotoPegada. This helper
+ * does not pass one: `FotoPegada.astro` accepts `alto` since the QA visual de
+ * Fase 2 (R22), but the two screens of `Artista.dc.html` give the same slots
+ * different heights and even different columns (Herick's photo 2 spans 7 to
+ * 13, Rubén's 8 to 13 — R21, a decision still open), so each photo keeps its
+ * natural aspect ratio inside the column it spans. The overlaps, rotations and
+ * column spans are the ones of the design; the heights follow the photo.
  */
 import type { ImageMetadata } from 'astro';
 

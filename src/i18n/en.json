@@ -1,7 +1,8 @@
 {
   "comun": {
     "irAlContenido": "Skip to content",
-    "cargando": "Loading…"
+    "cargando": "Loading…",
+    "cuerpoEnPendiente": "[BODY EN PENDING]"
   },
   "nav": {
     "manifiesto": "Manifesto",
@@ -138,7 +139,8 @@
   "pie": {
     "contacto": {
       "email": "Email:",
-      "instagram": "Instagram:"
+      "instagram": "Instagram:",
+      "emailPendiente": "[COLLECTIVE EMAIL]"
     },
     "aguante": "¡Aguante la fotografía!",
     "aliados": "[PARTNERS]"
@@ -172,7 +174,10 @@
     "voluntariadoLinea1": "[EN PENDIENTE]",
     "muestraCopiaAlt": "Print for sale: work by Rubén Mavarez",
     "muestraCopiaPie": "[TITLE] · [PRICE]",
-    "linkCopias": "[PRINTS FOR SALE LINK]"
+    "linkCopias": "[PRINTS FOR SALE LINK]",
+    "linkMercadoPago": "[MERCADO PAGO LINK]",
+    "linkPaypal": "[PAYPAL LINK]",
+    "linkCafecito": "[CAFECITO LINK]"
   },
   "manifiesto": {
     "comoEmpezo": "How it began",
@@ -278,7 +283,8 @@
     },
     "otros": "Other artists",
     "anterior": "← {nombre}",
-    "siguiente": "{nombre} →"
+    "siguiente": "{nombre} →",
+    "traduccion": "Translation"
   },
   "lightbox": {
     "titulo": "Photo viewer",
