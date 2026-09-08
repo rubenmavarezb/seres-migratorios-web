@@ -1,0 +1,102 @@
+[
+  {
+    "ruta": "index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "404.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "manifiesto/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "ediciones/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/pati-caro/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/kremlin-prieto/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/naia-guanipa/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/carlos-vazquez/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/sofia-martin/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/gabriela-rondon/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/gustavo-sanchez/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/herick-frontado/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/angela-perez/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/daniela-barbera/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/andrea-cubillan/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/leo-simmons/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/ruben-mavarez/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "artistas/rona-rangel/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  },
+  {
+    "ruta": "ediciones/buenos-aires-2026/index.html",
+    "identico": false,
+    "identico_salvo_hash_css": true
+  }
+]
