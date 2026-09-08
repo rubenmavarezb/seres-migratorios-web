@@ -1,0 +1,221 @@
+---
+/**
+ * Convocatoria — shared ES/EN page (SM-054, SM-055, SM-056), composed from
+ * design-system.md §7 canonical fields and buttons. Layout and both states
+ * follow design/Convocatoria.dc.html, including its three information blocks.
+ *
+ * OBSERVACIONES: the approved canvas supersedes sitemap.md §2.7 (no extra
+ * date badge, numbered steps, seal or first-edition link). Anotacion keeps
+ * the canonical -3 degree limit instead of the canvas's -6. The dictionaries
+ * already translate the open English heading as "Open call".
+ * Netlify adds form-name when processing static HTML (docs.netlify.com/manage/
+ * forms/setup/); the explicit hidden input also makes the local POST contract
+ * inspectable. A closed call emits no form, including no detection-only mirror.
+ */
+import { getCollection } from 'astro:content';
+import Anotacion from '../../Anotacion.astro';
+import Boton from '../../Boton.astro';
+import CajaNombre from '../../CajaNombre.astro';
+import Campo from '../../Campo.astro';
+import Pagina from '../../../layouts/Pagina.astro';
+import { type Idioma, rutaLocalizada, t } from '../../../i18n/utils.ts';
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const convocatorias = await getCollection('convocatorias');
+const convocatoria = convocatorias.find((entrada) => entrada.data.abierta);
+const abierta = convocatoria !== undefined;
+const titulo = t(idioma, abierta ? 'convocatoria.abierta.h1' : 'convocatoria.cerrada.h1');
+const bloques = [
+  {
+    titulo: t(idioma, 'convocatoria.queBuscamos.titulo'),
+    lineas: [
+      t(idioma, 'convocatoria.queBuscamos.linea1'),
+      t(idioma, 'convocatoria.queBuscamos.linea2'),
+      t(idioma, 'convocatoria.queBuscamos.linea3'),
+    ],
+  },
+  {
+    titulo: t(idioma, 'convocatoria.comoFunciona.titulo'),
+    lineas: [
+      t(idioma, 'convocatoria.comoFunciona.linea1'),
+      t(idioma, 'convocatoria.comoFunciona.linea2'),
+      t(idioma, 'convocatoria.comoFunciona.linea3'),
+    ],
+  },
+  {
+    titulo: t(idioma, 'convocatoria.quienPuedePostularse.titulo'),
+    lineas: [
+      t(idioma, 'convocatoria.quienPuedePostularse.linea1'),
+      t(idioma, 'convocatoria.quienPuedePostularse.linea2'),
+    ],
+  },
+];
+const disciplinas = (convocatoria?.data.disciplinas ?? []).map((disciplina) => ({
+  valor: disciplina,
+  etiqueta: t(idioma, `formulario.opciones.${disciplina}`),
+}));
+const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
+---
+
+<Pagina
+  titulo={titulo}
+  descripcion={t(idioma, 'seo.descripcionPorDefecto')}
+  idioma={idioma}
+  rutaActual={Astro.url.pathname}
+  contenedor={false}
+  encabezado={{ titulo, lineas: abierta ? titulo.split(' ') : undefined }}
+>
+  {
+    abierta && (
+      <Anotacion
+        slot="anotacion"
+        texto={t(idioma, 'convocatoria.abierta.anotacion')}
+        rotacion={-3}
+        tamano="clamp(2.25rem, 4.5vw, 4rem)"
+      />
+    )
+  }
+  <section class="border-linea border-t">
+    <div class={`${CLASE_CONTENEDOR} grid gap-x-8 gap-y-8 py-12 md:grid-cols-3 md:py-16`}>
+      {
+        bloques.map((bloque) => (
+          <div class="grid items-start justify-items-start gap-3 md:row-span-2 md:grid-rows-subgrid md:gap-4">
+            <h2 class="m-0">
+              <CajaNombre texto={bloque.titulo} tamanoMobile="chica" />
+            </h2>
+            <div class="flex flex-col gap-3 md:gap-2">
+              {bloque.lineas.map((linea) => (
+                <p class="font-mono text-tinta m-0 leading-relaxed text-pretty">{linea}</p>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <section class="border-linea border-t">
+    <div
+      class={`${CLASE_CONTENEDOR} grid items-start gap-6 py-12 pb-16 md:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] md:py-16 md:pb-24`}
+    >
+      <h2 id="postulacion" class="font-display text-display-md text-tinta m-0 uppercase">
+        {t(idioma, abierta ? 'convocatoria.abierta.h2' : 'convocatoria.cerrada.h2')}
+      </h2>
+      {
+        abierta ? (
+          <form
+            name="convocatoria"
+            method="POST"
+            data-netlify="true"
+            action={rutaLocalizada('/gracias', idioma)}
+            aria-labelledby="postulacion"
+            class="border-tinta bg-papel-puro grid min-w-0 grid-cols-1 gap-x-6 gap-y-6 border-2 p-6 md:grid-cols-2 md:gap-y-8 md:p-12"
+          >
+            <input type="hidden" name="form-name" value="convocatoria" />
+            <input type="hidden" name="idioma" value={idioma} />
+            <Campo
+              nombre="nombre"
+              etiqueta={t(idioma, 'formulario.etiquetas.nombre')}
+              requerido
+              autocomplete="name"
+              idioma={idioma}
+            />
+            <Campo
+              nombre="ciudad"
+              etiqueta={t(idioma, 'formulario.etiquetas.ciudad')}
+              requerido
+              autocomplete="address-level2"
+              idioma={idioma}
+            />
+            <Campo
+              nombre="pais"
+              etiqueta={t(idioma, 'formulario.etiquetas.pais')}
+              requerido
+              autocomplete="country-name"
+              idioma={idioma}
+            />
+            <Campo
+              nombre="email"
+              etiqueta={t(idioma, 'formulario.etiquetas.email')}
+              tipo="email"
+              requerido
+              autocomplete="email"
+              inputmode="email"
+              idioma={idioma}
+            />
+            <Campo
+              nombre="instagram"
+              etiqueta={t(idioma, 'formulario.etiquetas.instagram')}
+              placeholder={t(idioma, 'formulario.placeholders.instagram')}
+              idioma={idioma}
+            />
+            <Campo
+              nombre="portfolio"
+              etiqueta={t(idioma, 'formulario.etiquetas.portfolio')}
+              tipo="url"
+              inputmode="url"
+              autocomplete="url"
+              idioma={idioma}
+            />
+            <Campo
+              nombre="disciplina"
+              etiqueta={t(idioma, 'formulario.etiquetas.disciplina')}
+              tipo="select"
+              requerido
+              opciones={disciplinas}
+              placeholder={t(idioma, 'formulario.placeholders.disciplina')}
+              idioma={idioma}
+            />
+            <Campo
+              nombre="edicion"
+              etiqueta={t(idioma, 'formulario.etiquetas.edicion')}
+              placeholder={t(idioma, 'formulario.placeholders.edicion')}
+              idioma={idioma}
+            />
+            <div class="md:col-span-2">
+              <Campo
+                nombre="mensaje"
+                etiqueta={t(idioma, 'formulario.etiquetas.mensaje')}
+                tipo="textarea"
+                filas={4}
+                idioma={idioma}
+              />
+            </div>
+            <div class="md:col-span-2">
+              <Campo
+                nombre="consentimiento"
+                etiqueta={t(idioma, 'formulario.etiquetas.consentimiento')}
+                tipo="checkbox"
+                requerido
+                idioma={idioma}
+              />
+            </div>
+            <div class="md:col-span-2">
+              <Boton tipo="submit" anchoCompletoMobile>
+                {t(idioma, 'botones.postulate')}
+              </Boton>
+            </div>
+          </form>
+        ) : (
+          <div class="flex min-w-0 flex-col items-start gap-8">
+            <CajaNombre tono="grafito" texto={t(idioma, 'convocatoria.cerrada.caja')} />
+            <p class="font-mono text-tinta m-0 max-w-[65ch] leading-relaxed">
+              {t(idioma, 'convocatoria.cerrada.linea')}
+            </p>
+            <Boton
+              variante="sello"
+              href="https://www.instagram.com/seresmigratorios/"
+              externo
+              anchoCompletoMobile
+            >
+              {t(idioma, 'botones.seguinosEnInstagram')}
+            </Boton>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Pagina>
