@@ -94,7 +94,7 @@ confirmó `seresmigratorios@gmail.com` como destinatario; la notificación está
 - [x] Dos formularios registrados en Netlify; cinco pruebas recibidas en spam.
 - [ ] Envío aceptado como postulación verificada (0 entradas verificadas).
 - [x] Honeypot descartado: ausente tanto de verificadas como de spam.
-- [ ] Ambos formularios conservados tras el cierre final (verificación del deploy pendiente).
+- [x] Ambos formularios conservados tras el cierre final, con los mismos IDs y honeypot.
 - [x] Confirmación ES/EN después del POST real, incluso sin JavaScript.
 - [x] Notificación al colectivo configurada a `seresmigratorios@gmail.com`.
 - [ ] Recepción de la notificación en el buzón del colectivo.
@@ -194,3 +194,14 @@ Siguen siendo 0 entradas verificadas. No se reclasificaron manualmente ni se
 alteró el filtro antispam para presentar la prueba como aprobada. CI remoto de
 esta apertura: aprobado (48 s). Falta una prueba aceptada y confirmar que el
 colectivo recibe el aviso; esta limitación mantiene abierta la DoD de Fase 4.
+
+Cierre final: `91c42c0`; deploy `6aa0067dd54add0008c8d7b3` ready. El preview
+actual devuelve HTTP 200 y no contiene `<form>` en ambas rutas. La API conserva
+los dos IDs y `honeypot: true`. Build y verificación local cerrada aprobados;
+CI de este cierre aprobado (47 s).
+
+Para completar la prueba de recepción desde un navegador humano, sigue disponible
+la [versión de prueba abierta](https://6aa0058e2f07290008f4fd8a--seres-migratorios.netlify.app/convocatoria/),
+verificada por GET; no cambia el estado cerrado del preview actual ni de producción.
+Rubén debe confirmar la recepción en el buzón del colectivo y aprobar el preview
+antes del merge. La recepción de correo no se da por verificada con un HTTP 200.
