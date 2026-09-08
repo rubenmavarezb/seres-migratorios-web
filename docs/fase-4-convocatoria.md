@@ -91,9 +91,11 @@ no fue informado: no se inventa un destinatario ni se configura otro en su lugar
 - [x] Errores accesibles con JavaScript y validación nativa sin él.
 - [x] Ambas páginas de gracias y ambos estados de convocatoria.
 - [x] Apoyar mantiene los placeholders.
-- [ ] Formulario registrado y envío real recibido en Netlify (prueba de preview).
-- [ ] Honeypot descartado por Netlify (prueba de preview).
-- [ ] Formulario conservado tras volver a cerrada (prueba de preview).
+- [x] Formulario registrado en Netlify; tres pruebas recibidas en spam.
+- [ ] Envío aceptado como postulación verificada (0 entradas verificadas).
+- [x] Honeypot descartado: ausente tanto de verificadas como de spam.
+- [x] Formulario conservado tras volver a cerrada (mismo ID en la API).
+- [ ] Confirmación EN después del POST: Netlify devuelve el HTML ES con name compartido.
 - [ ] Notificación al colectivo configurada y recibida: falta email de Rubén.
 - [ ] Deploy Preview aprobado por Rubén; merge a cargo de Rubén.
 
@@ -125,3 +127,40 @@ token de Cloudflare, revisión humana de traducciones, autorizaciones y aliados.
 
 Fuentes externas consultadas sin modificar: PLAN, backlog, sitemap, modelo de
 contenido y BRIEF técnico en `Documents/Seres Migratorios`.
+
+## Prueba real del Deploy Preview #16
+
+[PR #16](https://github.com/rubenmavarezb/seres-migratorios-web/pull/16) y
+[preview](https://deploy-preview-16--seres-migratorios.netlify.app).
+
+- Apertura temporal: `84ba8d7`; deploy `6aa0027cbaf7e10008fd01e3`, estado ready.
+- Cierre con commit nuevo: `454019c`; producción nunca se modificó.
+- Netlify registró el formulario `convocatoria`, ID `6aa002a1d66dd60008191ea7`,
+  diez campos públicos, idioma y honeypot; `honeypot: true`.
+- Pruebas sintéticas `SM054-ES-20260908`, `SM054-EN-20260908` y
+  `SM054-EN-CONTROL-20260908`, con `qa@example.com`: las tres recibidas en spam.
+  IDs: `6aa002f98591923d55c1ae16`, `6aa002faeba230320c83e753`,
+  `6aa00334d62803258c3f9c2c`. No se las reclasificó manualmente.
+- `SM055-HONEYPOT-20260908`, con el honeypot relleno: no aparece ni en spam
+  ni en verificadas. No se borraron las evidencias de prueba.
+- La CLI instalada no declara `state` en la operación de lectura de envíos.
+  Para consultar spam se agregó ese parámetro documentado al esquema en memoria
+  mediante un módulo temporal; no se modificó la instalación ni se leyeron tokens.
+- GET `/en/thanks` devuelve `lang="en"` y «Thanks». **POST `/en/thanks` devuelve
+  HTTP 200 con `lang="es"`, título «Gracias» y canonical `/gracias/`**.
+  Request ID del caso control: `01M20GS1AA91TCSH1S2XERJD6X`.
+  No es un error de rutas Astro: Netlify utiliza una sola página de éxito para
+  el nombre compartido. La [respuesta de soporte de Netlify](https://answers.netlify.com/t/multilingual-website-always-shows-english-content-on-the-contact-form-custom-success-page/79249)
+  documenta el mismo caso y propone nombres distintos.
+- Los tests mock no podían detectar esa sustitución del servidor: validan el
+  destino y el contenido local, no el procesamiento de Netlify. La DoD queda abierta.
+- Propuesta pendiente de decisión: ES `name="convocatoria"`, EN `name="open-call"`,
+  con `form-name` correspondiente. Conserva POST nativo y confirmación localizada
+  incluso sin JavaScript, a cambio de dos bandejas. No se aplicó porque contradice
+  la decisión explícita de nombre único.
+- GET desconocido `/en/no-existe-sm054/`: HTTP 404 y documento en inglés.
+- CI remoto de la apertura: verde (49 s). Notificaciones: ninguna configurada.
+
+Deploy cerrado `6aa00456443679000810e5e9` listo sobre `454019c`: ambas rutas
+responden 200 sin `<form>` y con idioma correcto. Netlify conserva el formulario
+`6aa002a1d66dd60008191ea7` y el honeypot activo.
