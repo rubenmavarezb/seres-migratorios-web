@@ -1,7 +1,7 @@
 ---
 slug: edicion-02
 edicionNombre: '[NOMBRE EDICIÓN 02]'
-abierta: true
+abierta: false
 apertura: '[FECHA APERTURA CONVOCATORIA 02]'
 cierre: '[FECHA CIERRE CONVOCATORIA 02]'
 titulo:
