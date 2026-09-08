@@ -82,21 +82,22 @@ Forms es gratuito y sin límite. No se cambió el plan ni su configuración.
 - [Uso y facturación](https://docs.netlify.com/manage/forms/usage-and-billing/)
   y [planes heredados](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-legacy-plans/billing-faq-for-legacy-plans/).
 
-El envío real, la persistencia del formulario tras cerrar y la notificación se
-documentan en el comentario del Deploy Preview. El email del colectivo todavía
-no fue informado: no se inventa un destinatario ni se configura otro en su lugar.
+El envío real, la persistencia de los formularios tras cerrar y la notificación se
+documentan en el comentario del Deploy Preview y al final de este informe. Rubén
+confirmó `seresmigratorios@gmail.com` como destinatario; la notificación está configurada.
 
 ## DoD y pendientes
 
 - [x] Errores accesibles con JavaScript y validación nativa sin él.
 - [x] Ambas páginas de gracias y ambos estados de convocatoria.
 - [x] Apoyar mantiene los placeholders.
-- [x] Formulario registrado en Netlify; tres pruebas recibidas en spam.
+- [x] Dos formularios registrados en Netlify; cinco pruebas recibidas en spam.
 - [ ] Envío aceptado como postulación verificada (0 entradas verificadas).
 - [x] Honeypot descartado: ausente tanto de verificadas como de spam.
-- [x] Formulario conservado tras volver a cerrada (mismo ID en la API).
-- [ ] Confirmación EN después del POST: Netlify devuelve el HTML ES con name compartido.
-- [ ] Notificación al colectivo configurada y recibida: falta email de Rubén.
+- [ ] Ambos formularios conservados tras el cierre final (verificación del deploy pendiente).
+- [x] Confirmación ES/EN después del POST real, incluso sin JavaScript.
+- [x] Notificación al colectivo configurada a `seresmigratorios@gmail.com`.
+- [ ] Recepción de la notificación en el buzón del colectivo.
 - [ ] Deploy Preview aprobado por Rubén; merge a cargo de Rubén.
 
 SM-057/058 siguen a cargo de Rubén: texto y fechas reales, requisitos, links de
@@ -128,7 +129,7 @@ token de Cloudflare, revisión humana de traducciones, autorizaciones y aliados.
 Fuentes externas consultadas sin modificar: PLAN, backlog, sitemap, modelo de
 contenido y BRIEF técnico en `Documents/Seres Migratorios`.
 
-## Prueba real del Deploy Preview #16
+## Primera prueba del Deploy Preview #16 — antes de separar nombres
 
 [PR #16](https://github.com/rubenmavarezb/seres-migratorios-web/pull/16) y
 [preview](https://deploy-preview-16--seres-migratorios.netlify.app).
@@ -154,10 +155,8 @@ contenido y BRIEF técnico en `Documents/Seres Migratorios`.
   documenta el mismo caso y propone nombres distintos.
 - Los tests mock no podían detectar esa sustitución del servidor: validan el
   destino y el contenido local, no el procesamiento de Netlify. La DoD queda abierta.
-- Propuesta pendiente de decisión: ES `name="convocatoria"`, EN `name="open-call"`,
-  con `form-name` correspondiente. Conserva POST nativo y confirmación localizada
-  incluso sin JavaScript, a cambio de dos bandejas. No se aplicó porque contradice
-  la decisión explícita de nombre único.
+- En esta primera prueba se propuso separar los nombres. Rubén aprobó después
+  la propuesta; la implementación y el resultado están en la sección siguiente.
 - GET desconocido `/en/no-existe-sm054/`: HTTP 404 y documento en inglés.
 - CI remoto de la apertura: verde (49 s). Notificaciones: ninguna configurada.
 
@@ -174,9 +173,24 @@ para reflejar la decisión, conservando las fuentes externas de solo lectura.
 
 Notificación `submission_created` de tipo `email` configurada a
 `seresmigratorios@gmail.com`, para todos los formularios del proyecto.
-Hook: `6aa005439ba7d0dd0292c514`. La recepción en el buzón se verificará con un envío
-real; el conector de correo disponible pertenece a otra cuenta.
+Hook: `6aa005439ba7d0dd0292c514`; configuración confirmada por lectura de la API.
+La recepción en el buzón sigue pendiente: el conector disponible pertenece a otra
+cuenta y Netlify clasificó las pruebas como spam.
 
 Gate local repetido: 106 unitarias, check/lint/formato/build aprobados;
 validación y POST simulado ES/EN con y sin JavaScript aprobados.
 Auditoría incremental de contenido: sin hallazgos.
+
+Segunda apertura temporal: `e2939ed`; deploy `6aa0058e2f07290008f4fd8a`, ready.
+Netlify registró también `open-call`, ID `6aa005a10a95500008c03d87`, con honeypot.
+Los dos POST reales con JavaScript deshabilitado y el email confirmado devolvieron
+HTTP 200 con idioma y título correctos: `/gracias` → `es`/«Gracias» y
+`/en/thanks` → `en`/«Thanks». Evidencia y request IDs en
+[capturas/fase-4/SM-054-post-real-idiomas.json](capturas/fase-4/SM-054-post-real-idiomas.json).
+
+Las entradas `SM054-NOMBRES-ES-20260908` (`6aa005df409a9b437705d67a`) y
+`SM054-NOMBRES-EN-20260908` (`6aa005e1b3205d4ee1cc629d`) aparecen en spam.
+Siguen siendo 0 entradas verificadas. No se reclasificaron manualmente ni se
+alteró el filtro antispam para presentar la prueba como aprobada. CI remoto de
+esta apertura: aprobado (48 s). Falta una prueba aceptada y confirmar que el
+colectivo recibe el aviso; esta limitación mantiene abierta la DoD de Fase 4.
