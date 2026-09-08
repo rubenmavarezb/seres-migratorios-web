@@ -110,12 +110,14 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
             name="convocatoria"
             method="POST"
             data-netlify="true"
+            data-netlify-honeypot="bot-field"
             action={rutaLocalizada('/gracias', idioma)}
             aria-labelledby="postulacion"
             class="border-tinta bg-papel-puro grid min-w-0 grid-cols-1 gap-x-6 gap-y-6 border-2 p-6 md:grid-cols-2 md:gap-y-8 md:p-12"
           >
             <input type="hidden" name="form-name" value="convocatoria" />
             <input type="hidden" name="idioma" value={idioma} />
+            <input type="text" name="bot-field" hidden tabindex="-1" autocomplete="off" />
             <Campo
               nombre="nombre"
               etiqueta={t(idioma, 'formulario.etiquetas.nombre')}
@@ -150,6 +152,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
               nombre="instagram"
               etiqueta={t(idioma, 'formulario.etiquetas.instagram')}
               placeholder={t(idioma, 'formulario.placeholders.instagram')}
+              patron="@.+"
               idioma={idioma}
             />
             <Campo
