@@ -20,6 +20,7 @@ try {
     const textos = JSON.parse(readFileSync(`src/i18n/${idioma}.json`, 'utf8'));
     const ruta = idioma === 'es' ? '/convocatoria/' : '/en/open-call/';
     const gracias = idioma === 'es' ? '/gracias' : '/en/thanks';
+    const nombreFormulario = idioma === 'es' ? 'convocatoria' : 'open-call';
     for (const javaScriptEnabled of abierta ? [true, false] : [true]) {
       const context = await browser.newContext({ javaScriptEnabled, reducedMotion: 'reduce' });
       const page = await context.newPage();
@@ -30,16 +31,17 @@ try {
         return route.fulfill({ status: 303, headers: { location: `${gracias}/` } });
       });
       await page.goto(new URL(ruta, base).href);
-      const form = page.locator('form[name="convocatoria"]');
+      const form = page.locator('form');
       if (!abierta) {
         await expect(form).toHaveCount(0);
         await expect(
           page.getByText(textos.convocatoria.cerrada.caja, { exact: true })
         ).toBeVisible();
       } else {
+        await expect(form).toHaveAttribute('name', nombreFormulario);
         await expect(form).toHaveAttribute('action', gracias);
         await expect(form.locator('[name="idioma"]')).toHaveValue(idioma);
-        await expect(form.locator('[name="form-name"]')).toHaveValue('convocatoria');
+        await expect(form.locator('[name="form-name"]')).toHaveValue(nombreFormulario);
         const honey = form.locator('[name="bot-field"]');
         await expect(honey).toHaveAttribute('hidden', '');
         await expect(honey).toHaveAttribute('tabindex', '-1');
@@ -98,7 +100,7 @@ try {
         const data = new URLSearchParams(post.postData());
         assert.equal(data.get('idioma'), idioma);
         assert.equal(data.get('bot-field'), '');
-        assert.equal(data.get('form-name'), 'convocatoria');
+        assert.equal(data.get('form-name'), nombreFormulario);
       }
       await page.goto(new URL(`${gracias}/`, base).href);
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);

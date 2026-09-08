@@ -28,7 +28,7 @@ Al ser invocado:
    - **No traducibles** (no reportar como sin traducir): nombres propios, CONSULADO, handles, "Seres Migratorios", FAMILIA / RESILIENCIA / EXILIO, "¡Aguante la fotografía!" y las frases manuscritas. Sí reportar si alguno aparece traducido.
    - **Campos `{ es, en }`**: en las colecciones, todo campo de texto de cara al público es `bilingue`. Un campo con solo `es` o con `en` copiando el español es hallazgo.
    - **Rutas**: toda página nueva en `src/pages/` tiene su gemela en `src/pages/en/` y una fila en `RUTAS` con `clave`, `es` y `en`. Los slugs de contenido no se traducen; los de ruta sí. `/kit` es la excepción (interna, sin EN). Confirmá que `tests/unitarias/rutas.test.mjs` sigue en verde.
-   - **Formulario**: un solo `name="convocatoria"` en los dos idiomas, campo oculto `idioma`, `action="/gracias"` en ES y `/en/thanks` en EN.
+   - **Formulario**: `name="convocatoria"` en ES y `name="open-call"` en EN, `form-name` correspondiente, campo oculto `idioma`, `action="/gracias"` en ES y `/en/thanks` en EN (decisión de Ruben del 08.09.2026 para conservar la confirmación localizada en Netlify).
    - **`alt`**: real y descriptivo; en una frase manuscrita es la transcripción literal en español; decorativas `alt=""` con `aria-hidden`. Un `alt` `[ENTRE CORCHETES]` es un placeholder pendiente: reportalo como pendiente, no como error.
    - **Voz**: directa, cálida, colectiva ("nosotros"), voseo suave en llamados a la acción ("Postulate", "Sumate"). Sin emojis ni solemnidad. Mayúsculas por `text-transform`, nunca en el texto.
    - **Reglas de colección**: `roles` obligatorio en artistas; `numero` solo para quien fotea; una sola edición `estado: proxima` a la vez; si entra una próxima, la anterior baja a `pasada` en el mismo PR.

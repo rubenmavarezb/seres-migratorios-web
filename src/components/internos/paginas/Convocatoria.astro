@@ -28,6 +28,9 @@ const { idioma } = Astro.props;
 const convocatorias = await getCollection('convocatorias');
 const convocatoria = convocatorias.find((entrada) => entrada.data.abierta);
 const abierta = convocatoria !== undefined;
+// SM-054: Netlify associates one success page with each form name.
+const nombreFormulario =
+  idioma === 'en' ? 'open-call' : (convocatoria?.data.formNombre ?? 'convocatoria');
 const titulo = t(idioma, abierta ? 'convocatoria.abierta.h1' : 'convocatoria.cerrada.h1');
 const bloques = [
   {
@@ -107,7 +110,8 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
       {
         abierta ? (
           <form
-            name="convocatoria"
+            name={nombreFormulario}
+            data-convocatoria
             method="POST"
             data-netlify="true"
             data-netlify-honeypot="bot-field"
@@ -115,7 +119,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
             aria-labelledby="postulacion"
             class="border-tinta bg-papel-puro grid min-w-0 grid-cols-1 gap-x-6 gap-y-6 border-2 p-6 md:grid-cols-2 md:gap-y-8 md:p-12"
           >
-            <input type="hidden" name="form-name" value="convocatoria" />
+            <input type="hidden" name="form-name" value={nombreFormulario} />
             <input type="hidden" name="idioma" value={idioma} />
             <input type="text" name="bot-field" hidden tabindex="-1" autocomplete="off" />
             <Campo
@@ -242,7 +246,7 @@ const CLASE_CONTENEDOR = 'mx-auto w-full max-w-[1280px] px-6 md:px-12';
 <script>
   // SM-070: opt in only after the handlers exist. No JavaScript means native
   // validation and an ordinary POST; valid submissions always keep that POST.
-  const formulario = document.querySelector<HTMLFormElement>('form[name="convocatoria"]');
+  const formulario = document.querySelector<HTMLFormElement>('form[data-convocatoria]');
   const resumen = formulario?.querySelector<HTMLElement>('[data-resumen]');
 
   if (formulario && resumen) {

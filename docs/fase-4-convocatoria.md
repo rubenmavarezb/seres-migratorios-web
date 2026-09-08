@@ -6,7 +6,7 @@ Revisión: 08.09.2026. Convocatoria 02 cerrada en la entrega final.
 ## Implementación
 
 - SM-054: plantillas compartidas Convocatoria y Gracias, con envoltorios ES/EN.
-  Diez campos con Campo, un solo `name="convocatoria"`, idioma oculto y POST a
+  Diez campos con Campo, `name="convocatoria"` en ES y `name="open-call"` en EN, idioma oculto y POST a
   `/gracias` o `/en/thanks`. Gracias tiene `noindex` y sigue excluida del sitemap.
 - SM-055: honeypot `bot-field` con `hidden` y `tabindex="-1"`; campos obligatorios,
   email, URL y patrón de Instagram con validación nativa sin JavaScript.
@@ -164,3 +164,19 @@ contenido y BRIEF técnico en `Documents/Seres Migratorios`.
 Deploy cerrado `6aa00456443679000810e5e9` listo sobre `454019c`: ambas rutas
 responden 200 sin `<form>` y con idioma correcto. Netlify conserva el formulario
 `6aa002a1d66dd60008191ea7` y el honeypot activo.
+
+## Decisión aplicada — nombres por idioma y notificaciones
+
+Rubén aprobó el 08.09.2026 separar los nombres: `convocatoria` en ES y `open-call`
+en EN. Cada `form-name` coincide con su formulario. El selector del script utiliza
+`data-convocatoria` y no depende del nombre. Se actualizaron AGENTS y el auditor
+para reflejar la decisión, conservando las fuentes externas de solo lectura.
+
+Notificación `submission_created` de tipo `email` configurada a
+`seresmigratorios@gmail.com`, para todos los formularios del proyecto.
+Hook: `6aa005439ba7d0dd0292c514`. La recepción en el buzón se verificará con un envío
+real; el conector de correo disponible pertenece a otra cuenta.
+
+Gate local repetido: 106 unitarias, check/lint/formato/build aprobados;
+validación y POST simulado ES/EN con y sin JavaScript aprobados.
+Auditoría incremental de contenido: sin hallazgos.
