@@ -10,7 +10,8 @@
  *
  * Not a public page: Spanish only (no `/en/` twin — the brief scopes it as
  * internal), `noindex` through `Pagina`/`Base`'s new prop, and already listed
- * in `RUTAS_FUERA_DEL_SITEMAP` in astro.config.mjs.
+ * in `RUTAS_EXCLUIDAS_DE_ANALITICA` (`src/analitica.ts`, SM-065), so it stays
+ * out of the sitemap, `robots.txt` and the analytics beacon too.
  *
  * Every specimen's data comes from the seed content (`src/content/**`) and
  * `src/assets/**`; nothing is invented. The bracket placeholders that show up

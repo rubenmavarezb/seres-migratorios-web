@@ -5,6 +5,7 @@ import { loadEnv } from 'vite';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
+import { RUTAS_EXCLUIDAS_DE_ANALITICA, sinBarraFinal } from './src/analitica.ts';
 import { IDIOMAS, rutaBase, rutasAlternativas } from './src/i18n/rutas.ts';
 
 // PLAN.md §14 keeps every public value in `PUBLIC_*` env vars. `site` is read
@@ -13,17 +14,6 @@ import { IDIOMAS, rutaBase, rutasAlternativas } from './src/i18n/rutas.ts';
 // and SM-064 done on 06.09.2026); the internal seres-migratorios.netlify.app URL
 // is never used for `site` or canonical URLs.
 const { PUBLIC_SITE_URL } = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd(), 'PUBLIC_');
-
-/** Internal routes kept out of the sitemap (PLAN.md §4.3, "Analytics"). */
-const RUTAS_FUERA_DEL_SITEMAP = ['/kit', '/gracias', '/en/thanks'];
-
-/**
- * Normalizes a pathname for comparison: `build.format: 'directory'` emits
- * `/gracias/`, so the trailing slash is dropped everywhere except the root.
- * @param {string} pathname
- * @returns {string}
- */
-const sinBarraFinal = (pathname) => (pathname === '/' ? pathname : pathname.replace(/\/$/, ''));
 
 /**
  * The opposite shape, for the sitemap alternates: every `<loc>` the integration
@@ -88,7 +78,8 @@ export default defineConfig({
         defaultLocale: 'es',
         locales: { es: 'es-AR', en: 'en-US' },
       },
-      filter: (page) => !RUTAS_FUERA_DEL_SITEMAP.includes(sinBarraFinal(new URL(page).pathname)),
+      filter: (page) =>
+        !RUTAS_EXCLUIDAS_DE_ANALITICA.includes(sinBarraFinal(new URL(page).pathname)),
       serialize: conParesDeIdioma,
     }),
   ],
