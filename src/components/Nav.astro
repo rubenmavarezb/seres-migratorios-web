@@ -417,6 +417,31 @@ const CONTROL =
       devolverFoco();
     });
 
+    /**
+     * Tab wrap at the dialog's own boundary (SM-060, same fix as
+     * `Lightbox.astro`'s): `showModal()` keeps the rest of the document
+     * inert, but empirically (verified with Playwright, Chromium) Tab past
+     * the last focusable control — or Shift+Tab back from the first — lands
+     * on `document.body` for one stop before the next Tab/Shift+Tab reaches
+     * the other end. Nothing outside the dialog ever becomes reachable, but
+     * a keyboard user sees no focus indicator for that one stop, which reads
+     * as the trap failing. Queried live (not cached at module scope) since
+     * the set only ever grows with the two links inside `IDIOMAS.map()`.
+     */
+    dialogo.addEventListener('keydown', (evento) => {
+      if (evento.key !== 'Tab') return;
+      const controles = Array.from(dialogo.querySelectorAll<HTMLAnchorElement>('a[href]'));
+      const [primerControl, ultimoControl] = [controles[0], controles[controles.length - 1]];
+      if (!primerControl || !ultimoControl) return;
+      if (evento.shiftKey && document.activeElement === primerControl) {
+        evento.preventDefault();
+        ultimoControl.focus();
+      } else if (!evento.shiftKey && document.activeElement === ultimoControl) {
+        evento.preventDefault();
+        primerControl.focus();
+      }
+    });
+
     // The opener does not exist from `md` up: closing the dialog when the
     // viewport crosses that width keeps the document from staying inert.
     const escritorio = window.matchMedia('(min-width: 48rem)');

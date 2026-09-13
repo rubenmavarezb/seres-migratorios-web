@@ -144,7 +144,14 @@ const clasesEtiqueta = [
  */
 const clasesControl = [
   'w-full appearance-none rounded-none bg-transparent',
-  'font-mono text-base leading-[1.4] text-tinta placeholder:text-grafito',
+  // `focus:placeholder:text-tinta-suave` (SM-060): the field's own focus state
+  // tints its background `azul-tinta-agua` (below), and an empty field shows
+  // its placeholder in that same moment — `grafito` against that tint
+  // measures 4.42:1, below AA and the exact pair the backlog forbids
+  // ("grafito nunca sobre azul-tinta-agua"). `tinta-suave` clears it at
+  // 9.44:1; the resting-state placeholder (transparent background) keeps
+  // `grafito`, unaffected by the extra variant.
+  'font-mono text-base leading-[1.4] text-tinta placeholder:text-grafito focus:placeholder:text-tinta-suave',
   'border-0 border-b-2 px-0 py-2.5 transition-colors',
   hayError ? 'border-error' : 'border-tinta focus:border-azul-sello',
   // `focus:` lands after `user-invalid:` in the generated sheet and they share

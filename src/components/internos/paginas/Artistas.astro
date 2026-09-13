@@ -111,14 +111,24 @@ interface Fila {
  * exactly its own text.
  */
 const CLASE_SUBTITULO = 'font-mono text-etiqueta font-bold text-grafito uppercase';
-const CLASE_NUMERO = 'row-span-2 pt-px font-mono text-sm text-grafito md:row-span-1 md:pt-0';
+// `group-hover:text-tinta-suave` (SM-060): the row's own hover state tints its
+// background `azul-tinta-agua` (`CLASES_FILA` below), and `grafito` against
+// that tint measures 4.42:1 — below AA (4.5:1) and the exact pair the backlog
+// forbids outright ("grafito nunca sobre azul-tinta-agua"). `tinta-suave`
+// clears it at 9.44:1 while staying a muted, secondary tone (design-system.md
+// §3.1: "texto secundario largo") instead of jumping to the row's own
+// `tinta`. Resting state (transparent background) is untouched.
+const CLASE_NUMERO =
+  'row-span-2 pt-px font-mono text-sm text-grafito group-hover:text-tinta-suave md:row-span-1 md:pt-0';
 const CLASE_NOMBRE = 'font-mono text-etiqueta font-bold text-tinta uppercase';
 const CLASE_ROL =
-  'hidden font-mono text-metadatos font-bold tracking-[0.04em] text-grafito uppercase md:block';
+  'hidden font-mono text-metadatos font-bold tracking-[0.04em] text-grafito uppercase group-hover:text-tinta-suave md:block';
 const CLASE_HANDLE = 'font-mono text-metadatos md:text-sm';
 /** A real handle reads as a link (it is not one: the whole row is the anchor); a placeholder stays grafito, unlinked and unadorned. */
 const CLASE_HANDLE_ENLACE =
   'text-azul-sello underline underline-offset-[3px] group-hover:text-azul-marcador';
+/** Same SM-060 fix as `CLASE_NUMERO`/`CLASE_ROL`, for the unlinked placeholder handle. */
+const CLASE_HANDLE_PLACEHOLDER = 'text-grafito group-hover:text-tinta-suave';
 
 function aFila(artista: Artista, seccion: Seccion): Fila {
   const { numero, nombre, instagram, slug } = artista.data;
@@ -140,7 +150,7 @@ function aFila(artista: Artista, seccion: Seccion): Fila {
     nombre,
     handle: pendiente ? t(idioma, 'artistas.handlePendiente') : (instagram ?? ''),
     claseHandle: pendiente
-      ? `${CLASE_HANDLE} text-grafito`
+      ? `${CLASE_HANDLE} ${CLASE_HANDLE_PLACEHOLDER}`
       : `${CLASE_HANDLE} ${CLASE_HANDLE_ENLACE}`,
     rol,
     href: rutaLocalizada(`/artistas/${slug}`, idioma),
@@ -258,7 +268,7 @@ const CLASES_FILA = [
         <ul class="flex flex-col border-t-2 border-tinta">
           {seccion.filas.map((fila) => (
             <li class="border-b border-linea">
-              <a href={fila.href} class={CLASES_FILA}>
+              <a href={fila.href} class={CLASES_FILA} data-fila-artista>
                 <span class={CLASE_NUMERO}>{fila.numero}</span>
                 <span class={CLASE_NOMBRE}>{fila.nombre}</span>
                 <span class={fila.claseHandle}>{fila.handle}</span>
