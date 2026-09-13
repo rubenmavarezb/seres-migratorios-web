@@ -34,8 +34,8 @@ jobs:
       - run: npm test
 
       # SM-059: the open-call form only exists when the convocatoria is open,
-      # which no committed build ever is (`abierta: false`, CLAUDE.md's rule
-      # against inventing/leaving open sensitive state). This runner-only
+      # which the committed content is not (`abierta: false` until the team
+      # opens convocatoria 02; tech lead decision for SM-059). This runner-only
       # step flips it, rebuilds, and re-runs just the `@abierta`-tagged specs
       # against that throwaway build; nothing here is committed back.
       - name: Abrir la convocatoria 02 solo en este runner
@@ -46,7 +46,11 @@ jobs:
       - run: npm run build
 
       - name: Playwright — convocatoria abierta (@abierta)
-        run: npx playwright test --grep @abierta
+        # Guard: without the variable every @abierta spec is skipped and the
+        # step would pass green without testing anything.
+        run: |
+          test "$CONVOCATORIA_ABIERTA" = '1'
+          npx playwright test --grep @abierta
         env:
           CONVOCATORIA_ABIERTA: '1'
 

@@ -16,7 +16,9 @@ const CARPETA_ARTISTAS = fileURLToPath(new URL('../../src/content/artistas/', im
 const CARPETA_EDICIONES = fileURLToPath(new URL('../../src/content/ediciones/', import.meta.url));
 
 function archivosMarkdown(carpeta: string): string[] {
-  return readdirSync(carpeta).filter((archivo) => archivo.endsWith('.md'));
+  return readdirSync(carpeta)
+    .filter((archivo) => archivo.endsWith('.md'))
+    .sort();
 }
 
 /** Reads a single top-level `campo: valor` line, unquoted. */
