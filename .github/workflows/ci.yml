@@ -29,6 +29,11 @@ jobs:
 
       - run: npm run build
 
+      # SM-061: ≤ 120 KB gzip of HTML+CSS+JS per page (PLAN.md §9). Runs
+      # against the build above, before Playwright, so a page that grew past
+      # budget fails fast without waiting on the browser suite.
+      - run: npm run test:peso
+
       - run: npx playwright install --with-deps chromium
 
       - run: npm test
