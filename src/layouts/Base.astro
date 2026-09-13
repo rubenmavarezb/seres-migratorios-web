@@ -27,6 +27,7 @@
  * like it did before SM-065.
  */
 import type { ImageMetadata } from 'astro';
+import { Font } from 'astro:assets';
 
 import Nav from '../components/Nav.astro';
 import Pie from '../components/Pie.astro';
@@ -107,8 +108,31 @@ const emiteBeaconAnalytics =
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {
+      /* SM-063: self-hosted fonts (astro.config.mjs's `fonts`), so the
+         preconnect hints this used to carry for fonts.googleapis.com /
+         fonts.gstatic.com are gone — those origins are never contacted at
+         runtime any more. `<Font />` (astro:assets) emits the real
+         `@font-face` rules for each family below, on every page (this is the
+         one layout every route renders through — verified with
+         `grep -rl "import Base from"` / `"import Pagina from"` across
+         src/pages and src/components/internos/paginas). Only Courier Prime
+         gets `preload`, and only its `400` file: weight `400` is the
+         `<body>` default (`font-mono` above), needed for first paint on
+         every route, while `700` (`.boton`/`.campo`/Sello's SVG label) is
+         usually below the fold — `preload` takes an array to narrow which
+         file(s) load eagerly (astro.build/en/guides/fonts, "Preloading
+         fonts": "If multiple files correspond to a font, you can also
+         specify which one to preload by passing an array"); verified in the
+         built HTML that only the `400` woff2 gets a `<link rel=preload>`
+         once this array is passed. Anton and Gochi Hand are used more
+         selectively (headings, `Anotacion`) — preloading them globally
+         would spend bytes on routes that do not need them above the fold
+         ("Font preloading should be done sparingly"). */
+    }
+    <Font cssVariable="--font-astro-mono" preload={[{ weight: '400' }]} />
+    <Font cssVariable="--font-astro-display" />
+    <Font cssVariable="--font-astro-manuscrita" />
     <Seo
       titulo={titulo}
       descripcion={descripcion}

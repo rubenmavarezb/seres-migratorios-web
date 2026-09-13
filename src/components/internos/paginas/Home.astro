@@ -43,7 +43,10 @@
  *    section. Followed the lámina.
  *  - sitemap.md block 3 asks for three `FotoPegada` variante `sangrada`; the
  *    lámina uses two bare, absolutely-positioned obra photos as a backdrop to
- *    the title. Followed the lámina (`<Picture priority>` on the LCP one).
+ *    the title, plus a third mobile-only photo below it. Followed the lámina
+ *    (`<Picture priority>` on whichever of the three is the LCP element for
+ *    the viewport being measured — SM-063 moved it from the desktop backdrop
+ *    to the mobile-only photo below; see that section's own comment).
  *  - sitemap.md block 5 asks for a standalone `PalabrasClave` block; the
  *    lámina's home has none (PalabrasClave appears on /manifiesto and
  *    /ediciones instead). Omitted here, per the lámina.
@@ -258,7 +261,20 @@ const CLASE_PLACEHOLDER_MONO =
   {/* ============ 1 · HERO ============ */}
   <section class="relative overflow-hidden py-8 pb-16 md:py-12 md:pb-24">
     {
-      /* Backdrop obra photos: absolute, hidden below md (the lámina shows a single full-width photo on mobile instead — see below). `aria-hidden` because they are a decorative backdrop and their collection alt is a placeholder. */
+      /* Backdrop obra photos: absolute, hidden below md (the lámina shows a single full-width photo on mobile instead — see below). `aria-hidden` because they are a decorative backdrop and their collection alt is a placeholder.
+         SM-063 OBSERVACIÓN: this one used to carry `priority` (eager +
+         fetchpriority=high), but on the mobile viewport the base Lighthouse
+         run measures (`formFactor: mobile`) this wrapper is `hidden` — CSS
+         `display: none` does not stop an eager `loading="eager"` `<img>`
+         from being requested, so mobile was paying for a backdrop photo it
+         never paints, while the real mobile-visible hero photo below
+         (`md:hidden`, was `loading="lazy"`) is the one Lighthouse flagged as
+         the LCP element with `lcp-discovery-insight=0`. `priority` moves to
+         that one; this backdrop is now lazy like `heroObra2` below. On
+         desktop (`md:block`) that makes this backdrop non-eager too, which
+         could matter for a desktop LCP this ticket does not measure
+         (SM-063's gate is mobile-only) — flagging it in case a later desktop
+         audit wants it back. */
     }
     <div
       class="pointer-events-none absolute top-52 left-0 hidden h-[420px] w-[300px] md:block"
@@ -270,7 +286,6 @@ const CLASE_PLACEHOLDER_MONO =
         formats={['avif', 'webp']}
         widths={[300, 600]}
         sizes="300px"
-        priority
         class="block h-full w-full object-cover"
       />
     </div>
@@ -323,7 +338,13 @@ const CLASE_PLACEHOLDER_MONO =
       </div>
     </div>
 
-    {/* Mobile-only hero photo (lámina: herick 01 full-width under the title). */}
+    {
+      /* Mobile-only hero photo (lámina: herick 01 full-width under the title).
+        SM-063: this is the LCP element on mobile (base Lighthouse run,
+        `formFactor: mobile`) — `priority` (eager + fetchpriority=high)
+        replaces the default lazy loading that gave it
+        `lcp-discovery-insight=0`. */
+    }
     <div class="mt-8 md:hidden" aria-hidden="true">
       <Picture
         src={heroObra1.image}
@@ -331,6 +352,7 @@ const CLASE_PLACEHOLDER_MONO =
         formats={['avif', 'webp']}
         widths={[390, 780]}
         sizes="100vw"
+        priority
         class="block h-60 w-full object-cover"
       />
     </div>
