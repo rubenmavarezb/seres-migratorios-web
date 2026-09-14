@@ -656,6 +656,51 @@ Dos auditorías automáticas sobre el diff integrado. Ambas con veredicto
 
 **Auditoría 2 — pass, sin hallazgos.**
 
+## Medición sobre el Deploy Preview (SM-061)
+
+Corrida el 14.09.2026 contra `https://deploy-preview-17--seres-migratorios.netlify.app`
+(commit `d96695f`), Lighthouse móvil, mediana de 3 corridas por ruta. Resumen por
+ruta en [capturas/fase-5/lighthouse-deploy-preview.json](capturas/fase-5/lighthouse-deploy-preview.json);
+reportes crudos fuera del repo.
+
+Verificaciones que el preview sí valida (y que el servidor local no puede validar):
+sin `fonts.googleapis.com` en el HTML, los cuatro woff2 servidos desde `/_astro/fonts/`
+con `content-type: font/woff2`, `/robots.txt` con su `Sitemap:`, sin beacon de
+Cloudflare (el token sigue siendo placeholder) y ningún `netlify.app` en canonical
+ni en `og:url`. Todas pasan.
+
+**El Deploy Preview no es un proxy fiel de producción para Rendimiento ni SEO**, por
+dos artefactos de la plataforma, ambos verificados en la respuesta HTTP y ausentes
+del repo (`git grep` sin coincidencias):
+
+1. Netlify inyecta `<script async src="/.netlify/scripts/cdp">` (la barra de Deploy
+   Preview): 33 peticiones de terceros y ~1650 KB, contra 17–23 propias de 203–296 KB.
+   Deprime el rendimiento por contención del hilo principal (`elementRenderDelay` de
+   127 ms a 1088 ms en la misma ruta con el mismo TTFB) y baja Buenas Prácticas a 96
+   por `inspector-issues`, cuyo detalle nombra `app.netlify.com/cdp/`.
+2. Netlify responde con la cabecera `x-robots-tag: noindex` en los previews, así que
+   `is-crawlable` da 0 y el SEO baja a 69 en **todas** las rutas. Control interno: la
+   404 fue 69 antes y después, porque ya fallaba esa auditoría por su `noindex` propio.
+
+Control con la barra bloqueada (3 corridas por ruta), sobre las tres rutas más bajas
+del preview:
+
+| Ruta                            | Preview | Barra bloqueada | Local |
+| ------------------------------- | ------- | --------------- | ----- |
+| `/en/`                          | 76      | 100             | 99    |
+| `/ediciones/buenos-aires-2026/` | 80      | 99              | 98    |
+| `/manifiesto/`                  | 84      | 100             | 100   |
+
+Con la barra bloqueada no queda ninguna petición de terceros y Buenas Prácticas vuelve
+a 100. Conclusión: los números bajos del preview son de la plataforma, no del sitio, y
+la medición válida de SM-061 es la local (todas las rutas 98–100) más este control. La
+verificación definitiva es sobre producción después del merge, sin barra ni `noindex`:
+queda como pendiente de Rubén.
+
+OBSERVACIÓN sobre la varianza: en el preview sin bloquear, rutas como `/apoyar/`
+([98, 95, 79]) y `/artistas/` ([97, 100, 80]) no son distinguibles entre sí con tres
+corridas. No se rankea por esa mediana.
+
 ## DoD de Fase 5 (PLAN §13)
 
 - [x] Smoke pasa (Playwright: 59 passed, 11 skipped por `@abierta`, 0 failed).
@@ -680,9 +725,9 @@ Dos auditorías automáticas sobre el diff integrado. Ambas con veredicto
 - SM-062 (imágenes Open Graph) — no cubierto por esta fase.
 - SM-066, SM-067, SM-068 — pendientes, fuera del alcance de este informe.
 - Revisión humana de contenido y traducciones (ES/EN).
-- Correr Lighthouse sobre el Deploy Preview real del PR #17 (lo corre el
-  tech lead tras el push; esta medición fue contra un servidor estático
-  local, no contra Netlify).
+- Correr Lighthouse sobre **producción** después del merge: es la única
+  medición sin la barra de Deploy Preview ni el `x-robots-tag: noindex` de
+  Netlify (ver "Medición sobre el Deploy Preview").
 - Decisiones abiertas en las OBSERVACIONES de las líneas:
   - SM-063: revertir o no `optimizedFallbacks: false` dado el aumento de
     CLS (sigue muy por debajo de 0.1, pero es una decisión de trade-off
