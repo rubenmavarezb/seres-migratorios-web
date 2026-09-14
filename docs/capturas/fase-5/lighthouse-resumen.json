@@ -1,0 +1,210 @@
+{
+  "commit": "d99acffcf72807fdc2cd532b9fd1a1244982be76",
+  "rama": "fase-5-qa-lanzamiento",
+  "fecha": "2026-09-14",
+  "lighthouse": "13.0.3",
+  "chrome": "Google Chrome 153.0.8010.36 (--headless=new)",
+  "preset": "mobile 412x823, simulate rtt 150ms 1638.4kbps CPU 4x",
+  "agregacion": "mediana de 3 corridas por categoria y por metrica, corridas intercaladas por vuelta",
+  "peso": "HTML + CSS/JS locales referenciados, zlib gzip nivel 9 por recurso (mismo calculo que npm run test:peso); sin imagenes ni fuentes",
+  "axe": "scripts/capturas-axe.mjs --es --en /convocatoria/ /en/open-call/ --sin-capturas, 18 rutas x 1440/390, wcag2a/2aa/21a/21aa, 0 violaciones",
+  "notas": [
+    "/404 = dist/404.html servida con 200: Lighthouse aborta con ERRORED_DOCUMENT_REQUEST ante un status 404 real (smoke-404)",
+    "SEO 69 en /404: unica auditoria fallida is-crawlable, por meta robots noindex deliberado",
+    "buenasPracticas 96 en /artistas/herick-frontado/: image-size-responsive en herick-frontado.webp (52x32 mostrado, 72x44 servido, 78x48 esperado)",
+    "carga promedio (1 min) de la maquina entre 14.1 y 28.8 durante las 30 corridas",
+    "sin peticiones a terceros: fuentes autoalojadas en /_astro/fonts/ (4 woff2, ~54 KB, fuera del total de peso)"
+  ],
+  "rutas": [
+    {
+      "ruta": "/",
+      "rendimiento": 99,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 100,
+      "lcpMs": 2185,
+      "clsValor": 0.01,
+      "tbtMs": 0,
+      "pesoBrutoKB": 81,
+      "pesoGzipKB": 15.8,
+      "elementoLcp": "section.relative > div.mt-8 > picture > img.block",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=303ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/manifiesto/",
+      "rendimiento": 100,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 100,
+      "lcpMs": 1430,
+      "clsValor": 0.0016,
+      "tbtMs": 0,
+      "pesoBrutoKB": 64.7,
+      "pesoGzipKB": 13.9,
+      "elementoLcp": "section > div.mx-auto > div.flex > blockquote.font-mono",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=302ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/artistas/",
+      "rendimiento": 100,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 100,
+      "lcpMs": 1431,
+      "clsValor": 0.0012,
+      "tbtMs": 0,
+      "pesoBrutoKB": 77.4,
+      "pesoGzipKB": 13.9,
+      "elementoLcp": "main#contenido > section.contenedor > h1.[--text-manuscrita:3.5rem] > span.inline-block",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=302ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/artistas/herick-frontado/",
+      "rendimiento": 100,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 100,
+      "lcpMs": 1588,
+      "clsValor": 0.0024,
+      "tbtMs": 0,
+      "pesoBrutoKB": 70.1,
+      "pesoGzipKB": 14.7,
+      "elementoLcp": "section.contenedor > div.flex > div.flex > p",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=304ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/ediciones/",
+      "rendimiento": 99,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 100,
+      "lcpMs": 1885,
+      "clsValor": 0.0022,
+      "tbtMs": 0,
+      "pesoBrutoKB": 62.4,
+      "pesoGzipKB": 13.3,
+      "elementoLcp": "section.contenedor > div.flex > div.relative > h1.font-display",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=305ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/ediciones/buenos-aires-2026/",
+      "rendimiento": 98,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 100,
+      "lcpMs": 2405,
+      "clsValor": 0.0163,
+      "tbtMs": 0,
+      "pesoBrutoKB": 94.2,
+      "pesoGzipKB": 17.9,
+      "elementoLcp": "div.grid > div.col-start-1 > div.w-[146px] > img.block",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=305ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/convocatoria/",
+      "rendimiento": 100,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 100,
+      "lcpMs": 1430,
+      "clsValor": 0.0014,
+      "tbtMs": 0,
+      "pesoBrutoKB": 63.3,
+      "pesoGzipKB": 13.8,
+      "elementoLcp": "section.contenedor > div.flex > div.relative > h1.font-display",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=325ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/apoyar/",
+      "rendimiento": 100,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 100,
+      "lcpMs": 1433,
+      "clsValor": 0.0012,
+      "tbtMs": 0,
+      "pesoBrutoKB": 63.1,
+      "pesoGzipKB": 13.6,
+      "elementoLcp": "div.mx-auto > div.flex > div.flex > p.font-mono",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=307ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/404",
+      "rendimiento": 98,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 69,
+      "lcpMs": 2266,
+      "clsValor": 0.0251,
+      "tbtMs": 0,
+      "pesoBrutoKB": 59.9,
+      "pesoGzipKB": 12.9,
+      "elementoLcp": "main#contenido > section.contenedor > div.*:size-50 > img.block",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=308ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    },
+    {
+      "ruta": "/en/",
+      "rendimiento": 99,
+      "accesibilidad": 100,
+      "buenasPracticas": 100,
+      "seo": 100,
+      "lcpMs": 2116,
+      "clsValor": 0.0101,
+      "tbtMs": 0,
+      "pesoBrutoKB": 80.2,
+      "pesoGzipKB": 15.4,
+      "elementoLcp": "section.relative > div.mt-8 > picture > img.block",
+      "recursosBloqueantes": [
+        "/_astro/Base.BFJ1HivV.css wasted=305ms 9654B"
+      ],
+      "externos": [],
+      "violacionesAxe": 0,
+      "corridas": 3
+    }
+  ]
+}
