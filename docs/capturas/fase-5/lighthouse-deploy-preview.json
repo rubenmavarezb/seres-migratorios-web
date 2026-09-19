@@ -1,0 +1,758 @@
+{
+  "medicion": "SM-061 — Deploy Preview de Netlify del PR #17",
+  "url": "https://deploy-preview-17--seres-migratorios.netlify.app",
+  "commitWorktree": "d96695f26d1caabbc3fd4798ab2c43ebd3a745d9",
+  "rama": "fase-5-qa-lanzamiento",
+  "fecha": "2026-09-14",
+  "lighthouse": "13.0.3",
+  "chrome": "Google Chrome del sistema (--headless=new)",
+  "preset": "mobile por defecto (412x823, throttling simulate rtt 150ms / 1638.4kbps / CPU 4x)",
+  "agregacion": "mediana de 3 corridas por categoria y por metrica, corridas intercaladas por vuelta",
+  "cargaMaquina": {
+    "min": 55.57,
+    "max": 132.1,
+    "muestras": 58
+  },
+  "verificacionesPrevias": {
+    "fontsGoogleapisEnHtml": 0,
+    "woff2PropiosServidos": true,
+    "robotsTxt": "200 con \"Sitemap: https://seresmigratorios.com/sitemap-index.xml\"",
+    "beaconCloudflare": "ausente (token placeholder)",
+    "canonicalYOgUrl": "https://seresmigratorios.com/ (sin netlify.app)",
+    "xRobotsTagDelPreview": "noindex (cabecera que Netlify agrega a los deploy previews)"
+  },
+  "notas": [
+    "Todas las rutas del preview devuelven la cabecera x-robots-tag: noindex (Netlify la agrega en deploy previews). is-crawlable = 0 en las 10 rutas, SEO 69 en todas. Control: /404 ya daba 69 en local por su meta robots noindex deliberado y sigue en 69.",
+    "Netlify inyecta <script async src=\"/.netlify/scripts/cdp\"> (barra de Deploy Preview). Carga app.netlify.com/cdp (Next.js) + Segment + Bugsnag: 33 peticiones de terceros, ~1650 KB transferidos, contra 17-23 peticiones propias (203-296 KB). Localmente habia 0 terceros.",
+    "Buenas Practicas 100 -> 96: inspector-issues (issue de tipo Cookie en app.netlify.com/cdp). En /artistas/herick-frontado/ 96 -> 92 porque ademas sigue image-size-responsive (52x32 mostrado, 72x44 servido, 78x48 esperado), igual que en local.",
+    "/404 se sirve con 200 en Netlify y se midio como las demas rutas. La 404 real (/no-existe-xyz/, status 404) aborta con ERRORED_DOCUMENT_REQUEST (lh-404real-1.json).",
+    "convocatoria vuelta 2 dejo FALLO en el log por un ENOTEMPTY al borrar el perfil temporal de Chrome despues de escribir el reporte; el reporte es valido (runtimeError null). Los 30 reportes son validos.",
+    "Carga de la maquina (1 min) entre 55 y 132 durante la corrida (en local fue 14-29). benchmarkIndex de Lighthouse 2586-2893, comparable al local 2782-2865.",
+    "Rendimiento bimodal: LCP ~1.2-2.7 s o ~4.2-5.5 s en la misma ruta. TBT 0 en todas las corridas."
+  ],
+  "rutas": [
+    {
+      "ruta": "/",
+      "corridas": 3,
+      "rendimiento": 100,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 1701,
+      "clsValor": 0.0098,
+      "tbtMs": 0,
+      "fcpMs": 1342,
+      "siMs": 1342,
+      "ttfbLcpMs": 345,
+      "elementoLcp": "section.relative > div.mt-8 > picture > img.block",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2830,
+        2754,
+        2832
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          76,
+          100,
+          100
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          5365,
+          1697,
+          1701
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 99,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 100,
+        "lcpMs": 2185,
+        "clsValor": 0.01,
+        "tbtMs": 0,
+        "elementoLcp": "section.relative > div.mt-8 > picture > img.block"
+      }
+    },
+    {
+      "ruta": "/manifiesto/",
+      "corridas": 3,
+      "rendimiento": 84,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 4220,
+      "clsValor": 0,
+      "tbtMs": 0,
+      "fcpMs": 2179,
+      "siMs": 2228,
+      "ttfbLcpMs": 272,
+      "elementoLcp": "section > div.mx-auto > div.flex > blockquote.font-mono",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2835,
+        2802,
+        2854
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          84,
+          98,
+          79
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          4220,
+          1965,
+          4938
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 100,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 100,
+        "lcpMs": 1430,
+        "clsValor": 0.0016,
+        "tbtMs": 0,
+        "elementoLcp": "section > div.mx-auto > div.flex > blockquote.font-mono"
+      }
+    },
+    {
+      "ruta": "/artistas/",
+      "corridas": 3,
+      "rendimiento": 97,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 2179,
+      "clsValor": 0.0012,
+      "tbtMs": 0,
+      "fcpMs": 2090,
+      "siMs": 2289,
+      "ttfbLcpMs": 384,
+      "elementoLcp": "main#contenido > section.contenedor > h1.[--text-manuscrita:3.5rem] > span.inline-block",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2844,
+        2753,
+        2863
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          97,
+          100,
+          80
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          2179,
+          1160,
+          4811
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 100,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 100,
+        "lcpMs": 1431,
+        "clsValor": 0.0012,
+        "tbtMs": 0,
+        "elementoLcp": "main#contenido > section.contenedor > h1.[--text-manuscrita:3.5rem] > span.inline-block"
+      }
+    },
+    {
+      "ruta": "/artistas/herick-frontado/",
+      "corridas": 3,
+      "rendimiento": 97,
+      "accesibilidad": 100,
+      "buenasPracticas": 92,
+      "seo": 69,
+      "lcpMs": 2444,
+      "clsValor": 0,
+      "tbtMs": 0,
+      "fcpMs": 1914,
+      "siMs": 2397,
+      "ttfbLcpMs": 357,
+      "elementoLcp": "section.contenedor > div.flex > div.flex > p",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "image-size-responsive",
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2785,
+        2802,
+        2766
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          97,
+          77,
+          97
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          92,
+          92,
+          92
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          2444,
+          5233,
+          2188
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 100,
+        "accesibilidad": 100,
+        "buenasPracticas": 96,
+        "seo": 100,
+        "lcpMs": 1588,
+        "clsValor": 0.0024,
+        "tbtMs": 0,
+        "elementoLcp": "section.contenedor > div.flex > div.flex > p"
+      }
+    },
+    {
+      "ruta": "/ediciones/",
+      "corridas": 3,
+      "rendimiento": 95,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 2409,
+      "clsValor": 0.0022,
+      "tbtMs": 0,
+      "fcpMs": 2320,
+      "siMs": 2407,
+      "ttfbLcpMs": 392,
+      "elementoLcp": "section.contenedor > div.flex > div.relative > h1.font-display",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2824,
+        2776,
+        2855
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          81,
+          95,
+          100
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          4407,
+          2409,
+          1221
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 99,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 100,
+        "lcpMs": 1885,
+        "clsValor": 0.0022,
+        "tbtMs": 0,
+        "elementoLcp": "section.contenedor > div.flex > div.relative > h1.font-display"
+      }
+    },
+    {
+      "ruta": "/ediciones/buenos-aires-2026/",
+      "corridas": 3,
+      "rendimiento": 80,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 4979,
+      "clsValor": 0.0163,
+      "tbtMs": 0,
+      "fcpMs": 1155,
+      "siMs": 1477,
+      "ttfbLcpMs": 294,
+      "elementoLcp": "div.grid > div.col-start-1 > div.w-[146px] > img.block",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2819,
+        2839,
+        2845
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          80,
+          93,
+          80
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          5261,
+          3231,
+          4979
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 98,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 100,
+        "lcpMs": 2405,
+        "clsValor": 0.0163,
+        "tbtMs": 0,
+        "elementoLcp": "div.grid > div.col-start-1 > div.w-[146px] > img.block"
+      }
+    },
+    {
+      "ruta": "/convocatoria/",
+      "corridas": 3,
+      "rendimiento": 98,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 1981,
+      "clsValor": 0.0014,
+      "tbtMs": 0,
+      "fcpMs": 1892,
+      "siMs": 1892,
+      "ttfbLcpMs": 369,
+      "elementoLcp": "section.contenedor > div.flex > div.relative > h1.font-display",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2751,
+        2842,
+        2795
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          98,
+          97,
+          100
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          1981,
+          2142,
+          1155
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 100,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 100,
+        "lcpMs": 1430,
+        "clsValor": 0.0014,
+        "tbtMs": 0,
+        "elementoLcp": "section.contenedor > div.flex > div.relative > h1.font-display"
+      }
+    },
+    {
+      "ruta": "/apoyar/",
+      "corridas": 3,
+      "rendimiento": 95,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 1983,
+      "clsValor": 0.0012,
+      "tbtMs": 0,
+      "fcpMs": 1893,
+      "siMs": 3003,
+      "ttfbLcpMs": 354,
+      "elementoLcp": "div.mx-auto > div.flex > div.flex > p.font-mono",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2706,
+        2842,
+        2893
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          98,
+          95,
+          79
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          1983,
+          1156,
+          4870
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 100,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 100,
+        "lcpMs": 1433,
+        "clsValor": 0.0012,
+        "tbtMs": 0,
+        "elementoLcp": "div.mx-auto > div.flex > div.flex > p.font-mono"
+      }
+    },
+    {
+      "ruta": "/en/",
+      "corridas": 3,
+      "rendimiento": 76,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 5449,
+      "clsValor": 0,
+      "tbtMs": 0,
+      "fcpMs": 2432,
+      "siMs": 2727,
+      "ttfbLcpMs": 258,
+      "elementoLcp": "section.relative > div.mt-8 > picture > img.block",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2800,
+        2586,
+        2856
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          74,
+          94,
+          76
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          5449,
+          2663,
+          5501
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 99,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 100,
+        "lcpMs": 2116,
+        "clsValor": 0.0101,
+        "tbtMs": 0,
+        "elementoLcp": "section.relative > div.mt-8 > picture > img.block"
+      }
+    },
+    {
+      "ruta": "/404",
+      "corridas": 3,
+      "rendimiento": 85,
+      "accesibilidad": 100,
+      "buenasPracticas": 96,
+      "seo": 69,
+      "lcpMs": 4196,
+      "clsValor": 0.0251,
+      "tbtMs": 0,
+      "fcpMs": 1896,
+      "siMs": 2007,
+      "ttfbLcpMs": 356,
+      "elementoLcp": "main#contenido > section.contenedor > div.*:size-50 > img.block",
+      "seoAuditoriasFallidas": [
+        "is-crawlable"
+      ],
+      "buenasPracticasFallidas": [
+        "inspector-issues"
+      ],
+      "benchmarkIndex": [
+        2838,
+        2874,
+        2755
+      ],
+      "corridasCrudas": {
+        "rendimiento": [
+          85,
+          80,
+          96
+        ],
+        "accesibilidad": [
+          100,
+          100,
+          100
+        ],
+        "buenasPracticas": [
+          96,
+          96,
+          96
+        ],
+        "seo": [
+          69,
+          69,
+          69
+        ],
+        "lcpMs": [
+          4196,
+          4983,
+          2701
+        ]
+      },
+      "comparacionLocal": {
+        "rendimiento": 98,
+        "accesibilidad": 100,
+        "buenasPracticas": 100,
+        "seo": 69,
+        "lcpMs": 2266,
+        "clsValor": 0.0251,
+        "tbtMs": 0,
+        "elementoLcp": "main#contenido > section.contenedor > div.*:size-50 > img.block"
+      }
+    }
+  ],
+  "controlSinBarraDeDeployPreview": {
+    "proposito": "aislar el efecto de la barra de Deploy Preview de Netlify sobre Rendimiento y Buenas Practicas",
+    "flags": "--blocked-url-patterns=\"*/.netlify/scripts/cdp*\" --blocked-url-patterns=\"*app.netlify.com*\"",
+    "corridas": 3,
+    "rutas": [
+      {
+        "ruta": "/en/",
+        "rendimiento": 100,
+        "buenasPracticas": 100,
+        "lcpMs": 1461,
+        "corridasCrudas": {
+          "rendimiento": [
+            100,
+            98,
+            100
+          ],
+          "buenasPracticas": [
+            100,
+            100,
+            100
+          ],
+          "lcpMs": [
+            1461,
+            1498,
+            1168
+          ]
+        },
+        "peticionesDeTerceros": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ruta": "/ediciones/buenos-aires-2026/",
+        "rendimiento": 99,
+        "buenasPracticas": 100,
+        "lcpMs": 1851,
+        "corridasCrudas": {
+          "rendimiento": [
+            100,
+            99,
+            99
+          ],
+          "buenasPracticas": [
+            100,
+            100,
+            100
+          ],
+          "lcpMs": [
+            1830,
+            1902,
+            1851
+          ]
+        },
+        "peticionesDeTerceros": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "ruta": "/manifiesto/",
+        "rendimiento": 100,
+        "buenasPracticas": 100,
+        "lcpMs": 1001,
+        "corridasCrudas": {
+          "rendimiento": [
+            100,
+            100,
+            100
+          ],
+          "buenasPracticas": [
+            100,
+            100,
+            100
+          ],
+          "lcpMs": [
+            1126,
+            1001,
+            980
+          ]
+        },
+        "peticionesDeTerceros": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "conclusion": "Con la barra bloqueada las 3 rutas vuelven a 99-100 en Rendimiento y 100 en Buenas Practicas, con 0 peticiones de terceros: el bajon del preview es de la barra, no del sitio."
+  }
+}

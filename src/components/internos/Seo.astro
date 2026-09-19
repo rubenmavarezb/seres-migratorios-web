@@ -65,9 +65,10 @@
  * `xhtml:link` pairs come from the `serialize` hook of astro.config.mjs, fed by
  * the same table.
  *
- * NOT here, on purpose: the Cloudflare Web Analytics beacon is SM-065, and the
- * `<link rel="preconnect">` hints stay in `Base.astro` — they are resource
- * hints, not metadata.
+ * NOT here, on purpose: the Cloudflare Web Analytics beacon (SM-065) lives in
+ * `Base.astro`, right after this component, together with the
+ * `<link rel="preconnect">` hints — neither is metadata, so neither belongs
+ * in the single source of metadata tags this component is.
  */
 import type { ImageMetadata } from 'astro';
 

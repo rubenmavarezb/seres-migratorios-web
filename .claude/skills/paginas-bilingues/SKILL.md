@@ -16,7 +16,7 @@ Una página del sitio existe dos veces, ES en la raíz y EN bajo `/en/`, con la 
 - **`Base.astro`**: `<head>` (vía `internos/Seo.astro`), `Nav` y `Pie`. Lo usa directo el home, que no tiene el header estándar.
 - **`idioma`**: `Base` lo deriva de `Astro.currentLocale`; una página EN lo fija en `const idioma: Idioma = 'en'` para sus llamadas a `t()`.
 - **`RUTAS`**: la tabla de `src/i18n/rutas.ts`. Sin fila ahí, el selector ES/EN del `Nav` y el `hreflang` caen al home.
-- **Rutas fuera del sitemap**: `RUTAS_FUERA_DEL_SITEMAP` en `astro.config.mjs` (`/kit`, `/gracias`, `/en/thanks`).
+- **Rutas fuera del sitemap**: `RUTAS_EXCLUIDAS_DE_ANALITICA` en `src/analitica.ts` (`/kit`, `/gracias`, `/en/thanks`): fuente única del filtro del sitemap, los `Disallow` de `robots.txt` y la exclusión del beacon.
 
 ## Patrones a seguir
 
@@ -57,7 +57,7 @@ Lo emite `Pagina` (prop `encabezado`) o `TitularPartido` (home y edición). Ning
 1. `src/pages/<ruta>.astro` y `src/pages/en/<route>.astro`.
 2. Fila en `RUTAS` y literal en `ClaveDeRuta` (`src/i18n/rutas.ts`).
 3. Claves en `es.json` y `en.json` (`[EN PENDIENTE]` si hace falta).
-4. Si es interna o de agradecimiento: sumarla a `RUTAS_FUERA_DEL_SITEMAP`.
+4. Si es interna o de agradecimiento: sumarla a `RUTAS_EXCLUIDAS_DE_ANALITICA` (`src/analitica.ts`).
 5. Si reemplaza una ruta vieja: redirect 301 con `force = true` en `netlify.toml`; los slugs de contenido nunca cambian.
 6. `npm run test:unit` y `npm run build`; revisar `dist/sitemap-0.xml`.
 
@@ -106,7 +106,7 @@ El sitio es estático y sin router de cliente; ninguna página cambia eso sin mo
 
 **Antes**: solo `gracias.astro`, indexable.
 
-**Después**: ambas páginas, fila `{ clave: 'gracias', es: '/gracias', en: '/en/thanks' }`, ambas en `RUTAS_FUERA_DEL_SITEMAP`, `action` del formulario apuntando a cada una.
+**Después**: ambas páginas, fila `{ clave: 'gracias', es: '/gracias', en: '/en/thanks' }`, ambas en `RUTAS_EXCLUIDAS_DE_ANALITICA`, `action` del formulario apuntando a cada una.
 
 **Por qué**: Netlify Forms redirige ahí; no aporta al índice.
 

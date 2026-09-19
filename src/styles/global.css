@@ -1,3 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gochi+Hand&display=swap');
+/* SM-063: the Google Fonts `@import url(...)` that used to open this file
+   (Anton/Courier Prime/Gochi Hand from fonts.googleapis.com) is gone — fonts
+   are self-hosted at build time via Astro's Fonts API (`fonts` in
+   astro.config.mjs) and applied per-page by the `<Font />` components in
+   src/layouts/Base.astro. See astro.config.mjs and theme.css's
+   `--font-display`/`--font-mono`/`--font-manuscrita` tokens for the rest of
+   the change. */
 @import './theme.css';
 @import './sitio.css';

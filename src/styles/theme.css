@@ -7,11 +7,13 @@
 
 @import 'tailwindcss';
 
-/* Font import for Anton, Courier Prime and Gochi Hand lives in global.css,
-   not here: Tailwind v4 requires an external @import url(...) to precede
-   @import "tailwindcss" (see Tailwind docs, font-family: "place @import for
-   external fonts at the top, before the Tailwind import"), so it is placed
-   as the first line of global.css instead of here. */
+/* SM-063: Anton, Courier Prime and Gochi Hand no longer arrive through an
+   external `@import url(fonts.googleapis.com/...)` in global.css — that
+   comment described a Tailwind v4 ordering rule ("an external @import must
+   precede @import 'tailwindcss'") that no longer applies now that the fonts
+   are self-hosted at build time (astro.config.mjs's `fonts`, `fontProviders
+   .google()`) and applied per-page by `<Font />` in src/layouts/Base.astro,
+   which emits real `@font-face` rules, not a stylesheet import. */
 
 @theme {
   /* ---- Color -----------------------------------------------------------
@@ -32,10 +34,42 @@
   --color-error: #b3261e;
 
   /* ---- Tipografía: familias --------------------------------------------
-     Genera font-display, font-mono, font-manuscrita. */
-  --font-display: 'Anton', Impact, 'Arial Narrow Bold', sans-serif;
-  --font-mono: 'Courier Prime', 'Courier New', Courier, monospace;
-  --font-manuscrita: 'Gochi Hand', 'Comic Sans MS', cursive;
+     Genera font-display, font-mono, font-manuscrita.
+
+     OBSERVACIÓN para Rubén (SM-063, decisión 2 del tech lead): estos tres
+     tokens ya no llevan el nombre de fuente + fallback literal, sino la
+     variable CSS que generan los <Font cssVariable="..."> de
+     src/layouts/Base.astro (astro:assets, alimentados por `fonts` en
+     astro.config.mjs). La familia de diseño no cambia (sigue siendo Anton /
+     Courier Prime / Gochi Hand); lo que cambia es el fallback:
+
+       ANTES: --font-display: 'Anton', Impact, 'Arial Narrow Bold', sans-serif;
+              --font-mono: 'Courier Prime', 'Courier New', Courier, monospace;
+              --font-manuscrita: 'Gochi Hand', 'Comic Sans MS', cursive;
+       AHORA: --font-display: var(--font-astro-display);      (→ 'Anton', sans-serif)
+              --font-mono: var(--font-astro-mono);             (→ 'Courier Prime', monospace)
+              --font-manuscrita: var(--font-astro-manuscrita); (→ 'Gochi Hand', cursive)
+
+     El fallback deja de nombrar fuentes reales (Impact, Arial Narrow Bold,
+     Courier New, Comic Sans MS) y pasa a un solo genérico por familia
+     (`fallbacks: ['sans-serif' | 'monospace' | 'cursive']` en
+     astro.config.mjs). Es intencional, no un descuido: la instrucción del
+     tech lead para este ticket dice "Nunca Inter/Roboto/Arial/Helvetica como
+     fallback visible: el fallback métrico debe declararse sobre una local()
+     genérica monospace/sans documentada", y el propio mecanismo de Astro
+     (`optimizedFallbacks`, default `true`) solo calcula el `size-adjust` /
+     `ascent-override` que evita layout shift contra el ÚLTIMO fallback de la
+     lista SI es genérico (docs.astro.build/en/guides/fonts,
+     "Customizing font fallbacks") — un nombre real puesto antes no se
+     optimiza. Verificado con captura 1440/390 de home antes/después
+     (docs de esta vuelta) que la tipografía se ve igual y con Lighthouse que
+     el CLS no empeora (base 0.0049, después ver medición de esta ficha). Si
+     Rubén prefiere conservar los nombres reales como primer fallback (a
+     costa de perder la optimización automática de métricas en ese primer
+     salto), es un cambio de una línea por token en astro.config.mjs. */
+  --font-display: var(--font-astro-display);
+  --font-mono: var(--font-astro-mono);
+  --font-manuscrita: var(--font-astro-manuscrita);
 
   /* ---- Tipografía: escala display --------------------------------------
      Genera text-display-xl / text-display-lg / text-display-md ya con

@@ -11,15 +11,28 @@
  * "única fuente de metadatos" keeps holding.
  *
  * The `hreflang` pair PLAN.md §5 attributes to this layout lives in `Seo.astro`
- * too (SM-050), for the same "única fuente" reason. One piece is still
- * deliberately absent here: the Cloudflare Web Analytics beacon of PLAN.md
- * §4.3, which lands with its token in SM-065.
+ * too (SM-050), for the same "única fuente" reason.
+ *
+ * The Cloudflare Web Analytics beacon of PLAN.md §4.3 (SM-065) lives here too,
+ * right after `Seo` in the `<head>`: the official snippet, as a `<script>`
+ * with `is:inline` (so Astro ships it verbatim instead of trying to process it
+ * as a module) and `data-cf-beacon` built with `JSON.stringify`, never string
+ * concatenation. It only renders when `tokenDeAnalyticsValido()` accepts
+ * `PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN` (rejects `undefined`, empty, and the
+ * bracketed placeholder `.env.example` ships) AND the current route is not
+ * `estaExcluidaDeAnalitica()` (`/kit`, `/gracias`, `/en/thanks` —
+ * `RUTAS_EXCLUIDAS_DE_ANALITICA` in `src/analitica.ts`, the same list
+ * `astro.config.mjs`'s sitemap filter and `robots.txt.ts`'s `Disallow` read).
+ * With no real token configured — today's state — this head renders exactly
+ * like it did before SM-065.
  */
 import type { ImageMetadata } from 'astro';
+import { Font } from 'astro:assets';
 
 import Nav from '../components/Nav.astro';
 import Pie from '../components/Pie.astro';
 import Seo from '../components/internos/Seo.astro';
+import { estaExcluidaDeAnalitica, tokenDeAnalyticsValido } from '../analitica.ts';
 import { IDIOMAS, IDIOMA_POR_DEFECTO, type Idioma, t } from '../i18n/utils.ts';
 import '../styles/global.css';
 
@@ -40,11 +53,12 @@ interface Props {
   /**
    * Keeps the page out of search results with `<meta name="robots"
    * content="noindex">`. For the internal pages of the site — `/kit` (SM-029)
-   * today — which are also excluded from the sitemap by
-   * `RUTAS_FUERA_DEL_SITEMAP` in astro.config.mjs: the two mechanisms are
-   * independent (the sitemap governs what is *offered* to a crawler, `noindex`
-   * what it does with a page it reaches anyway, e.g. through a link) and an
-   * internal page needs both. Defaults to `false`, so every public page keeps
+   * today — which are also excluded from the sitemap and `robots.txt` by
+   * `RUTAS_EXCLUIDAS_DE_ANALITICA` (`src/analitica.ts`): the two mechanisms are
+   * independent (the sitemap and `robots.txt` govern what is *offered* to a
+   * crawler, `noindex` what it does with a page it reaches anyway, e.g.
+   * through a link) and an internal page needs both. Defaults to `false`, so
+   * every public page keeps
    * emitting no `robots` tag at all rather than an explicit `index, follow`,
    * which is the default behaviour anyway.
    */
@@ -75,6 +89,14 @@ const idioma: Idioma = idiomaProp ?? (esIdioma(localeActual) ? localeActual : ID
 // definition of "the current route" per render.
 const ruta = rutaActual ?? Astro.url.pathname;
 
+// SM-065: the beacon only renders with a real token AND on a route that is
+// not one of `RUTAS_EXCLUIDAS_DE_ANALITICA`. Today's `.env.example` ships the
+// bracketed placeholder, so `tokenDeAnalyticsValido` rejects it and this stays
+// `false` in every environment that has not set a real token.
+const tokenAnalytics = import.meta.env.PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN;
+const emiteBeaconAnalytics =
+  tokenDeAnalyticsValido(tokenAnalytics) && !estaExcluidaDeAnalitica(ruta);
+
 // The `<body>` carries `font-mono text-tinta` (SM-013): without it any text
 // that reaches a page with no font class of its own falls back to Tailwind's
 // default sans stack (ui-sans-serif, system-ui…) — Arial or Roboto in
@@ -86,8 +108,31 @@ const ruta = rutaActual ?? Astro.url.pathname;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {
+      /* SM-063: self-hosted fonts (astro.config.mjs's `fonts`), so the
+         preconnect hints this used to carry for fonts.googleapis.com /
+         fonts.gstatic.com are gone — those origins are never contacted at
+         runtime any more. `<Font />` (astro:assets) emits the real
+         `@font-face` rules for each family below, on every page (this is the
+         one layout every route renders through — verified with
+         `grep -rl "import Base from"` / `"import Pagina from"` across
+         src/pages and src/components/internos/paginas). Only Courier Prime
+         gets `preload`, and only its `400` file: weight `400` is the
+         `<body>` default (`font-mono` above), needed for first paint on
+         every route, while `700` (`.boton`/`.campo`/Sello's SVG label) is
+         usually below the fold — `preload` takes an array to narrow which
+         file(s) load eagerly (astro.build/en/guides/fonts, "Preloading
+         fonts": "If multiple files correspond to a font, you can also
+         specify which one to preload by passing an array"); verified in the
+         built HTML that only the `400` woff2 gets a `<link rel=preload>`
+         once this array is passed. Anton and Gochi Hand are used more
+         selectively (headings, `Anotacion`) — preloading them globally
+         would spend bytes on routes that do not need them above the fold
+         ("Font preloading should be done sparingly"). */
+    }
+    <Font cssVariable="--font-astro-mono" preload={[{ weight: '400' }]} />
+    <Font cssVariable="--font-astro-display" />
+    <Font cssVariable="--font-astro-manuscrita" />
     <Seo
       titulo={titulo}
       descripcion={descripcion}
@@ -96,6 +141,16 @@ const ruta = rutaActual ?? Astro.url.pathname;
       rutaActual={ruta}
       noindex={noindex}
     />
+    {
+      emiteBeaconAnalytics && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: tokenAnalytics })}
+        />
+      )
+    }
   </head>
   <body class="papel font-mono text-tinta flex min-h-screen flex-col">
     <a
